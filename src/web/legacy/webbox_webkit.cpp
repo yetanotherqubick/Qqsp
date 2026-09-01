@@ -1,4 +1,4 @@
-#include "qspwebbox_webkit.h"
+#include "webbox_webkit.h"
 
 #include <QFileInfo>
 #include <QPalette>

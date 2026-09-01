@@ -164,7 +164,7 @@ if(QQSP_ENABLE_WEBBOX)
 endif()
 
 if(WIN32)
-    target_sources(Qqsp PRIVATE Qqsp.rc)
+    target_sources(Qqsp PRIVATE packaging/windows/Qqsp.rc)
 endif()
 
 if(APPLE)
