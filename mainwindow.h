@@ -2,22 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QWidget>
-#include <QDockWidget>
 #include <QString>
 #include <QColor>
-#include <QTimer>
-#include <QMenuBar>
-#include <QMenu>
-#include <QAction>
-#include <QToolBar>
-#include <QStatusBar>
 #include <QFont>
-#include <QCloseEvent>
-#include <QKeyEvent>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QTranslator>
+#include <QPalette>
 
 #include "qsptextbox.h"
 #include "qsplistbox.h"
@@ -42,6 +30,19 @@
 #define QSP_QUICKSAVE "quicksave.sav"
 #define QSP_GAME "game.qsp"
 
+class QCloseEvent;
+class QDockWidget;
+class QDragEnterEvent;
+class QDropEvent;
+class QKeyEvent;
+class QListWidgetItem;
+class QMenu;
+class QMenuBar;
+class QAction;
+class QTimer;
+class QToolBar;
+class QUrl;
+
 namespace Ui {
 class MainWindow;
 }
@@ -51,7 +52,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     // Methods
@@ -82,7 +83,7 @@ public:
     QDockWidget *GetObjectsDock() const { return _objectsWidget; }
     QDockWidget *GetImageDock() const { return _imgViewWidget; }
 
-    QString GetLastPath() { return lastPath; }
+    QString GetLastPath() const { return lastPath; }
     void SetLastPath(const QString &path) { lastPath = path; }
 
     QspImgCanvas *GetImgView() const { return m_imgView; }
@@ -91,45 +92,45 @@ public:
     bool IsQuit() const { return m_isQuit; }
     bool IsKeyPressedWhileDisabled() const { return m_keyPressedWhileDisabled; }
 
-    QColor GetLinkColor() { return m_linkColor; }
-    QColor GetBackgroundColor() { return m_backColor; }
-    QColor GetForegroundColor() { return m_fontColor; }
-    void SetLinkColor(const QColor& new_color) { m_settingsLinkColor = new_color; if(m_isUseLinkColor) ApplyLinkColor(new_color); }
-    void SetBackgroundColor(const QColor& new_color) { m_settingsBackColor = new_color; if(m_isUseBackColor) ApplyBackColor(new_color); }
-    void SetForegroundColor(const QColor& new_color) { m_settingsFontColor = new_color; if(m_isUseFontColor) ApplyFontColor(new_color); }
+    QColor GetLinkColor() const { return m_linkColor; }
+    QColor GetBackgroundColor() const { return m_backColor; }
+    QColor GetForegroundColor() const { return m_fontColor; }
+    void SetLinkColor(const QColor &new_color) { m_settingsLinkColor = new_color; if (m_isUseLinkColor) ApplyLinkColor(new_color); }
+    void SetBackgroundColor(const QColor &new_color) { m_settingsBackColor = new_color; if (m_isUseBackColor) ApplyBackColor(new_color); }
+    void SetForegroundColor(const QColor &new_color) { m_settingsFontColor = new_color; if (m_isUseFontColor) ApplyFontColor(new_color); }
 
     void SetShowPlainText(bool isPlain);
 
-    bool GetUseFontSize() { return m_isUseFontSize; }
+    bool GetUseFontSize() const { return m_isUseFontSize; }
     void SetUseFontSize(bool isUseFontS) { m_isUseFontSize = isUseFontS; }
-    int GetFontSize() { return m_fontSize; }
+    int GetFontSize() const { return m_fontSize; }
     void SetFontSize(int fontS) { m_fontSize = fontS; }
-    bool GetUseFont() { return m_isUseFont; }
+    bool GetUseFont() const { return m_isUseFont; }
     void SetUseFont(bool isUseFont) { m_isUseFont = isUseFont; }
-    QFont GetFont() { return m_font; }
-    void SetFont(const QFont& new_font) { m_font = new_font; if(m_isUseFont) ApplyFont(new_font, 2, 2); }
-    bool GetAutostart() { return autostartLastGame; }
+    QFont GetFont() const { return m_font; }
+    void SetFont(const QFont &new_font) { m_font = new_font; if (m_isUseFont) ApplyFont(new_font, 2, 2); }
+    bool GetAutostart() const { return autostartLastGame; }
     void SetAutostart(bool isAutostart) { autostartLastGame = isAutostart; }
-    bool GetPerGameConfig() { return perGameConfig; }
+    bool GetPerGameConfig() const { return perGameConfig; }
     void SetPerGameConfig(bool isPerGameConfig) { perGameConfig = isPerGameConfig; }
-    bool GetUseBackColor() { return m_isUseBackColor; }
+    bool GetUseBackColor() const { return m_isUseBackColor; }
     void SetUseBackColor(bool isUseBackColor) { m_isUseBackColor = isUseBackColor; }
-    bool GetUseLinkColor() { return m_isUseLinkColor; }
+    bool GetUseLinkColor() const { return m_isUseLinkColor; }
     void SetUseLinkColor(bool isUseLinkColor) { m_isUseLinkColor = isUseLinkColor; }
-    bool GetUseFontColor() { return m_isUseFontColor; }
+    bool GetUseFontColor() const { return m_isUseFontColor; }
     void SetUseFontColor(bool isUseFontColor) { m_isUseFontColor = isUseFontColor; }
-    QString GetLangID() { return langid; }
-    void SetLangID(const QString& new_langid) { langid = new_langid; }
-    float GetOverallVolume() { return m_volume; }
+    QString GetLangID() const { return langid; }
+    void SetLangID(const QString &new_langid) { langid = new_langid; }
+    float GetOverallVolume() const { return m_volume; }
     void SetOverallVolume(float new_volume);
-    bool GetDisableVideo() { return disableVideo; }
+    bool GetDisableVideo() const { return disableVideo; }
     void SetDisableVideo(bool isDisableVideo);
-    bool GetVideoFix() { return m_videoFix; }
+    bool GetVideoFix() const { return m_videoFix; }
     void SetVideoFix(bool isFix);
     void SetAllowHTML5Extras(bool HTML5Extras);
-    bool GetAllowHTML5Extras() { return m_isAllowHTML5Extras; }
+    bool GetAllowHTML5Extras() const { return m_isAllowHTML5Extras; }
     void SetUseCaseInsensitiveFilePath(bool CaseInsensitiveFilePath);
-    bool GetUseCaseInsensitiveFilePath();
+    bool GetUseCaseInsensitiveFilePath() const;
 
 private:
     void CreateMenuBar();
@@ -139,42 +140,41 @@ private:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent *event);
     void ActionsListBoxDoAction(int action);
-    void dropEvent(QDropEvent* event);
-    void dragEnterEvent(QDragEnterEvent* event);
+    void dropEvent(QDropEvent *event);
+    void dragEnterEvent(QDragEnterEvent *event);
 
     // Internal methods
     void UpdateTitle();
     void ReCreateGUI();
     void RefreshUI();
-    void ApplyFont(const QFont& new_font, int fontType, int sizeType);
-    bool ApplyFontColor(const QColor& color);
-    bool ApplyBackColor(const QColor& color);
-    bool ApplyLinkColor(const QColor& color);
+    void ApplyFont(const QFont &new_font, int fontType, int sizeType);
+    bool ApplyFontColor(const QColor &color);
+    bool ApplyBackColor(const QColor &color);
+    bool ApplyLinkColor(const QColor &color);
 
-    QMenuBar*       mainMenuBar;
-    QToolBar*       mainToolBar;
-    //QStatusBar*     mainStatusBar;
-    QMenu*			_fileMenu; // was wxMenu *m_fileMenu;
-    QMenu*			_gameMenu; // was wxMenu *m_gameMenu;
-    QMenu*			_settingsMenu; // was wxMenu *m_settingsMenu;
-    QMenu*			_showHideMenu; //Show / Hide submenu
+    QMenuBar *mainMenuBar;
+    QToolBar *mainToolBar;
+    QMenu *_fileMenu;
+    QMenu *_gameMenu;
+    QMenu *_settingsMenu;
+    QMenu *_showHideMenu;
 #ifndef _WEBBOX_COMMON
-    QspTextBox*		_mainDescTextBox; //m_desc
-    QspTextBox*		_descTextBox; //m_vars ID_VARSDESC
+    QspTextBox *_mainDescTextBox;
+    QspTextBox *_descTextBox;
 #else
-    QspWebBox*		_mainDescTextBox; //m_desc
-    QspWebBox*		_descTextBox; //m_vars ID_VARSDESC
+    QspWebBox *_mainDescTextBox;
+    QspWebBox *_descTextBox;
 #endif
-    QspListBox*		_objectsListBox; //m_objects
-    QspListBox*		_actionsListBox; //m_actions
+    QspListBox *_objectsListBox;
+    QspListBox *_actionsListBox;
 
-    QspInputBox*	_inputTextBox; //m_input
-    QDockWidget*	_objectsWidget; //m_objects
-    QDockWidget*	_actionsWidget; //m_actions
-    QDockWidget*	_descWidget; //m_vars ID_VARSDESC
-    QDockWidget*	_inputWidget; //m_input
-    QDockWidget*    _mainDescWidget;
-    QString lastPath; //For QFileDialog
+    QspInputBox *_inputTextBox;
+    QDockWidget *_objectsWidget;
+    QDockWidget *_actionsWidget;
+    QDockWidget *_descWidget;
+    QDockWidget *_inputWidget;
+    QDockWidget *_mainDescWidget;
+    QString lastPath;
     QString lastGame;
 
     // Fields
@@ -185,9 +185,9 @@ private:
     QString m_path;
     QTimer *m_timer;
     QspImgCanvas *m_imgView;
-    QDockWidget*    _imgViewWidget;
+    QDockWidget *_imgViewWidget;
     int m_menuItemId;
-    QMenu *m_menu; //qsp callback menu
+    QMenu *m_menu;
     QColor m_backColor;
     QColor m_linkColor;
     QColor m_fontColor;
@@ -221,7 +221,7 @@ private:
     bool m_isAllowHTML5Extras;
 
 public slots:
-    void OpenGameFile(const QString& path);
+    void OpenGameFile(const QString &path);
 
 private slots:
     void OnOpenGame();
@@ -239,12 +239,12 @@ private slots:
     void OnToggleShowPlainText(bool checked);
     void OnNewGame();
     void OnTimer();
-    void OnLinkClicked(const QUrl& url);
-    void OnObjectListBoxItemClicked (QListWidgetItem * itemClicked);
-    void OnActionsListBoxItemClicked (QListWidgetItem * itemClicked);
+    void OnLinkClicked(const QUrl &url);
+    void OnObjectListBoxItemClicked(QListWidgetItem *itemClicked);
+    void OnActionsListBoxItemClicked(QListWidgetItem *itemClicked);
     void OnObjectChange(int currentRow);
     void OnActionChange(int currentRow);
-    void OnMenu(QAction* action);
+    void OnMenu(QAction *action);
     void OnInputTextChange();
     void OnInputTextEnter();
 };
