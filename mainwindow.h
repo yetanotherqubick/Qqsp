@@ -6,6 +6,12 @@
 #include <QColor>
 #include <QFont>
 #include <QPalette>
+#include <QAction>
+#include <QDockWidget>
+#include <QMenu>
+#include <QMenuBar>
+#include <QTimer>
+#include <QToolBar>
 
 #include "qsptextbox.h"
 #include "qsplistbox.h"
@@ -31,16 +37,10 @@
 #define QSP_GAME "game.qsp"
 
 class QCloseEvent;
-class QDockWidget;
 class QDragEnterEvent;
 class QDropEvent;
 class QKeyEvent;
 class QListWidgetItem;
-class QMenu;
-class QMenuBar;
-class QAction;
-class QTimer;
-class QToolBar;
 class QUrl;
 
 namespace Ui {
@@ -130,7 +130,7 @@ public:
     void SetAllowHTML5Extras(bool HTML5Extras);
     bool GetAllowHTML5Extras() const { return m_isAllowHTML5Extras; }
     void SetUseCaseInsensitiveFilePath(bool CaseInsensitiveFilePath);
-    bool GetUseCaseInsensitiveFilePath() const;
+    bool GetUseCaseInsensitiveFilePath();
 
 private:
     void CreateMenuBar();
