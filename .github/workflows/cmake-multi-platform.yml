@@ -18,12 +18,12 @@ jobs:
             os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-            qt_arch: linux_gcc_64
+            qt_arch: gcc_64
           - name: Linux Clang
             os: ubuntu-latest
             c_compiler: clang
             cpp_compiler: clang++
-            qt_arch: linux_gcc_64
+            qt_arch: gcc_64
           - name: Windows MSVC
             os: windows-latest
             c_compiler: cl
