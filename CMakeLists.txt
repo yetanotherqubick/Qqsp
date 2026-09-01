@@ -33,12 +33,12 @@ set(QQSP_APPLICATION_HEADERS
 )
 
 set(QQSP_WIDGET_SOURCES
-    src/widgets/qsptextbox.cpp
-    src/widgets/qsplistbox.cpp
-    src/widgets/qspinputbox.cpp
-    src/widgets/qspinputdlg.cpp
-    src/widgets/qspmsgdlg.cpp
-    src/widgets/qspimgcanvas.cpp
+    src/widgets/textbox.cpp
+    src/widgets/listbox.cpp
+    src/widgets/inputbox.cpp
+    src/widgets/inputdlg.cpp
+    src/widgets/msgdlg.cpp
+    src/widgets/imgcanvas.cpp
 )
 
 set(QQSP_WIDGET_HEADERS
@@ -61,13 +61,13 @@ set(QQSP_MEDIA_HEADERS
 )
 
 set(QQSP_WEB_SOURCES
-    src/web/qspnetworkaccessmanager.cpp
-    src/web/qspreply.cpp
-    src/web/qspwebbox.cpp
-    src/web/qspwebengineurlrequestinterceptor.cpp
-    src/web/qspwebengineurlschemehandler.cpp
-    src/web/qspexecwebengineurlschemehandler.cpp
-    src/web/qspwebchannel.cpp
+    src/web/networkaccessmanager.cpp
+    src/web/reply.cpp
+    src/web/webbox.cpp
+    src/web/webengineurlrequestinterceptor.cpp
+    src/web/webengineurlschemehandler.cpp
+    src/web/execwebengineurlschemehandler.cpp
+    src/web/webchannel.cpp
     src/web/url_schemes.cpp
 )
 
