@@ -44,7 +44,7 @@ jobs:
         with:
           version: 5.15.2
           arch: ${{ matrix.qt_arch }}
-          modules: qtmultimedia qtwebchannel qtwebengine
+          modules: qtwebengine
           cache: true
 
       - name: Set up MSVC
