@@ -7,7 +7,7 @@ arch=(i686 x86_64)
 url="http://git.tfgamessite.com/Sonnix/Qqsp"
 license=('MIT')
 depends=('qt5-base' 'qt5-webengine' 'qt5-multimedia' 'gst-plugins-good' 'gst-plugins-ugly')
-makedepends=('git' 'librsvg')
+makedepends=('git' 'cmake' 'ninja' 'librsvg')
 source=("${_pkgname}::git+https://gitlab.com/Sonnix1/Qqsp.git#tag=v$pkgver")
 sha256sums=('SKIP')
 
@@ -20,24 +20,22 @@ prepare() {
     rsvg-convert -w "${i%%x*}" -h "${i##*x}" -f png \
         -o "$srcdir/hicolor/$i/apps/qsp.png" "$srcdir/hicolor/scalable/apps/qsp.svg"
   done
-  cd "${_pkgname}"
-  mkdir -p build
 }
 
 build() {
-  cd "${_pkgname}/build"
-  qmake-qt5 .. PREFIX=/usr
-  make
+  cmake -S "${_pkgname}" -B build -G Ninja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake --build build
 }
 
 package() {
   install -dm0755 "$pkgdir"/usr/{bin,share/{applications,icons,licenses/qqsp,mime/packages}}/
 
-  install -m0755 "$_pkgname/build/Qqsp" "$pkgdir/usr/bin/"
+  DESTDIR="$pkgdir" cmake --install build
   install -m0644 "$_pkgname/LICENSE" "$pkgdir/usr/share/licenses/qqsp/"
-
   install -m0644 "$_pkgname/Qqsp.desktop" "$pkgdir/usr/share/applications/"
   install -m0644 "$_pkgname/qsp.mime" "$pkgdir/usr/share/mime/packages/qsp.xml"
-  
+
   bsdtar -cf - "hicolor" | bsdtar -xf - -C "$pkgdir/usr/share/icons"
 }
