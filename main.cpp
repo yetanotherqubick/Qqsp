@@ -1,13 +1,14 @@
 #include "mainwindow.h"
-#include <QCoreApplication>
+
 #include <QApplication>
-#include <QObject>
-#include <QSettings>
-#include <QTranslator>
-#include <QString>
-#include <QLocale>
 #include <QCommandLineParser>
+#include <QCoreApplication>
 #include <QFileInfo>
+#include <QLocale>
+#include <QSettings>
+#include <QString>
+#include <QTranslator>
+
 #ifdef _WEBBOX
 #include <QtWebEngine>
 #include "url_schemes.h"
@@ -27,7 +28,7 @@ int main(int argc, char *argv[])
 
     QString langid;
     QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
-    if(settingsFile.exists() && settingsFile.isFile())
+    if (settingsFile.exists() && settingsFile.isFile())
     {
         QSettings settings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG, QSettings::IniFormat);
         langid = settings.value("application/language", QLocale::system().name()).toString();
@@ -37,13 +38,12 @@ int main(int argc, char *argv[])
         QSettings settings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(), QApplication::applicationName());
         langid = settings.value("application/language", QLocale::system().name()).toString();
     }
-    QTranslator qtTranslator;
 
-    if(qtTranslator.load(QApplication::applicationName() + "." + langid, QApplication::applicationDirPath()))
+    QTranslator qtTranslator;
+    if (qtTranslator.load(QApplication::applicationName() + "." + langid, QApplication::applicationDirPath()))
         a.installTranslator(&qtTranslator);
-    else
-        if(qtTranslator.load(QApplication::applicationName() + "." + langid, ":/translations/"))
-            a.installTranslator(&qtTranslator);
+    else if (qtTranslator.load(QApplication::applicationName() + "." + langid, ":/translations/"))
+        a.installTranslator(&qtTranslator);
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Qqsp");
@@ -59,13 +59,13 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
-    if(parser.positionalArguments().size() != 0)
+    const QStringList positionalArguments = parser.positionalArguments();
+    if (!positionalArguments.isEmpty())
     {
-        QFileInfo file(parser.positionalArguments().at(0));
+        QFileInfo file(positionalArguments.at(0));
         w.OpenGameFile(file.filePath());
     }
 
     w.show();
-
     return a.exec();
 }
