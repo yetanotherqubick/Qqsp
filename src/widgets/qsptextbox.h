@@ -58,7 +58,7 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
     void SetDisableVideo(bool isDisableVideo) { disableVideo = isDisableVideo; }
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 #ifndef _WEBBOX_COMMON
     void SetBackgroundImage(const QImage& bmpBg);
     void LoadBackImage(const QString& fileName);
@@ -71,12 +71,12 @@ public:
 
 private:
     // Internal methods
-    void wheelEvent(QWheelEvent *e);
+    void wheelEvent(QWheelEvent *e) override;
 #ifndef _WEBBOX_COMMON
     void CalcImageSize();
-    void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *e) override;
     QVariant loadResource(int type, const QUrl &name);
-    void resizeEvent(QResizeEvent *e);
+    void resizeEvent(QResizeEvent *e) override;
     void clearManualResources();
 #endif
 
