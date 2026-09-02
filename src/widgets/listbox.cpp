@@ -155,7 +155,7 @@ void QspListBox::SetSelection(int selection)
 {
     if(selection != oldSelection)
     {
-        if(selection != -1 && selection < (count() - 1))
+        if(selection >= 0 && selection < count())
             if(item(selection) != 0)
                 scrollToItem(item(selection));
         if(selection != -1)
