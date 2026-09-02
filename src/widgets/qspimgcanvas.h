@@ -26,10 +26,10 @@ public:
     void SetGamePath(const QString& path);
 
     // Overloaded methods
-    virtual bool SetBackgroundColor(const QColor& color);
+    bool SetBackgroundColor(const QColor& color) override;
 
 private:
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
     void updateImage();
     // Fields
     bool m_isAnim;
