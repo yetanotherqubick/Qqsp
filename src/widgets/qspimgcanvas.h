@@ -43,8 +43,6 @@ private:
     QString m_path;
     int m_posX;
     int m_posY;
-//    void keyPressEvent(QKeyEvent *event);
-//    void closeEvent(QCloseEvent *event);
 private slots:
     void OnNewFrame(int frameNumber);
 };
