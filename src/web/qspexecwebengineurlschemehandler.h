@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QUrl>
-#include <QWebEngineUrlRequestJob>
 #include <QWebEngineUrlSchemeHandler>
+
+class QWebEngineUrlRequestJob;
 
 class QspExecWebEngineUrlSchemeHandler : public QWebEngineUrlSchemeHandler
 {
@@ -21,7 +22,6 @@ public slots:
     void QspLinkClicked();
 
 private:
-    void legacyLinkClicked(QWebEngineUrlRequestJob *request);
     QUrl url;
 };
 
