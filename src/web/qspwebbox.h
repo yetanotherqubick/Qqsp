@@ -23,8 +23,8 @@ public:
     void RefreshUI(bool isScroll = false);
     void LoadBackImage(const QString& fileName);
 
-    void SetIsHtml(bool isHtml);
-    void SetText(const QString& text, bool isScroll = false);
+    void SetIsHtml(bool isHtml, bool refresh = true);
+    void SetText(const QString& text, bool isScroll = false, bool refresh = true);
     void SetTextFont(const QFont& new_font);
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
@@ -37,30 +37,32 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
     void SetVideoFix(bool isFix);
-    void SetHead(const QString &head);
+    void SetHead(const QString &head, bool refresh = true);
     void SetFontType(const int fontType);
     void SetSizeType(const int sizeType);
     void SetCustomCSS(bool customCSS);
     void Quit();
 
 private:
-    bool m_isUseHtml;
-    QString m_path;
+    QWebEnginePage *createPage();
+    void registerUrlSchemeHandlers();
+
+    bool m_isUseHtml = false;
     QFont m_font;
     QString m_text;
     QString m_head;
     QColor m_linkColor;
     QColor m_backColor;
     QColor m_fontColor;
-    bool showPlainText;
-    bool m_videoFix;
-    int m_fontType;
-    int m_sizeType;
+    bool m_showPlainText = false;
+    bool m_videoFix = true;
+    int m_fontType = 0;
+    int m_sizeType = 0;
     QspWebEngineUrlSchemeHandler qweush;
     QspExecWebEngineUrlSchemeHandler qeweush;
     QWebEngineProfile profile;
     QspWebChannel qspJS;
-    bool m_isQuit;
+    bool m_isQuit = false;
 
 signals:
     void qspLinkClicked(QUrl url);

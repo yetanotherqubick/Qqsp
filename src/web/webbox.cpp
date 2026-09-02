@@ -1,86 +1,89 @@
 #include "qspwebbox.h"
 
-#include <QWebEngineSettings>
 #include <QEventLoop>
 #include <QWebChannel>
+#include <QWebEnginePage>
+#include <QWebEngineSettings>
 
 #include "comtools.h"
 
-QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
+QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent), m_font(font())
 {
-    m_isQuit = false;
-    settings()->setDefaultTextEncoding("utf-8");
+    settings()->setDefaultTextEncoding(QStringLiteral("utf-8"));
     setFocusPolicy(Qt::NoFocus);
     settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
     settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
     setContextMenuPolicy(Qt::NoContextMenu);
     setContentsMargins(0, 0, 0, 0);
-    m_isUseHtml = false;
-    showPlainText = false;
-    m_videoFix = true;
-    m_font = font();
-    profile.installUrlSchemeHandler(QByteArray("qsp"), &qweush);
-    profile.installUrlSchemeHandler(QByteArray("exec"), &qeweush);
+    registerUrlSchemeHandlers();
     page()->triggerAction(QWebEnginePage::Stop);
     page()->deleteLater();
-    QWebEnginePage *newpage = new QWebEnginePage(&profile, this);
-    QWebChannel *channel = new QWebChannel(newpage);
-    channel->registerObject(QStringLiteral("qsp"), &qspJS);
-    newpage->setWebChannel(channel);
-    newpage->settings()->setDefaultTextEncoding("utf-8");
-    newpage->settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
-    newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
-    page()->deleteLater();
-    setPage(newpage);
+    setPage(createPage());
     connect(&qeweush, &QspExecWebEngineUrlSchemeHandler::qspLinkClicked, this, &QspWebBox::OnQspLinkClicked);
-    QEventLoop loop;
-    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
-    page()->load(QUrl("qsp:/"));
-    loop.exec();
+    page()->load(QUrl(QStringLiteral("qsp:/")));
 }
 
-void QspWebBox::SetIsHtml(bool isHtml)
+void QspWebBox::registerUrlSchemeHandlers()
+{
+    profile.installUrlSchemeHandler(QByteArrayLiteral("qsp"), &qweush);
+    profile.installUrlSchemeHandler(QByteArrayLiteral("exec"), &qeweush);
+}
+
+QWebEnginePage *QspWebBox::createPage()
+{
+    auto *newPage = new QWebEnginePage(&profile, this);
+    auto *channel = new QWebChannel(newPage);
+    channel->registerObject(QStringLiteral("qsp"), &qspJS);
+    newPage->setWebChannel(channel);
+    newPage->settings()->setDefaultTextEncoding(QStringLiteral("utf-8"));
+    newPage->settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
+    newPage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
+    return newPage;
+}
+
+void QspWebBox::SetIsHtml(bool isHtml, bool refresh)
 {
     if (m_isUseHtml != isHtml)
     {
         m_isUseHtml = isHtml;
-        RefreshUI();
+        if (refresh)
+            RefreshUI();
     }
 }
 
 void QspWebBox::RefreshUI(bool isScroll)
 {
-    if(m_isQuit)
+    if (m_isQuit)
         return;
 
-    QString str = m_text;
+    const QString str = m_text;
     QString text;
-    if(m_videoFix)
+    if (m_videoFix)
     {
         int copypos = 0;
         int startIndex = str.indexOf("<video", 0, Qt::CaseInsensitive);
         while (startIndex >= 0)
         {
             int endIndex = str.indexOf(">", startIndex, Qt::CaseInsensitive);
-            if(endIndex < 0)
+            if (endIndex < 0)
                 break;
             endIndex = endIndex + 1;
             text.append(str.mid(copypos, startIndex + 6 - copypos));
-            if(!str.mid(startIndex, endIndex - startIndex).contains("autoplay", Qt::CaseInsensitive))
+            if (!str.mid(startIndex, endIndex - startIndex).contains("autoplay", Qt::CaseInsensitive))
                 text.append(" autoplay");
-            if(!str.mid(startIndex, endIndex - startIndex).contains("loop", Qt::CaseInsensitive))
+            if (!str.mid(startIndex, endIndex - startIndex).contains("loop", Qt::CaseInsensitive))
                 text.append(" loop");
             text.append(str.mid(startIndex + 6, endIndex - startIndex - 6));
             copypos = endIndex;
-            int cloaseTegPos = str.indexOf("</video>", 0, Qt::CaseInsensitive);
-            if(cloaseTegPos == -1)
+            const int cloaseTegPos = str.indexOf("</video>", 0, Qt::CaseInsensitive);
+            if (cloaseTegPos == -1)
                 text.append("</video>");
             else
             {
-                int nextV = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
-                if(nextV == -1)
+                const int nextV = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
+                if (nextV == -1)
                     text.append("</video>");
-                else if(cloaseTegPos > nextV)
+                else if (cloaseTegPos > nextV)
                     text.append("</video>");
             }
             startIndex = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
@@ -91,38 +94,31 @@ void QspWebBox::RefreshUI(bool isScroll)
         text = str;
 
     text = QSPTools::HtmlizeWhitespaces(m_isUseHtml ? text : QSPTools::ProceedAsPlain(text));
-    if(showPlainText)
+    if (m_showPlainText)
         qweush.SetPlainText(text);
     else
         qweush.SetHtml(text);
 
-    QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
-    if(url_str.compare("qsp:", Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/", Qt::CaseInsensitive) != 0)
+    const QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
+    if (url_str.compare("qsp:", Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/", Qt::CaseInsensitive) != 0)
     {
         page()->triggerAction(QWebEnginePage::Stop);
         page()->deleteLater();
-        QWebEnginePage *newpage = new QWebEnginePage(&profile, this);
-        QWebChannel *channel = new QWebChannel(newpage);
-        channel->registerObject(QStringLiteral("qsp"), &qspJS);
-        newpage->setWebChannel(channel);
-        newpage->settings()->setDefaultTextEncoding("utf-8");
-        newpage->settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
-        newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
-        setPage(newpage);
+        setPage(createPage());
         QEventLoop loop;
         connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
-        page()->load(QUrl("qsp:/"));
+        page()->load(QUrl(QStringLiteral("qsp:/")));
         loop.exec();
     }
     page()->triggerAction(QWebEnginePage::ReloadAndBypassCache);
 }
 
-void QspWebBox::LoadBackImage(const QString& fileName)
+void QspWebBox::LoadBackImage(const QString &fileName)
 {
     qweush.SetBackgroundImage(fileName);
 }
 
-void QspWebBox::SetText(const QString& text, bool isScroll)
+void QspWebBox::SetText(const QString &text, bool isScroll, bool refresh)
 {
     if (m_text != text)
     {
@@ -132,11 +128,12 @@ void QspWebBox::SetText(const QString& text, bool isScroll)
                 isScroll = false;
         }
         m_text = text;
-        RefreshUI(isScroll);
+        if (refresh)
+            RefreshUI(isScroll);
     }
 }
 
-void QspWebBox::SetTextFont(const QFont& new_font)
+void QspWebBox::SetTextFont(const QFont &new_font)
 {
     if (m_font != new_font)
     {
@@ -147,7 +144,7 @@ void QspWebBox::SetTextFont(const QFont& new_font)
 
 bool QspWebBox::SetLinkColor(const QColor &color)
 {
-    if(m_linkColor != color)
+    if (m_linkColor != color)
     {
         m_linkColor = color;
         qweush.SetLinkColor(color);
@@ -157,9 +154,8 @@ bool QspWebBox::SetLinkColor(const QColor &color)
     return false;
 }
 
-void QspWebBox::SetGamePath(const QString &path)
+void QspWebBox::SetGamePath(const QString& path)
 {
-    m_path = path;
     qweush.SetGamePath(path);
 }
 
@@ -173,9 +169,9 @@ QColor QspWebBox::GetForegroundColor() const
     return m_fontColor;
 }
 
-bool QspWebBox::SetBackgroundColor(const QColor &color)
+bool QspWebBox::SetBackgroundColor(const QColor& color)
 {
-    if(m_backColor != color)
+    if (m_backColor != color)
     {
         m_backColor = color;
         qweush.SetBackgroundColor(color);
@@ -185,9 +181,9 @@ bool QspWebBox::SetBackgroundColor(const QColor &color)
     return false;
 }
 
-bool QspWebBox::SetForegroundColor(const QColor &color)
+bool QspWebBox::SetForegroundColor(const QColor& color)
 {
-    if(m_fontColor != color)
+    if (m_fontColor != color)
     {
         m_fontColor = color;
         qweush.SetForegroundColor(color);
@@ -199,7 +195,7 @@ bool QspWebBox::SetForegroundColor(const QColor &color)
 
 void QspWebBox::SetShowPlainText(bool isPlain)
 {
-    showPlainText = isPlain;
+    m_showPlainText = isPlain;
     RefreshUI();
 }
 
@@ -208,19 +204,20 @@ void QspWebBox::SetVideoFix(bool isFix)
     m_videoFix = isFix;
 }
 
-void QspWebBox::SetHead(const QString &head)
+void QspWebBox::SetHead(const QString &head, bool refresh)
 {
-    if(m_head != head)
+    if (m_head != head)
     {
         m_head = head;
         qweush.SetHead(head);
-        RefreshUI();
+        if (refresh)
+            RefreshUI();
     }
 }
 
-void QspWebBox::SetFontType(const int fontType)
+void QspWebBox::SetFontType(int fontType)
 {
-    if(m_fontType != fontType)
+    if (m_fontType != fontType)
     {
         m_fontType = fontType;
         qweush.SetFontType(fontType);
@@ -228,9 +225,9 @@ void QspWebBox::SetFontType(const int fontType)
     }
 }
 
-void QspWebBox::SetSizeType(const int sizeType)
+void QspWebBox::SetSizeType(int sizeType)
 {
-    if(m_sizeType != sizeType)
+    if (m_sizeType != sizeType)
     {
         m_sizeType = sizeType;
         qweush.SetSizeType(sizeType);
@@ -252,7 +249,7 @@ void QspWebBox::Quit()
     setPage(newpage);
     QEventLoop loop;
     connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
-    page()->load(QUrl("about:blank"));
+    page()->load(QUrl(QStringLiteral("about:blank")));
     loop.exec();
 }
 
