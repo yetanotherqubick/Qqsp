@@ -59,8 +59,6 @@ set(QQSP_MEDIA_HEADERS
 )
 
 set(QQSP_WEB_SOURCES
-    src/web/networkaccessmanager.cpp
-    src/web/reply.cpp
     src/web/webbox.cpp
     src/web/webengineurlschemehandler.cpp
     src/web/execwebengineurlschemehandler.cpp
@@ -69,8 +67,6 @@ set(QQSP_WEB_SOURCES
 )
 
 set(QQSP_WEB_HEADERS
-    src/web/qspnetworkaccessmanager.h
-    src/web/qspreply.h
     src/web/qspwebbox.h
     src/web/qspwebengineurlschemehandler.h
     src/web/qspexecwebengineurlschemehandler.h
