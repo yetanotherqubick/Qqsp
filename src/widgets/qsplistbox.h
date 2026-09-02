@@ -44,7 +44,7 @@ public:
     bool SetForegroundColor(const QColor& color);
     void SetGamePath(const QString& path) { m_path = path; }
     void SetSelection(int selection);
-    int GetSelection() { return oldSelection; }
+    int GetSelection() const { return oldSelection; }
     void SetShowPlainText(bool isPlain);
     void SetMouseTracking(bool trackMouse);
 
@@ -52,8 +52,8 @@ private:
     // Internal methods
     void createList();
     QString formatItem(int itemIndex);
-    void resizeEvent(QResizeEvent *e);
-    void mouseMoveEvent(QMouseEvent *event);
+    void resizeEvent(QResizeEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
 
     // Fields
     QString m_outFormat;
