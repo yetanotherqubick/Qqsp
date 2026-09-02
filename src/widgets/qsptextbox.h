@@ -1,7 +1,6 @@
 #ifndef QSPTEXTBOX_H
 #define QSPTEXTBOX_H
 
-#include <QWidget>
 #include <QTextBrowser>
 #include <QString>
 #include <QFont>
@@ -9,13 +8,13 @@
 #include <QImage>
 #include <QVariant>
 #include <QUrl>
-#include <QMovie>
-#include <QLabel>
 #include <QMap>
 #include <QKeyEvent>
 #include <QMutex>
 
-#include "videolabel.h"
+class QLabel;
+class QMovie;
+class VideoLabel;
 
 struct animation_gif
 {
@@ -27,10 +26,6 @@ struct animation_video
 {
     VideoLabel *videoLabel;
 };
-
-namespace Ui {
-class QspTextBox;
-}
 
 class QspTextBox : public QTextBrowser
 {
@@ -82,7 +77,6 @@ private:
 
     // Fields
     bool m_isUseHtml;
-    QString m_outFormat;
     QString m_path;
     QString m_imagePath;
     QFont m_font;
