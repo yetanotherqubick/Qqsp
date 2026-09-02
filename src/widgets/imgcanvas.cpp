@@ -18,7 +18,7 @@ QspImgCanvas::QspImgCanvas(QWidget *parent) : QWidget(parent)
     setLayout(&layout);
     label_image.setMinimumSize(50, 50);
     setMinimumSize(50, 50);
-    connect(&m_movie, SIGNAL(frameChanged(int)), this, SLOT(OnNewFrame(int)) );
+    connect(&m_movie, &QMovie::frameChanged, this, &QspImgCanvas::OnNewFrame);
 }
 
 bool QspImgCanvas::OpenFile(const QString &fileName)
@@ -93,6 +93,7 @@ void QspImgCanvas::updateImage()
 
 void QspImgCanvas::OnNewFrame(int frameNumber)
 {
+    Q_UNUSED(frameNumber);
     if (m_isAnim)
     {
         if(m_movie.isValid())

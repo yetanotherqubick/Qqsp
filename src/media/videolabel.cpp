@@ -27,7 +27,7 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
 
 //    if(mediaPlayer.error() != QMediaPlayer::InvalidMedia && vfp.error() == QAbstractVideoSurface::NoError)
 //    {
-        connect(&vfp, SIGNAL(newFrame(QImage)), this, SLOT(OnNewFrame(QImage)));
+        connect(&vfp, &VideoFrameProcessor::newFrame, this, &VideoLabel::OnNewFrame);
         m_videoError = false;
 }
 
