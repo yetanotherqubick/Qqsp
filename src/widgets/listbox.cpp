@@ -106,17 +106,17 @@ bool QspListBox::SetLinkColor(const QColor &color)
     return false;
 }
 
-QColor QspListBox::GetLinkColor()
+QColor QspListBox::GetLinkColor() const
 {
     return m_linkColor;
 }
 
-QColor QspListBox::GetBackgroundColor()
+QColor QspListBox::GetBackgroundColor() const
 {
     return m_backgroundColor;
 }
 
-QColor QspListBox::GetForegroundColor()
+QColor QspListBox::GetForegroundColor() const
 {
     return m_textColor;
 }
