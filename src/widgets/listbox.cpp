@@ -235,8 +235,7 @@ void QspListBox::createList()
         //QFontMetrics font_metrics(item_widget->font());
         //item_widget->setFixedHeight(font_metrics.height() + 4* item_widget->frameWidth());
         item_widget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
-        item_widget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
-        item_widget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
+        item_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
         item_widget->SetText(item_tmp);
 
