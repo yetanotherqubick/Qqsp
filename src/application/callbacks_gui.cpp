@@ -25,6 +25,8 @@ QString soundFilePath(const QString &gamePath, const QSP_CHAR *file)
     const QString path = QSPTools::GetCaseInsensitiveFilePath(gamePath, QSPTools::qspStrToQt(file));
     return QFileInfo(gamePath + path).absoluteFilePath();
 }
+
+constexpr auto SoundVolumeProperty = "qspBaseVolume";
 }
 
 void QSPCallBacks::Init(MainWindow *frame)
@@ -222,6 +224,7 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
     const QString strFile = soundFilePath(m_gamePath, file);
     auto *snd = new QMediaPlayer;
     snd->setMedia(QUrl::fromLocalFile(strFile));
+    snd->setProperty(SoundVolumeProperty, volume);
     snd->setVolume(volume*m_volumeCoeff);
     snd->play();
     m_sounds.insert(strFile, snd);
@@ -402,6 +405,7 @@ bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
     if (elem == m_sounds.end() || elem.value()->state() != QMediaPlayer::PlayingState)
         return false;
 
+    elem.value()->setProperty(SoundVolumeProperty, volume);
     elem.value()->setVolume(volume*m_volumeCoeff);
 	return true;
 }
@@ -416,7 +420,10 @@ void QSPCallBacks::SetOverallVolume(float coeff)
     for (auto *snd : m_sounds)
     {
         if (snd->state() == QMediaPlayer::PlayingState)
-            snd->setVolume(snd->volume()*m_volumeCoeff);
+        {
+            const int baseVolume = snd->property(SoundVolumeProperty).toInt();
+            snd->setVolume(static_cast<int>(baseVolume*m_volumeCoeff));
+        }
     }
 }
 
