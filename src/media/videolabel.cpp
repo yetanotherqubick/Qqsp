@@ -36,7 +36,7 @@ VideoLabel::~VideoLabel()
 
 }
 
-bool VideoLabel::videoError()
+bool VideoLabel::videoError() const
 {
     if(mediaPlayer.error() != QMediaPlayer::FormatError && vfp.error() == QAbstractVideoSurface::NoError)
         return false;
