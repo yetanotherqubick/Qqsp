@@ -18,12 +18,7 @@
 #include "qspinputbox.h"
 #include "qspimgcanvas.h"
 #ifdef _WEBBOX
-#include <QWebEngineProfile>
 #include "qspwebbox.h"
-#include "qspwebengineurlschemehandler.h"
-#endif
-#ifdef _WEBBOX_WEBKIT
-#include "qspwebbox_webkit.h"
 #endif
 
 #include <qsp_default.h>
@@ -41,10 +36,6 @@ class QDropEvent;
 class QKeyEvent;
 class QListWidgetItem;
 class QUrl;
-
-namespace Ui {
-class MainWindow;
-}
 
 class MainWindow : public QMainWindow
 {
@@ -136,11 +127,11 @@ private:
     void CreateDockWindows();
     void LoadSettings(QString filePath = QString());
     void SaveSettings(QString filePath = QString());
-    void closeEvent(QCloseEvent *event);
-    void keyPressEvent(QKeyEvent *event);
+    void closeEvent(QCloseEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
     void ActionsListBoxDoAction(int action);
-    void dropEvent(QDropEvent *event);
-    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event) override;
+    void dragEnterEvent(QDragEnterEvent *event) override;
 
     // Internal methods
     void UpdateTitle();
