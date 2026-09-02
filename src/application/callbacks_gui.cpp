@@ -161,8 +161,9 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 	if (isRedraw)
 	{
 		m_frame->EnableControls(false, true);
-		if (m_frame->IsQuit()) return;
-		m_frame->EnableControls(true, true);
+        const bool quitting = m_frame->IsQuit();
+        m_frame->EnableControls(true, true);
+        if (quitting) return;
 	}
     m_frame->GetGameMenu()->setEnabled(isCanSave);
 }
