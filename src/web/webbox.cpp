@@ -106,12 +106,13 @@ void QspWebBox::RefreshUI(bool isScroll)
         page()->deleteLater();
         setPage(createPage());
         auto *newPage = page();
-        connect(newPage, &QWebEnginePage::loadFinished, this,
-                [this, newPage](bool) {
-                    if (page() == newPage && !m_isQuit)
-                        newPage->triggerAction(QWebEnginePage::ReloadAndBypassCache);
-                },
-                Qt::SingleShotConnection);
+        auto connection = std::make_shared<QMetaObject::Connection>();
+        *connection = connect(newPage, &QWebEnginePage::loadFinished, this,
+                              [this, newPage, connection](bool) {
+                                  QObject::disconnect(*connection);
+                                  if (page() == newPage && !m_isQuit)
+                                      newPage->triggerAction(QWebEnginePage::ReloadAndBypassCache);
+                              });
         newPage->load(QUrl(QStringLiteral("qsp:/")));
         return;
     }
@@ -123,7 +124,7 @@ void QspWebBox::LoadBackImage(const QString &fileName)
     qweush.SetBackgroundImage(fileName);
 }
 
-void QspWebBox::SetText(const QString &text, bool isScroll, bool refresh)
+void QspWebBox::SetText(const QString& text, bool isScroll, bool refresh)
 {
     if (m_text != text)
     {
