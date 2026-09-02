@@ -16,9 +16,6 @@ class VideoLabel : public QLabel
 {
     Q_OBJECT
 
-signals:
-    void medialLoaded();
-
 public:
     explicit VideoLabel(QString path, QString filename, QWidget *parent = nullptr);
     ~VideoLabel() = default;
