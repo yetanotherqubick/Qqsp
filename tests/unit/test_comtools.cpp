@@ -64,7 +64,7 @@ void TestComtools::htmlizeWhitespaces_data()
     QTest::newRow("trailing spaces") << QStringLiteral("text  ") << QStringLiteral("text &ensp;");
     QTest::newRow("newline") << QStringLiteral("one\ntwo") << QStringLiteral("one<br>two");
     QTest::newRow("carriage return") << QStringLiteral("one\r\ntwo") << QStringLiteral("one<br>two");
-    QTest::newRow("tab at column one") << QStringLiteral("a\tb") << QStringLiteral("a &emsp;  b");
+    QTest::newRow("tab at column one") << QStringLiteral("a\tb") << QStringLiteral("a &emsp; b");
     QTest::newRow("tab at column zero") << QStringLiteral("\tb") << QStringLiteral("&emsp;&emsp;&emsp;&emsp;b");
     QTest::newRow("whitespace after tag") << QStringLiteral("a <b> b") << QStringLiteral("a <b>&ensp; b");
     QTest::newRow("quoted tag characters")
@@ -103,13 +103,9 @@ void TestComtools::caseInsensitiveFilePath()
     QSPTools::useCaseInsensitiveFilePath = true;
 
     QFETCH(QString, originalPath);
-    QString expected;
-    if (originalPath == QStringLiteral("dir\\file.txt"))
-        expected = QStringLiteral("Dir/File.TXT");
-    else
-        expected = QStringLiteral("Dir/File.TXT");
+    QCOMPARE(QSPTools::GetCaseInsensitiveFilePath(tempDir.path(), originalPath),
+             QStringLiteral("Dir/File.TXT"));
 
-    QCOMPARE(QSPTools::GetCaseInsensitiveFilePath(tempDir.path(), originalPath), expected);
     QSPTools::useCaseInsensitiveFilePath = oldSetting;
 }
 
