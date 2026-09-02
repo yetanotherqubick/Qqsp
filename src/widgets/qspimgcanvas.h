@@ -26,7 +26,7 @@ public:
     void SetGamePath(const QString& path);
 
     // Overloaded methods
-    bool SetBackgroundColor(const QColor& color) override;
+    bool SetBackgroundColor(const QColor& color);
 
 private:
     void resizeEvent(QResizeEvent *event) override;
