@@ -14,19 +14,11 @@ QspImgCanvas::QspImgCanvas(QWidget *parent) : QWidget(parent)
     layout.setContentsMargins(0,0,0,0);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     label_image.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    //label_image.setScaledContents(true);
     layout.addWidget(&label_image);
     setLayout(&layout);
     label_image.setMinimumSize(50, 50);
     setMinimumSize(50, 50);
-    //setVisible(false);
-    //setModal(false);
     connect(&m_movie, SIGNAL(frameChanged(int)), this, SLOT(OnNewFrame(int)) );
-}
-
-QspImgCanvas::~QspImgCanvas()
-{
-
 }
 
 bool QspImgCanvas::OpenFile(const QString &fileName)
@@ -50,7 +42,6 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
             }
             if (m_isAnim)
             {
-                //label_image.setMovie(&m_movie);
                 ret = true;
             }
             else
@@ -62,7 +53,6 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
             if (ret)
             {
                 updateImage();
-                //setVisible(true);
             }
             return ret;
         }
@@ -73,10 +63,6 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
 
 void QspImgCanvas::RefreshUI()
 {
-//    if (m_isAnim)
-//		m_animation->RefreshUI();
-//	else
-    //		Refresh();
 }
 
 void QspImgCanvas::SetGamePath(const QString &path)
@@ -88,8 +74,6 @@ bool QspImgCanvas::SetBackgroundColor(const QColor &color)
 {
     QString sheet = QString::fromLatin1("QLabel { background-color : %1 }").arg(color.name());
     label_image.setStyleSheet(sheet);
-    //wxWindow::SetBackgroundColor(color);
-    //m_animation->SetBackgroundColor(color);
     return true;
 }
 
@@ -101,11 +85,7 @@ void QspImgCanvas::resizeEvent(QResizeEvent *event)
 
 void QspImgCanvas::updateImage()
 {
-    if (m_isAnim)
-    {
-        //label_image.setMovie(&m_movie);
-    }
-    else if (!m_image.isNull())
+    if (!m_image.isNull())
     {
         label_image.setPixmap(m_image.scaled(label_image.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
@@ -121,18 +101,3 @@ void QspImgCanvas::OnNewFrame(int frameNumber)
         }
     }
 }
-
-//void QspImgCanvas::keyPressEvent(QKeyEvent *event)
-//{
-//    if(event->key() == Qt::Key_Escape)
-//    {
-//        setVisible(false);
-//        event->ignore();
-//    }
-//}
-
-//void QspImgCanvas::closeEvent(QCloseEvent *event)
-//{
-//    setVisible(false);
-//    event->ignore();
-//}
