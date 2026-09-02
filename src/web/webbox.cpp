@@ -1,6 +1,7 @@
 #include "qspwebbox.h"
 
 #include <QEventLoop>
+#include <QSharedPointer>
 #include <QWebChannel>
 #include <QWebEnginePage>
 #include <QWebEngineSettings>
@@ -106,7 +107,7 @@ void QspWebBox::RefreshUI(bool isScroll)
         page()->deleteLater();
         setPage(createPage());
         auto *newPage = page();
-        auto connection = std::make_shared<QMetaObject::Connection>();
+        auto connection = QSharedPointer<QMetaObject::Connection>::create();
         *connection = connect(newPage, &QWebEnginePage::loadFinished, this,
                               [this, newPage, connection](bool) {
                                   QObject::disconnect(*connection);
