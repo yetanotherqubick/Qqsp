@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+class QString;
+
 class QspWebChannel : public QObject
 {
     Q_OBJECT
