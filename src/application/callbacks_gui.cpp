@@ -194,6 +194,22 @@ void QSPCallBacks::CloseFile(const QSP_CHAR *file)
     m_sounds.clear();
 }
 
+void QSPCallBacks::UpdateSounds()
+{
+    for (auto it = m_sounds.begin(); it != m_sounds.end();)
+    {
+        if (it.value()->state() != QMediaPlayer::PlayingState)
+        {
+            delete it.value();
+            it = m_sounds.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
 void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
 {
     if (SetVolume(file, volume)) return;
@@ -204,6 +220,7 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
     snd->setVolume(volume*m_volumeCoeff);
     snd->play();
     m_sounds.insert(strFile, snd);
+    UpdateSounds();
 }
 
 void QSPCallBacks::ShowPane(int type, QSP_BOOL isShow)
