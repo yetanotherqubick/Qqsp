@@ -54,9 +54,6 @@ void QspTextBox::SetIsHtml(bool isHtml)
 
 void QspTextBox::RefreshUI(bool isScroll)
 {
-    QString color(QSPTools::GetHexColor(GetForegroundColor()));
-    //QString str(QByteArray::fromPercentEncoding(m_text.replace("%", "%25").toUtf8()));
-    //QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
     QString str = m_text;
     QString text;
     if(m_isUseHtml)
@@ -330,7 +327,6 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         if(!disableVideo)
         {
             VideoLabel *videoL = new VideoLabel(m_path, new_name, this);
-            connect(videoL, &VideoLabel::medialLoaded, this, &QspTextBox::resizeAnimations);
             animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), { videoL });
             videoL->setGeometry(0,0, 0, 0);
             videoL->raise();
