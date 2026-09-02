@@ -40,7 +40,7 @@ QspListBox::~QspListBox()
 
 void QspListBox::RefreshUI()
 {
-//	RefreshAll();
+//\tRefreshAll();
 }
 
 void QspListBox::BeginItems()
@@ -205,7 +205,6 @@ void QspListBox::createList()
         QListWidgetItem* listItem;
         listItem = new QListWidgetItem(this);
         listItem->setBackground(m_backgroundColor);
-        addItem(listItem);
         QspTextBox *item_widget;
         item_widget = new QspTextBox(this);
         //item_widget->setFrameStyle(QFrame::Box);
