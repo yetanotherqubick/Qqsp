@@ -6,8 +6,11 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QTextBlock>
+#include <QMovie>
+#include <QLabel>
 
 #include "comtools.h"
+#include "videolabel.h"
 
 QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
 {
@@ -28,12 +31,12 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &QspTextBox::resizeAnimations);
     connect(horizontalScrollBar(), &QScrollBar::valueChanged, this, &QspTextBox::resizeAnimations);
 #endif
-//	m_font = *wxNORMAL_FONT;
-//	m_outFormat = wxString::Format(
-//		wxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
-//		wxT("<BODY><FONT COLOR = #%%s>%%s</FONT></BODY></HTML>"),
-//		wxFontMapper::GetEncodingName(wxLocale::GetSystemEncoding()).wx_str()
-//	);
+//\tm_font = *wxNORMAL_FONT;
+//\tm_outFormat = wxString::Format(
+//\t\twxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
+//\t\twxT("<BODY><FONT COLOR = #%%s>%%s</FONT></BODY></HTML>"),
+//\t\twxFontMapper::GetEncodingName(wxLocale::GetSystemEncoding()).wx_str()
+//\t);
 }
 
 QspTextBox::~QspTextBox()
