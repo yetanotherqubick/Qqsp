@@ -76,8 +76,7 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
 
 void QspMsgDlg::OnLinkClicked(const QUrl &url)
 {
-    QString href;
-    href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
+    const QString href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
 
     if (href.startsWith("#"))
     {
