@@ -50,7 +50,7 @@ public:
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
     bool SetLinkColor(const QColor &color);
-    QColor GetLinkColor() { return m_linkColor; }
+    QColor GetLinkColor() const { return m_linkColor; }
     void SetGamePath(const QString& path);
     QColor GetBackgroundColor();
     QColor GetForegroundColor(); //text color
@@ -75,7 +75,7 @@ private:
 #ifndef _WEBBOX_COMMON
     void CalcImageSize();
     void paintEvent(QPaintEvent *e) override;
-    QVariant loadResource(int type, const QUrl &name);
+    QVariant loadResource(int type, const QUrl &name) override;
     void resizeEvent(QResizeEvent *e) override;
     void clearManualResources();
 #endif
