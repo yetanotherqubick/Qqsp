@@ -105,10 +105,15 @@ void QspWebBox::RefreshUI(bool isScroll)
         page()->triggerAction(QWebEnginePage::Stop);
         page()->deleteLater();
         setPage(createPage());
-        QEventLoop loop;
-        connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
-        page()->load(QUrl(QStringLiteral("qsp:/")));
-        loop.exec();
+        auto *newPage = page();
+        connect(newPage, &QWebEnginePage::loadFinished, this,
+                [this, newPage](bool) {
+                    if (page() == newPage && !m_isQuit)
+                        newPage->triggerAction(QWebEnginePage::ReloadAndBypassCache);
+                },
+                Qt::SingleShotConnection);
+        newPage->load(QUrl(QStringLiteral("qsp:/")));
+        return;
     }
     page()->triggerAction(QWebEnginePage::ReloadAndBypassCache);
 }
