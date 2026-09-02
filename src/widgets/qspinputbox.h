@@ -24,7 +24,7 @@ public:
     QString GetText();
 
 private:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
     // Fields
     QStringList m_strings;
     int m_selIndex;
