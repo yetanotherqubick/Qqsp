@@ -38,7 +38,7 @@ public:
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
     bool SetLinkColor(const QColor &color);
-    QColor GetLinkColor() { return m_linkColor; }
+    QColor GetLinkColor() const { return m_linkColor; }
     void SetGamePath(const QString& path);
     QColor GetBackgroundColor();
     QColor GetForegroundColor(); //text color
