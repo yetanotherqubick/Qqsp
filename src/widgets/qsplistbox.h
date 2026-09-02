@@ -10,10 +10,6 @@
 #include <QResizeEvent>
 #include <QMouseEvent>
 
-namespace Ui {
-class QspListBox;
-}
-
 class QspListBox : public QListWidget
 {
     Q_OBJECT
@@ -51,6 +47,7 @@ public:
 private:
     // Internal methods
     void createList();
+    void resizeItem(QListWidgetItem *listItem);
     QString formatItem(int itemIndex);
     void resizeEvent(QResizeEvent *e) override;
     void mouseMoveEvent(QMouseEvent *event) override;
