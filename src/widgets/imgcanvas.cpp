@@ -61,7 +61,7 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
             }
             if (ret)
             {
-                resizeEvent(0);
+                updateImage();
                 //setVisible(true);
             }
             return ret;
@@ -95,14 +95,19 @@ bool QspImgCanvas::SetBackgroundColor(const QColor &color)
 
 void QspImgCanvas::resizeEvent(QResizeEvent *event)
 {
+    Q_UNUSED(event);
+    updateImage();
+}
+
+void QspImgCanvas::updateImage()
+{
     if (m_isAnim)
     {
         //label_image.setMovie(&m_movie);
     }
-    else
+    else if (!m_image.isNull())
     {
-        if(!m_image.isNull())
-            label_image.setPixmap(m_image.scaled(label_image.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        label_image.setPixmap(m_image.scaled(label_image.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
     }
 }
 
