@@ -56,12 +56,13 @@ QspTextBox::~QspTextBox()
 #endif
 }
 
-void QspTextBox::SetIsHtml(bool isHtml)
+void QspTextBox::SetIsHtml(bool isHtml, bool refresh)
 {
     if (m_isUseHtml != isHtml)
     {
         m_isUseHtml = isHtml;
-        RefreshUI();
+        if (refresh)
+            RefreshUI();
     }
 }
 
@@ -90,7 +91,7 @@ void QspTextBox::RefreshUI(bool isScroll)
     if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
-void QspTextBox::SetText(const QString& text, bool isScroll)
+void QspTextBox::SetText(const QString& text, bool isScroll, bool refresh)
 {
     if (m_text != text)
     {
@@ -103,7 +104,8 @@ void QspTextBox::SetText(const QString& text, bool isScroll)
                 isScroll = false;
         }
         m_text = text;
-        RefreshUI(isScroll);
+        if (refresh)
+            RefreshUI(isScroll);
 #ifndef _WEBBOX_COMMON
         resizeAnimations();
 #endif

@@ -39,8 +39,8 @@ public:
     void RefreshUI(bool isScroll = false);
 
     // Accessors
-    void SetIsHtml(bool isHtml);
-    void SetText(const QString& text, bool isScroll = false);
+    void SetIsHtml(bool isHtml, bool refresh = true);
+    void SetText(const QString& text, bool isScroll = false, bool refresh = true);
     void SetTextFont(const QFont& new_font);
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
@@ -58,7 +58,7 @@ public:
     void SetBackgroundImage(const QImage& bmpBg);
     void LoadBackImage(const QString& fileName);
     //TODO:
-    void SetHead(const QString &head) {};
+    void SetHead(const QString &head, bool refresh = true);
     void SetFontType(const int fontType) {};
     void SetSizeType(const int sizeType) {};
     void SetCustomCSS(bool customCSS) {};
