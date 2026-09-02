@@ -23,8 +23,8 @@ public:
     explicit VideoLabel(QString path, QString filename, QWidget *parent = nullptr);
     ~VideoLabel();
     bool videoError();
-    QSize getResolution() { return vfp.mediaResolution; }
-    bool hasFrame() { return m_medialLoaded; }
+    QSize getResolution() const { return vfp.mediaResolution; }
+    bool hasFrame() const { return m_medialLoaded; }
     bool resolution_set;
 
 private:
