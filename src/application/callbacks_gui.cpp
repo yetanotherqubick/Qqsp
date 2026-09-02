@@ -90,38 +90,42 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
     }
 	m_frame->GetVars()->SetIsHtml(m_isHtml, false);
 	const bool varsChanged = QSPIsVarsDescChanged();
-	if (varsChanged)
+	if (varsChanged || isHtmlChanged)
 	{
         m_frame->EnableControls(false, true);
-        if(m_isAllowHTML5Extras)
+        if (varsChanged)
         {
-            if (QSPGetVarValues(QSP_FMT("SETSTATHEAD"), 0, &numVal, &strVal) && strVal)
-                m_frame->GetVars()->SetHead(QSPTools::qspStrToQt(strVal), false);
-            else
-                 m_frame->GetVars()->SetHead(QString(), false);
+            if(m_isAllowHTML5Extras)
+            {
+                if (QSPGetVarValues(QSP_FMT("SETSTATHEAD"), 0, &numVal, &strVal) && strVal)
+                    m_frame->GetVars()->SetHead(QSPTools::qspStrToQt(strVal), false);
+                else
+                    m_frame->GetVars()->SetHead(QString(), false);
+            }
+            m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll, false);
         }
-        m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll, false);
+        m_frame->GetVars()->RefreshUI(isScroll);
         m_frame->EnableControls(true, true);
 	}
-    if (isHtmlChanged || varsChanged)
-        m_frame->GetVars()->RefreshUI(isScroll);
 	m_frame->GetDesc()->SetIsHtml(m_isHtml, false);
     const bool mainDescChanged = QSPIsMainDescChanged();
-    if (mainDescChanged)
+    if (mainDescChanged || isHtmlChanged)
     {
         m_frame->EnableControls(false, true);
-        if(m_isAllowHTML5Extras)
+        if (mainDescChanged)
         {
-            if (QSPGetVarValues(QSP_FMT("SETMAINDESCHEAD"), 0, &numVal, &strVal) && strVal)
-                m_frame->GetDesc()->SetHead(QSPTools::qspStrToQt(strVal), false);
-            else
-                 m_frame->GetDesc()->SetHead(QString(), false);
+            if(m_isAllowHTML5Extras)
+            {
+                if (QSPGetVarValues(QSP_FMT("SETMAINDESCHEAD"), 0, &numVal, &strVal) && strVal)
+                    m_frame->GetDesc()->SetHead(QSPTools::qspStrToQt(strVal), false);
+                else
+                    m_frame->GetDesc()->SetHead(QString(), false);
+            }
+            m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll, false);
         }
-        m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll, false);
+        m_frame->GetDesc()->RefreshUI(isScroll);
         m_frame->EnableControls(true, true);
 	}
-    if (isHtmlChanged || mainDescChanged)
-        m_frame->GetDesc()->RefreshUI(isScroll);
 	m_frame->GetActions()->SetIsHtml(m_isHtml);
 	m_frame->GetActions()->SetIsShowNums(m_frame->IsShowHotkeys());
     if (QSPIsActionsChanged())
