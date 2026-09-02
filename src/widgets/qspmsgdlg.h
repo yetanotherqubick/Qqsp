@@ -30,7 +30,6 @@ public:
               bool isHtml,
               const QString& gamePath,
               QWidget *parent = 0);
-    ~QspMsgDlg();
 
 private:
     // Events
