@@ -4,8 +4,6 @@
 
 QspImgCanvas::QspImgCanvas(QWidget *parent) : QWidget(parent)
 {
-    m_posX = m_posY = 0;
-    m_isAnim = false;
     setWindowTitle(tr("Image"));
     setContentsMargins(0,0,0,0);
     label_image.setFrameStyle(QFrame::NoFrame);
