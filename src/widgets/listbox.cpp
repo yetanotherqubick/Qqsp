@@ -275,8 +275,6 @@ QString QspListBox::formatItem(int itemIndex)
             isImage = true;
         }
     }
-    QString color(QSPTools::GetHexColor(GetForegroundColor()));
-    QString formatedText;
     if (m_isShowNums && itemIndex < 9)
     {
         if (isImage)
@@ -306,54 +304,7 @@ QString QspListBox::formatItem(int itemIndex)
             return m_descs.at(itemIndex);
         }
     }
-    return formatedText;
-
-    //TODO: make this variant work
-    if(m_descs.at(itemIndex).isEmpty())
-    {
-        formatedText = "";
-    }
-    else
-    {
-        QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? m_descs.at(itemIndex) : QSPTools::ProceedAsPlain(m_descs.at(itemIndex))));
-        formatedText = QString("<div style=\"padding:0px; margin-right:4px;\">%1</div>").arg(text);
-        formatedText = m_descs.at(itemIndex);
-    }
-
-    if (m_isShowNums && itemIndex < 9)
-    {
-        if (isImage)
-        {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; margin-right:4px;\">[%2]</div><div style=\"padding:0px; margin-right:4px;\"><img src=\"%3\"></div>%4</div>")
-                    .arg(color)
-                    .arg(itemIndex+1)
-                    .arg(imgPath)
-                    .arg(formatedText);
-        }
-        else
-        {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; margin-right:4px;\">[%2]</div>%3</div>")
-                    .arg(color)
-                    .arg(itemIndex+1)
-                    .arg(formatedText);
-        }
-    }
-    else
-    {
-        if (isImage)
-        {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; margin-right:4px;\"><img src=\"%2\"></div>%3</div>")
-                    .arg(color)
-                    .arg(imgPath)
-                    .arg(formatedText);
-        }
-        else
-        {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\">%2</div>")
-                    .arg(color)
-                    .arg(formatedText);
-        }
-    }
+    return QString("");
 }
 
 void QspListBox::resizeEvent(QResizeEvent *e)
