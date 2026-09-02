@@ -24,7 +24,7 @@ class QspWebBox : public QWebEngineView
     Q_OBJECT
 
 public:
-    explicit QspWebBox(QWidget *parent = 0);
+    explicit QspWebBox(QWidget *parent = nullptr);
     ~QspWebBox();
 
     // Methods
