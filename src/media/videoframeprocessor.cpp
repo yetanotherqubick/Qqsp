@@ -6,15 +6,9 @@
 
 VideoFrameProcessor::VideoFrameProcessor(QObject *parent) : QAbstractVideoSurface(parent)
 {
-    hasFrame = false;
 //    timer.setSingleShot(true);
 //    connect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
 //    timer.start(10000);
-}
-
-VideoFrameProcessor::~VideoFrameProcessor()
-{
-
 }
 
 bool VideoFrameProcessor::present(const QVideoFrame &frame)

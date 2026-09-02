@@ -4,6 +4,7 @@
 #include <QBuffer>
 #include <QUrl>
 #include <QMessageBox>
+#include <QTimer>
 
 #include <qsp_default.h>
 #include "callbacks_gui.h"
@@ -17,7 +18,7 @@ QspExecWebEngineUrlSchemeHandler::QspExecWebEngineUrlSchemeHandler(QObject *pare
 void QspExecWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *request)
 {
     url = request->requestUrl();
-    QTimer::singleShot(0, this, SLOT(QspLinkClicked()));
+    QTimer::singleShot(0, this, &QspExecWebEngineUrlSchemeHandler::QspLinkClicked);
 }
 
 void QspExecWebEngineUrlSchemeHandler::QspLinkClicked()

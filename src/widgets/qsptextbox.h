@@ -52,8 +52,8 @@ public:
     bool SetLinkColor(const QColor &color);
     QColor GetLinkColor() const { return m_linkColor; }
     void SetGamePath(const QString& path);
-    QColor GetBackgroundColor();
-    QColor GetForegroundColor(); //text color
+    QColor GetBackgroundColor() const;
+    QColor GetForegroundColor() const; //text color
     bool SetBackgroundColor(const QColor& color);
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);

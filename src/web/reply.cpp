@@ -9,7 +9,6 @@
 
 QspReply::QspReply(const QUrl &url, const QString &_text, bool _isUseHtml, const QString &_path, const QColor &_linkColor, const QColor &_backColor, const QColor &_fontColor, const QString &_bmpBg, const QFont &_font)
 {
-    offset = 0;
     m_text = _text;
     m_path = _path;
     m_bmpBg = _bmpBg;
@@ -65,7 +64,6 @@ QspReply::QspReply(const QUrl &url, const QString &_text, bool _isUseHtml, const
             content = file.readAll();
             setHeader(QNetworkRequest::ContentTypeHeader, QVariant(type.name().toUtf8()));
         }
-        file.close();
     }
     setHeader(QNetworkRequest::ContentLengthHeader, QVariant(content.size()));
     QTimer::singleShot(0, this, &QspReply::readyRead);

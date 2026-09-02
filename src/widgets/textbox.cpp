@@ -135,13 +135,13 @@ void QspTextBox::SetGamePath(const QString &path)
 }
 
 //Returns the background color of the window.
-QColor QspTextBox::GetBackgroundColor()
+QColor QspTextBox::GetBackgroundColor() const
 {
     return m_backColor;
 }
 
-//The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
-QColor QspTextBox::GetForegroundColor()
+//The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change its colour only partially or even not at all.
+QColor QspTextBox::GetForegroundColor() const
 {
     return m_fontColor;
 }

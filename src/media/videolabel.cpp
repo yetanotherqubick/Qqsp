@@ -11,24 +11,14 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
     setScaledContents(true);
     setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     setAttribute(Qt::WA_TransparentForMouseEvents);
-    resolution_set = false;
-    m_medialLoaded = false;
 
     playlist.setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
     playlist.addMedia(QUrl::fromLocalFile(m_path + m_filename));
     mediaPlayer.setPlaylist(&playlist);
     mediaPlayer.setVideoOutput(&vfp);
     mediaPlayer.play();
-//    while(!vfp.hasFrame && mediaPlayer.error() != QMediaPlayer::InvalidMedia && vfp.error() == QAbstractVideoSurface::NoError)
-//    {
-//        QCoreApplication::processEvents();
-//        //QThread::msleep(4);
-//    }
 
-//    if(mediaPlayer.error() != QMediaPlayer::InvalidMedia && vfp.error() == QAbstractVideoSurface::NoError)
-//    {
-        connect(&vfp, &VideoFrameProcessor::newFrame, this, &VideoLabel::OnNewFrame);
-        m_videoError = false;
+    connect(&vfp, &VideoFrameProcessor::newFrame, this, &VideoLabel::OnNewFrame);
 }
 
 bool VideoLabel::videoError() const

@@ -20,14 +20,14 @@ signals:
     void newFrame(QImage);
 
 public:
-    explicit VideoFrameProcessor(QObject *parent = 0);
-    ~VideoFrameProcessor();
+    explicit VideoFrameProcessor(QObject *parent = nullptr);
+    ~VideoFrameProcessor() = default;
     bool present(const QVideoFrame& frame);
     QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const;
     bool isFormatSupported(const QVideoSurfaceFormat &format) const;
     //QImage curFrame;
     QSize mediaResolution;
-    bool hasFrame;
+    bool hasFrame = false;
 //    QTimer timer;
 private:
 

@@ -44,16 +44,11 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
     page()->deleteLater();
     setPage(newpage);
-    connect(&qeweush, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnQspLinkClicked(QUrl)));
+    connect(&qeweush, &QspExecWebEngineUrlSchemeHandler::qspLinkClicked, this, &QspWebBox::OnQspLinkClicked);
     QEventLoop loop;
-    connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
     page()->load(QUrl("qsp:/"));
     loop.exec();
-}
-
-QspWebBox::~QspWebBox()
-{
-
 }
 
 void QspWebBox::SetIsHtml(bool isHtml)
@@ -144,7 +139,7 @@ void QspWebBox::RefreshUI(bool isScroll)
         newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
         setPage(newpage);
         QEventLoop loop;
-        connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+        connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
         page()->load(QUrl("qsp:/"));
         loop.exec();
     }
@@ -213,13 +208,13 @@ void QspWebBox::SetGamePath(const QString &path)
 }
 
 //Returns the background color of the window.
-QColor QspWebBox::GetBackgroundColor()
+QColor QspWebBox::GetBackgroundColor() const
 {
     return m_backColor;
 }
 
 //The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
-QColor QspWebBox::GetForegroundColor()
+QColor QspWebBox::GetForegroundColor() const
 {
     return m_fontColor;
 }
@@ -303,7 +298,7 @@ void QspWebBox::Quit()
     QWebEnginePage * newpage = new QWebEnginePage(this);
     setPage(newpage);
     QEventLoop loop;
-    connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
     page()->load(QUrl("about:blank"));
     loop.exec();
 }

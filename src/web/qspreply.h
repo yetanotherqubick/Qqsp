@@ -12,15 +12,15 @@ class QspReply : public QNetworkReply
 
 public:
     QspReply(const QUrl &url, const QString  &_text, bool _isUseHtml, const QString &_path, const QColor &_linkColor, const QColor &_backColor, const QColor &_fontColor, const QString &_bmpBg, const QFont &_font);
-    void abort();
-    qint64 bytesAvailable() const;
-    bool isSequential() const;
+    void abort() override;
+    qint64 bytesAvailable() const override;
+    bool isSequential() const override;
 
 protected:
-    qint64 readData(char *data, qint64 maxSize);
+    qint64 readData(char *data, qint64 maxSize) override;
 
     QByteArray content;
-    qint64 offset;
+    qint64 offset = 0;
 
     QString  m_text;
     QString m_path;

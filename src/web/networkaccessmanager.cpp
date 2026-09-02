@@ -9,11 +9,6 @@ QspNetworkAccessManager::QspNetworkAccessManager(QNetworkAccessManager *oldManag
     //setProxyFactory(oldManager->proxyFactory());
 }
 
-QspNetworkAccessManager::~QspNetworkAccessManager()
-{
-
-}
-
 void QspNetworkAccessManager::SetPlainText(const QString &text)
 {
     m_isUseHtml = false;

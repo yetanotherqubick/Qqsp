@@ -11,8 +11,8 @@ class QspNetworkAccessManager : public QNetworkAccessManager
     Q_OBJECT
 
 public:
-    QspNetworkAccessManager(QNetworkAccessManager *oldManager, QObject *parent = 0);
-    ~QspNetworkAccessManager();
+    QspNetworkAccessManager(QNetworkAccessManager *oldManager, QObject *parent = nullptr);
+    ~QspNetworkAccessManager() = default;
     void SetPlainText(const QString& text);
     void SetHtml(const QString& text);
     void SetGamePath(const QString &path);
@@ -23,7 +23,7 @@ public:
     void SetTextFont(const QFont& new_font);
 
 protected:
-    QNetworkReply *createRequest(Operation operation, const QNetworkRequest &request, QIODevice *device);
+    QNetworkReply *createRequest(Operation operation, const QNetworkRequest &request, QIODevice *device) override;
 
 private:
     QString  m_text;
