@@ -14,11 +14,6 @@ QspMsgDlg::QspMsgDlg(QWidget *parent) : QDialog(parent)
 
 }
 
-QspMsgDlg::~QspMsgDlg()
-{
-
-}
-
 QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *parent) : QDialog(parent) {
     setWindowTitle(caption);
     sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
