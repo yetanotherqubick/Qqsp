@@ -5,11 +5,6 @@ QspInputBox::QspInputBox(QWidget *parent) : QPlainTextEdit(parent)
     m_selIndex = -1;
 }
 
-QspInputBox::~QspInputBox()
-{
-
-}
-
 void QspInputBox::SetText(const QString& text)
 {
     bool oldState = blockSignals(true);
