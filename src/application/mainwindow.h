@@ -20,7 +20,6 @@
 #ifdef _WEBBOX
 #include <QWebEngineProfile>
 #include "qspwebbox.h"
-#include "qspwebengineurlrequestinterceptor.h"
 #include "qspwebengineurlschemehandler.h"
 #endif
 #ifdef _WEBBOX_WEBKIT
