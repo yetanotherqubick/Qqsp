@@ -2,6 +2,7 @@
 
 #include <QWebEngineSettings>
 #include <QEventLoop>
+#include <QWebChannel>
 
 #include "comtools.h"
 
