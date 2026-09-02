@@ -33,6 +33,7 @@ public:
 
 private:
     void resizeEvent(QResizeEvent *event);
+    void updateImage();
     // Fields
     bool m_isAnim;
     QPixmap m_image;
