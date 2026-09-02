@@ -6,7 +6,6 @@
 #include <QString>
 #include <QFont>
 #include <QColor>
-#include <QVariant>
 #include <QUrl>
 #include <QWebChannel>
 #include <QWebEngineProfile>
@@ -14,10 +13,6 @@
 #include "qspwebengineurlschemehandler.h"
 #include "qspexecwebengineurlschemehandler.h"
 #include "qspwebchannel.h"
-
-namespace Ui {
-class QspWebBox;
-}
 
 class QspWebBox : public QWebEngineView
 {
@@ -27,11 +22,9 @@ public:
     explicit QspWebBox(QWidget *parent = nullptr);
     ~QspWebBox() = default;
 
-    // Methods
     void RefreshUI(bool isScroll = false);
     void LoadBackImage(const QString& fileName);
 
-    // Accessors
     void SetIsHtml(bool isHtml);
     void SetText(const QString& text, bool isScroll = false);
     void SetTextFont(const QFont& new_font);
@@ -41,7 +34,7 @@ public:
     QColor GetLinkColor() const { return m_linkColor; }
     void SetGamePath(const QString& path);
     QColor GetBackgroundColor() const;
-    QColor GetForegroundColor() const; //text color
+    QColor GetForegroundColor() const;
     bool SetBackgroundColor(const QColor& color);
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
@@ -53,16 +46,11 @@ public:
     void Quit();
 
 private:
-    // Fields
     bool m_isUseHtml;
-    QString m_outFormat;
     QString m_path;
-    QString m_imagePath;
     QFont m_font;
     QString m_text;
     QString m_head;
-    int m_posX;
-    int m_posY;
     QColor m_linkColor;
     QColor m_backColor;
     QColor m_fontColor;

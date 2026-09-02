@@ -62,7 +62,6 @@ set(QQSP_WEB_SOURCES
     src/web/networkaccessmanager.cpp
     src/web/reply.cpp
     src/web/webbox.cpp
-    src/web/webengineurlrequestinterceptor.cpp
     src/web/webengineurlschemehandler.cpp
     src/web/execwebengineurlschemehandler.cpp
     src/web/webchannel.cpp
@@ -73,7 +72,6 @@ set(QQSP_WEB_HEADERS
     src/web/qspnetworkaccessmanager.h
     src/web/qspreply.h
     src/web/qspwebbox.h
-    src/web/qspwebengineurlrequestinterceptor.h
     src/web/qspwebengineurlschemehandler.h
     src/web/qspexecwebengineurlschemehandler.h
     src/web/qspwebchannel.h

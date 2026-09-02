@@ -25,7 +25,6 @@ public:
     bool videoError() const;
     QSize getResolution() const { return vfp.mediaResolution; }
     bool hasFrame() const { return m_medialLoaded; }
-    bool resolution_set = false;
 
 private:
     QString m_path;
@@ -33,7 +32,6 @@ private:
     VideoFrameProcessor vfp;
     QMediaPlayer mediaPlayer;
     QMediaPlaylist playlist;
-    bool m_videoError = false;
     bool m_medialLoaded = false;
     QMutex mutex;
 

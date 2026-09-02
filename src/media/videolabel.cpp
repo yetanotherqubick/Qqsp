@@ -1,8 +1,6 @@
 #include "videolabel.h"
 
 #include <QUrl>
-//#include <QCoreApplication>
-//#include <QThread>
 
 VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel(parent)
 {
