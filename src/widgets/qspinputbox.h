@@ -18,7 +18,7 @@ signals:
    void InputTextEnter();
 
 public:
-    explicit QspInputBox(QWidget *parent = 0);
+    explicit QspInputBox(QWidget *parent = nullptr);
     // Accessors
     void SetText(const QString& text);
     QString GetText();

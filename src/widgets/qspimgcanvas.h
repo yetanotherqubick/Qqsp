@@ -18,7 +18,7 @@ class QspImgCanvas : public QWidget
     Q_OBJECT
 
 public:
-    explicit QspImgCanvas(QWidget *parent = 0);
+    explicit QspImgCanvas(QWidget *parent = nullptr);
 
     // Methods
     bool OpenFile(const QString& fileName);

@@ -20,7 +20,7 @@ signals:
     void medialLoaded();
 
 public:
-    explicit VideoLabel(QString path, QString filename, QWidget *parent = 0);
+    explicit VideoLabel(QString path, QString filename, QWidget *parent = nullptr);
     ~VideoLabel();
     bool videoError();
     QSize getResolution() { return vfp.mediaResolution; }
