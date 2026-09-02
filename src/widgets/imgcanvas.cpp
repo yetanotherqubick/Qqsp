@@ -33,7 +33,7 @@ QspImgCanvas::~QspImgCanvas()
 
 bool QspImgCanvas::OpenFile(const QString &fileName)
 {
-    bool ret;
+    bool ret = false;
     QFileInfo file(m_path + fileName);
     QString path(file.absoluteFilePath());
     setWindowTitle(path);
