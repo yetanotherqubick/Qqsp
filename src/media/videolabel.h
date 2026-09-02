@@ -30,6 +30,7 @@ private:
     QMediaPlayer mediaPlayer;
     QMediaPlaylist playlist;
     bool m_medialLoaded = false;
+    bool resolution_set = false;
     QMutex mutex;
 
 private slots:
