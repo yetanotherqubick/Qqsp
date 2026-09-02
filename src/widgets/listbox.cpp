@@ -151,18 +151,18 @@ void QspListBox::SetSelection(int selection)
     if(selection != oldSelection)
     {
         if(selection >= 0 && selection < count())
-            if(item(selection) != 0)
+            if(item(selection) != nullptr)
                 scrollToItem(item(selection));
         if(selection != -1)
         {
             QListWidgetItem *curItem =item(selection);
-            if (curItem != 0)
+            if (curItem != nullptr)
                 qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
         }
         if(oldSelection != -1)
         {
             QListWidgetItem *curItem =item(oldSelection);
-            if (curItem != 0)
+            if (curItem != nullptr)
                 qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
         }
         oldSelection = selection;
@@ -246,7 +246,7 @@ void QspListBox::createList()
     if(oldSelection != -1)
     {
         QListWidgetItem *curItem =item(oldSelection);
-        if (curItem != 0)
+        if (curItem != nullptr)
             qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
     }
     adjustSize();
@@ -307,10 +307,10 @@ void QspListBox::resizeEvent(QResizeEvent *e)
     for(int i = 0; i<count(); i++)
     {
         QListWidgetItem* listItem = item(i);
-        if(listItem != 0)
+        if(listItem != nullptr)
         {
             QspTextBox *item_widget = qobject_cast<QspTextBox*>(itemWidget(listItem));
-            if(item_widget != 0)
+            if(item_widget != nullptr)
             {
                 item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
                 QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
@@ -326,7 +326,7 @@ void QspListBox::mouseMoveEvent(QMouseEvent *event)
     if(m_mouseTracking)
     {
         QListWidgetItem *curItem = itemAt(event->pos());
-        if (curItem != 0)
+        if (curItem != nullptr)
         {
             SetSelection(row(curItem));
         }
