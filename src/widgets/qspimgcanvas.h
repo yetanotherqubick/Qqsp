@@ -7,8 +7,6 @@
 #include <QColor>
 #include <QPixmap>
 #include <QVBoxLayout>
-#include <QKeyEvent>
-#include <QCloseEvent>
 #include <QMovie>
 
 namespace Ui {
@@ -21,7 +19,6 @@ class QspImgCanvas : public QWidget
 
 public:
     explicit QspImgCanvas(QWidget *parent = 0);
-    ~QspImgCanvas();
 
     // Methods
     bool OpenFile(const QString& fileName);
