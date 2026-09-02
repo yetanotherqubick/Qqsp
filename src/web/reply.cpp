@@ -68,8 +68,8 @@ QspReply::QspReply(const QUrl &url, const QString &_text, bool _isUseHtml, const
         file.close();
     }
     setHeader(QNetworkRequest::ContentLengthHeader, QVariant(content.size()));
-    QTimer::singleShot(0, this, SLOT(readyRead()));
-    QTimer::singleShot(0, this, SLOT(finished()));
+    QTimer::singleShot(0, this, &QspReply::readyRead);
+    QTimer::singleShot(0, this, &QspReply::finished);
     //emit readyRead();
     //emit finished();
 }
