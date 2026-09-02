@@ -12,10 +12,8 @@ QspImgCanvas::QspImgCanvas(QWidget *parent) : QWidget(parent)
     label_image.setFrameShadow(QFrame::Plain);
     label_image.setContentsMargins(0,0,0,0);
     layout.setContentsMargins(0,0,0,0);
-    sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
-    sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    label_image.sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
-    label_image.sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
+    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    label_image.setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     //label_image.setScaledContents(true);
     layout.addWidget(&label_image);
     setLayout(&layout);
