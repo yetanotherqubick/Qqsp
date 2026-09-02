@@ -31,11 +31,6 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
         m_videoError = false;
 }
 
-VideoLabel::~VideoLabel()
-{
-
-}
-
 bool VideoLabel::videoError() const
 {
     if(mediaPlayer.error() != QMediaPlayer::FormatError && vfp.error() == QAbstractVideoSurface::NoError)

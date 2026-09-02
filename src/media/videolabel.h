@@ -21,7 +21,7 @@ signals:
 
 public:
     explicit VideoLabel(QString path, QString filename, QWidget *parent = nullptr);
-    ~VideoLabel();
+    ~VideoLabel() = default;
     bool videoError() const;
     QSize getResolution() const { return vfp.mediaResolution; }
     bool hasFrame() const { return m_medialLoaded; }
