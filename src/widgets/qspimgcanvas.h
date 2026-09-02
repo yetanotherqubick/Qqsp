@@ -26,20 +26,20 @@ public:
     void SetGamePath(const QString& path);
 
     // Overloaded methods
-    virtual bool SetBackgroundColor(const QColor& color);
+    bool SetBackgroundColor(const QColor& color);
 
 private:
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
     void updateImage();
     // Fields
-    bool m_isAnim;
+    bool m_isAnim = false;
     QPixmap m_image;
     QMovie m_movie;
     QLabel label_image;
     QVBoxLayout layout;
     QString m_path;
-    int m_posX;
-    int m_posY;
+    int m_posX = 0;
+    int m_posY = 0;
 private slots:
     void OnNewFrame(int frameNumber);
 };

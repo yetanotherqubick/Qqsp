@@ -6,8 +6,11 @@
 #include <QScrollBar>
 #include <QPainter>
 #include <QTextBlock>
+#include <QMovie>
+#include <QLabel>
 
 #include "comtools.h"
+#include "videolabel.h"
 
 QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
 {
@@ -25,15 +28,9 @@ QspTextBox::QspTextBox(QWidget *parent) : QTextBrowser(parent)
     m_font = font();
     setOpenLinks(false);
 #ifndef _WEBBOX_COMMON
-    connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
-    connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(resizeAnimations()) );
+    connect(verticalScrollBar(), &QScrollBar::valueChanged, this, &QspTextBox::resizeAnimations);
+    connect(horizontalScrollBar(), &QScrollBar::valueChanged, this, &QspTextBox::resizeAnimations);
 #endif
-//	m_font = *wxNORMAL_FONT;
-//	m_outFormat = wxString::Format(
-//		wxT("<HTML><META HTTP-EQUIV = \"Content-Type\" CONTENT = \"text/html; charset=%s\">")
-//		wxT("<BODY><FONT COLOR = #%%s>%%s</FONT></BODY></HTML>"),
-//		wxFontMapper::GetEncodingName(wxLocale::GetSystemEncoding()).wx_str()
-//	);
 }
 
 QspTextBox::~QspTextBox()
@@ -54,9 +51,6 @@ void QspTextBox::SetIsHtml(bool isHtml)
 
 void QspTextBox::RefreshUI(bool isScroll)
 {
-    QString color(QSPTools::GetHexColor(GetForegroundColor()));
-    //QString str(QByteArray::fromPercentEncoding(m_text.replace("%", "%25").toUtf8()));
-    //QString text(QSPTools::HtmlizeWhitespaces(m_isUseHtml ? str : QSPTools::ProceedAsPlain(str)));
     QString str = m_text;
     QString text;
     if(m_isUseHtml)
@@ -135,13 +129,13 @@ void QspTextBox::SetGamePath(const QString &path)
 }
 
 //Returns the background color of the window.
-QColor QspTextBox::GetBackgroundColor()
+QColor QspTextBox::GetBackgroundColor() const
 {
     return m_backColor;
 }
 
-//The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
-QColor QspTextBox::GetForegroundColor()
+//The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change its colour only partially or even not at all.
+QColor QspTextBox::GetForegroundColor() const
 {
     return m_fontColor;
 }
@@ -166,7 +160,7 @@ bool QspTextBox::SetForegroundColor(const QColor &color)
 {
     //TODO: find alternative
     //NOTE: From Qt documentation
-    //Warning: Do not use this function (void 	setPalette(const QPalette &)) in conjunction with Qt Style Sheets.
+    //Warning: Do not use this function (void \tsetPalette(const QPalette &)) in conjunction with Qt Style Sheets.
     if(m_fontColor != color)
     {
         m_fontColor = color;
@@ -274,15 +268,15 @@ void QspTextBox::clearManualResources()
 {
     for(auto animationsItem : animations_gif)
     {
-        if(animationsItem.movie != 0)
+        if(animationsItem.movie != nullptr)
             delete animationsItem.movie;
-        if(animationsItem.movieLabel != 0)
+        if(animationsItem.movieLabel != nullptr)
             delete animationsItem.movieLabel;
     }
     animations_gif.clear();
     for(auto animationsItem : animations_video)
     {
-        if(animationsItem.videoLabel != 0)
+        if(animationsItem.videoLabel != nullptr)
             delete animationsItem.videoLabel;
     }
     animations_video.clear();
@@ -302,8 +296,8 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
             videoL->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
             videoL->setAttribute(Qt::WA_TransparentForMouseEvents);
             videoL->setMovie(movie);
-            connect(movie, SIGNAL(started()), this, SLOT(resizeAnimations()));
-            connect(movie, SIGNAL(finished()), this, SLOT(resizeAnimations()));
+            connect(movie, &QMovie::started, this, &QspTextBox::resizeAnimations);
+            connect(movie, &QMovie::finished, this, &QspTextBox::resizeAnimations);
             movie->start();
             videoL->raise();
             videoL->show();
@@ -316,9 +310,9 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         }
         else
         {
-            if(movie != 0)
+            if(movie != nullptr)
                 delete movie;
-            if(videoL != 0)
+            if(videoL != nullptr)
                 delete videoL;
             QImage image(1, 1, QImage::Format_ARGB32);
             image.fill(qRgba(0,0,0,0));
@@ -330,7 +324,6 @@ QVariant QspTextBox::loadResource(int type, const QUrl &name)
         if(!disableVideo)
         {
             VideoLabel *videoL = new VideoLabel(m_path, new_name, this);
-            connect(videoL, SIGNAL(medialLoaded()), this, SLOT(resizeAnimations()));
             animations_video.insert(QString(QByteArray::fromPercentEncoding(name.toString().toUtf8())), { videoL });
             videoL->setGeometry(0,0, 0, 0);
             videoL->raise();
@@ -378,7 +371,7 @@ void QspTextBox::resizeAnimations()
                             else
                             if (animations_video.contains(it.fragment().charFormat().toImageFormat().name()))
                             {
-                                if(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel != 0)
+                                if(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel != nullptr)
                                 {
                                     if(animations_video[it.fragment().charFormat().toImageFormat().name()].videoLabel->hasFrame())
                                     {

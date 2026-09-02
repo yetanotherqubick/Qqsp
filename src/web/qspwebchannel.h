@@ -2,6 +2,7 @@
 #define QSPWEBCHANNEL_H
 
 #include <QObject>
+#include <QString>
 
 class QspWebChannel : public QObject
 {

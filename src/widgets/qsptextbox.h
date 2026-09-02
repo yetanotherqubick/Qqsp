@@ -1,7 +1,6 @@
 #ifndef QSPTEXTBOX_H
 #define QSPTEXTBOX_H
 
-#include <QWidget>
 #include <QTextBrowser>
 #include <QString>
 #include <QFont>
@@ -9,13 +8,13 @@
 #include <QImage>
 #include <QVariant>
 #include <QUrl>
-#include <QMovie>
-#include <QLabel>
 #include <QMap>
 #include <QKeyEvent>
 #include <QMutex>
 
-#include "videolabel.h"
+class QLabel;
+class QMovie;
+class VideoLabel;
 
 struct animation_gif
 {
@@ -27,10 +26,6 @@ struct animation_video
 {
     VideoLabel *videoLabel;
 };
-
-namespace Ui {
-class QspTextBox;
-}
 
 class QspTextBox : public QTextBrowser
 {
@@ -50,15 +45,15 @@ public:
     QFont GetTextFont() const { return m_font; }
     QString GetText() const { return m_text; }
     bool SetLinkColor(const QColor &color);
-    QColor GetLinkColor() { return m_linkColor; }
+    QColor GetLinkColor() const { return m_linkColor; }
     void SetGamePath(const QString& path);
-    QColor GetBackgroundColor();
-    QColor GetForegroundColor(); //text color
+    QColor GetBackgroundColor() const;
+    QColor GetForegroundColor() const; //text color
     bool SetBackgroundColor(const QColor& color);
     bool SetForegroundColor(const QColor& color);
     void SetShowPlainText(bool isPlain);
     void SetDisableVideo(bool isDisableVideo) { disableVideo = isDisableVideo; }
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
 #ifndef _WEBBOX_COMMON
     void SetBackgroundImage(const QImage& bmpBg);
     void LoadBackImage(const QString& fileName);
@@ -71,18 +66,17 @@ public:
 
 private:
     // Internal methods
-    void wheelEvent(QWheelEvent *e);
+    void wheelEvent(QWheelEvent *e) override;
 #ifndef _WEBBOX_COMMON
     void CalcImageSize();
-    void paintEvent(QPaintEvent *e);
-    QVariant loadResource(int type, const QUrl &name);
-    void resizeEvent(QResizeEvent *e);
+    void paintEvent(QPaintEvent *e) override;
+    QVariant loadResource(int type, const QUrl &name) override;
+    void resizeEvent(QResizeEvent *e) override;
     void clearManualResources();
 #endif
 
     // Fields
     bool m_isUseHtml;
-    QString m_outFormat;
     QString m_path;
     QString m_imagePath;
     QFont m_font;

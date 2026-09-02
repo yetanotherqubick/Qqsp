@@ -1,17 +1,11 @@
 #include "comtools.h"
 
-#include <QCoreApplication>
 #include <QDir>
 #include <QDirIterator>
 
 QHash<QString, QString> QSPTools::file_list;
 QString QSPTools::file_path;
 bool QSPTools::useCaseInsensitiveFilePath = true;
-
-QString QSPTools::GetHexColor(const QColor &color)
-{
-    return QString("%1%2%3").arg(color.red(), 2, 16, QLatin1Char('0')).arg(color.green(), 2, 16, QLatin1Char('0')).arg(color.blue(), 2, 16, QLatin1Char('0'));
-}
 
 QString QSPTools::HtmlizeWhitespaces(const QString &str)
 {
@@ -132,11 +126,6 @@ QString QSPTools::ProceedAsPlain(const QString &str)
             out.append(ch);
     }
     return out;
-}
-
-QString QSPTools::GetAppPath()
-{
-    return QCoreApplication::applicationDirPath();
 }
 
 QString QSPTools::GetCaseInsensitiveFilePath(QString searchDir, QString originalPath)

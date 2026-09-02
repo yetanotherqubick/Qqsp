@@ -1,18 +1,18 @@
 #include "qspinputbox.h"
 
-QspInputBox::QspInputBox(QWidget *parent) : QPlainTextEdit(parent)
+#include <QSignalBlocker>
+
+QspInputBox::QspInputBox(QWidget *parent) : QPlainTextEdit(parent), m_selIndex(-1)
 {
-    m_selIndex = -1;
 }
 
 void QspInputBox::SetText(const QString& text)
 {
-    bool oldState = blockSignals(true);
+    const QSignalBlocker signalBlocker(this);
     setPlainText(text);
-    blockSignals(oldState);
 }
 
-QString QspInputBox::GetText()
+QString QspInputBox::GetText() const
 {
     return toPlainText();
 }

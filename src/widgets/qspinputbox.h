@@ -21,10 +21,10 @@ public:
     explicit QspInputBox(QWidget *parent = nullptr);
     // Accessors
     void SetText(const QString& text);
-    QString GetText();
+    QString GetText() const;
 
 private:
-    void keyPressEvent(QKeyEvent *event);
+    void keyPressEvent(QKeyEvent *event) override;
     // Fields
     QStringList m_strings;
     int m_selIndex;

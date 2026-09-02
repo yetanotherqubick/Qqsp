@@ -13,8 +13,8 @@ class QspWebEngineUrlSchemeHandler : public QWebEngineUrlSchemeHandler
     Q_OBJECT
 
 public:
-    explicit QspWebEngineUrlSchemeHandler(QObject *parent = 0);
-    void requestStarted(QWebEngineUrlRequestJob *request);
+    explicit QspWebEngineUrlSchemeHandler(QObject *parent = nullptr);
+    void requestStarted(QWebEngineUrlRequestJob *request) override;
     void SetPlainText(const QString& text);
     void SetHtml(const QString& text);
     void SetGamePath(const QString &path);

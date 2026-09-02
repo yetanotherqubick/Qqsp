@@ -18,11 +18,11 @@ QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *paren
     setWindowTitle(caption);
     sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    connect(&m_desc, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+    connect(&m_desc, &QTextBrowser::anchorClicked, this, &QspMsgDlg::OnLinkClicked);
     m_desc.setHtml(text);
     m_desc.sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     m_desc.sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    connect(&okButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(&okButton, &QPushButton::clicked, this, &QDialog::close);
     okButton.setGeometry(QRect(10, 130, 100, 20));
     okButton.setText(tr("OK"));
     m_desc.document()->setTextWidth(400);
@@ -58,7 +58,7 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
     m_desc.sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     m_desc.sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    connect(&okButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(&okButton, &QPushButton::clicked, this, &QDialog::close);
     okButton.setGeometry(QRect(10, 130, 100, 20));
     okButton.setText("OK");
     okButton.setDefault(true);
@@ -76,8 +76,7 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
 
 void QspMsgDlg::OnLinkClicked(const QUrl &url)
 {
-    QString href;
-    href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
+    const QString href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
 
     if (href.startsWith("#"))
     {
@@ -87,7 +86,7 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
     {
         QString string = href.mid(5);
         if (!QSPExecString(qspStringFromQString(string), QSP_TRUE))
-            if(this->parent() != 0)
+            if(this->parent() != nullptr)
                 if(this->parent()->objectName() == QStringLiteral("MainWindow"))
                     qobject_cast<MainWindow*>(this->parent())->ShowError(); //TODO: replace with signal
     }

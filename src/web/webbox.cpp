@@ -1,17 +1,10 @@
 #include "qspwebbox.h"
 
-#include <QFileInfo>
-#include <QPalette>
-#include <QAbstractScrollArea>
-#include <QScrollBar>
-#include <QPainter>
 #include <QWebEngineSettings>
-//#include <QTimer>
 #include <QEventLoop>
+#include <QWebChannel>
 
 #include "comtools.h"
-
-//#include "qspwebengineurlrequestinterceptor.h"
 
 QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
 {
@@ -20,22 +13,17 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     setFocusPolicy(Qt::NoFocus);
     settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
     settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
-    //setFrameStyle(QFrame::NoFrame);
-    //setFrameShadow(QFrame::Plain);
-    setContextMenuPolicy( Qt::NoContextMenu );
-    setContentsMargins(0,0,0,0);
+    setContextMenuPolicy(Qt::NoContextMenu);
+    setContentsMargins(0, 0, 0, 0);
     m_isUseHtml = false;
     showPlainText = false;
     m_videoFix = true;
     m_font = font();
-    //setOpenLinks(false);
-    //QspWebEngineUrlRequestInterceptor *qwuri = new QspWebEngineUrlRequestInterceptor(this);
-    //profile->setRequestInterceptor(qwuri);
     profile.installUrlSchemeHandler(QByteArray("qsp"), &qweush);
     profile.installUrlSchemeHandler(QByteArray("exec"), &qeweush);
     page()->triggerAction(QWebEnginePage::Stop);
     page()->deleteLater();
-    QWebEnginePage * newpage = new QWebEnginePage(&profile, this);
+    QWebEnginePage *newpage = new QWebEnginePage(&profile, this);
     QWebChannel *channel = new QWebChannel(newpage);
     channel->registerObject(QStringLiteral("qsp"), &qspJS);
     newpage->setWebChannel(channel);
@@ -44,16 +32,11 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
     page()->deleteLater();
     setPage(newpage);
-    connect(&qeweush, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnQspLinkClicked(QUrl)));
+    connect(&qeweush, &QspExecWebEngineUrlSchemeHandler::qspLinkClicked, this, &QspWebBox::OnQspLinkClicked);
     QEventLoop loop;
-    connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
     page()->load(QUrl("qsp:/"));
     loop.exec();
-}
-
-QspWebBox::~QspWebBox()
-{
-
 }
 
 void QspWebBox::SetIsHtml(bool isHtml)
@@ -69,23 +52,9 @@ void QspWebBox::RefreshUI(bool isScroll)
 {
     if(m_isQuit)
         return;
-    QString color(QSPTools::GetHexColor(GetForegroundColor()));
+
     QString str = m_text;
     QString text;
-//    if(m_isUseHtml)
-//    {
-//        if(str.endsWith("\r"))
-//            str.chop(1);
-//        if(str.endsWith("\n"))
-//            str.chop(1);
-//        str = str.replace("\r", "").replace("\n", "<br>").replace("<video ", "<img ", Qt::CaseInsensitive);
-//        text = str.replace("</center><br>", "</center>", Qt::CaseInsensitive).replace("</table><br>", "</table>", Qt::CaseInsensitive);
-//    }
-//    else
-//    {
-//        text = str;
-//    }
-
     if(m_videoFix)
     {
         int copypos = 0;
@@ -111,11 +80,8 @@ void QspWebBox::RefreshUI(bool isScroll)
                 int nextV = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
                 if(nextV == -1)
                     text.append("</video>");
-                else
-                {
-                    if(cloaseTegPos > nextV)
-                        text.append("</video>");
-                }
+                else if(cloaseTegPos > nextV)
+                    text.append("</video>");
             }
             startIndex = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
         }
@@ -131,11 +97,11 @@ void QspWebBox::RefreshUI(bool isScroll)
         qweush.SetHtml(text);
 
     QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
-    if(url_str.compare("qsp:" , Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/" , Qt::CaseInsensitive) != 0)
+    if(url_str.compare("qsp:", Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/", Qt::CaseInsensitive) != 0)
     {
         page()->triggerAction(QWebEnginePage::Stop);
         page()->deleteLater();
-        QWebEnginePage * newpage = new QWebEnginePage(&profile, this);
+        QWebEnginePage *newpage = new QWebEnginePage(&profile, this);
         QWebChannel *channel = new QWebChannel(newpage);
         channel->registerObject(QStringLiteral("qsp"), &qspJS);
         newpage->setWebChannel(channel);
@@ -144,31 +110,16 @@ void QspWebBox::RefreshUI(bool isScroll)
         newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
         setPage(newpage);
         QEventLoop loop;
-        connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+        connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
         page()->load(QUrl("qsp:/"));
         loop.exec();
     }
     page()->triggerAction(QWebEnginePage::ReloadAndBypassCache);
-
-    //QTimer wtimer;
-    //wtimer.setSingleShot(true);
-    //QEventLoop loop;
-    //connect(this,  SIGNAL(loadFinished(bool)), &loop, SLOT(quit()) );
-    //connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    //wtimer.start(400);
-    //loop.exec();
-    //if(!wtimer.isActive())
-    //{
-    //    qDebug() << "timeout";
-    //}
-    //if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
 }
 
 void QspWebBox::LoadBackImage(const QString& fileName)
 {
     qweush.SetBackgroundImage(fileName);
-    QFileInfo file(m_path + fileName);
-    QString path(file.absoluteFilePath());
 }
 
 void QspWebBox::SetText(const QString& text, bool isScroll)
@@ -212,19 +163,16 @@ void QspWebBox::SetGamePath(const QString &path)
     qweush.SetGamePath(path);
 }
 
-//Returns the background color of the window.
-QColor QspWebBox::GetBackgroundColor()
+QColor QspWebBox::GetBackgroundColor() const
 {
     return m_backColor;
 }
 
-//The meaning of foreground colour varies according to the window class; it may be the text colour or other colour, or it may not be used at all. Additionally, not all native controls support changing their foreground colour so this method may change their colour only partially or even not at all.
-QColor QspWebBox::GetForegroundColor()
+QColor QspWebBox::GetForegroundColor() const
 {
     return m_fontColor;
 }
 
-//Returns true if the color was really changed, false if it was already set to this color and nothing was done.
 bool QspWebBox::SetBackgroundColor(const QColor &color)
 {
     if(m_backColor != color)
@@ -300,10 +248,10 @@ void QspWebBox::Quit()
     m_isQuit = true;
     page()->triggerAction(QWebEnginePage::Stop);
     page()->deleteLater();
-    QWebEnginePage * newpage = new QWebEnginePage(this);
+    QWebEnginePage *newpage = new QWebEnginePage(this);
     setPage(newpage);
     QEventLoop loop;
-    connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
     page()->load(QUrl("about:blank"));
     loop.exec();
 }
