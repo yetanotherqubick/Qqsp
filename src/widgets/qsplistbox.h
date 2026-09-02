@@ -22,8 +22,8 @@ signals:
    void SelectionChange(int selection);
 
 public:
-    explicit QspListBox(QWidget *parent = 0);
-    ~QspListBox();
+    explicit QspListBox(QWidget *parent = nullptr);
+    ~QspListBox() = default;
 
     // Methods
     void RefreshUI();

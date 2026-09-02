@@ -20,8 +20,8 @@ class QspMsgDlg : public QDialog
     Q_OBJECT
 
 public:
-    explicit QspMsgDlg(QWidget *parent = 0);
-    QspMsgDlg(const QString &caption = "", const QString &text = "", QWidget *parent = 0);
+    explicit QspMsgDlg(QWidget *parent = nullptr);
+    QspMsgDlg(const QString &caption = "", const QString &text = "", QWidget *parent = nullptr);
     QspMsgDlg(const QColor& backColor,
               const QColor& fontColor,
               const QFont& new_font,
@@ -29,7 +29,7 @@ public:
               const QString& text,
               bool isHtml,
               const QString& gamePath,
-              QWidget *parent = 0);
+              QWidget *parent = nullptr);
 
 private:
     // Events

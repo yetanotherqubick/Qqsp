@@ -37,7 +37,7 @@ class QspTextBox : public QTextBrowser
     Q_OBJECT
 
 public:
-    explicit QspTextBox(QWidget *parent = 0);
+    explicit QspTextBox(QWidget *parent = nullptr);
     ~QspTextBox();
 
     // Methods
