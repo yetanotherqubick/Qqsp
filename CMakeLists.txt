@@ -36,7 +36,6 @@ set(QQSP_WIDGET_SOURCES
     src/widgets/textbox.cpp
     src/widgets/listbox.cpp
     src/widgets/inputbox.cpp
-    src/widgets/inputdlg.cpp
     src/widgets/msgdlg.cpp
     src/widgets/imgcanvas.cpp
 )
@@ -45,7 +44,6 @@ set(QQSP_WIDGET_HEADERS
     src/widgets/qsptextbox.h
     src/widgets/qsplistbox.h
     src/widgets/qspinputbox.h
-    src/widgets/qspinputdlg.h
     src/widgets/qspmsgdlg.h
     src/widgets/qspimgcanvas.h
 )

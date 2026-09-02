@@ -12,7 +12,6 @@
 
 #include "comtools.h"
 #include "qspmsgdlg.h"
-#include "qspinputdlg.h"
 #ifdef _WEBBOX
 #include "qspwebbox.h"
 #endif
