@@ -1,13 +1,11 @@
 #ifndef QSPWEBBOX_H
 #define QSPWEBBOX_H
 
-#include <QWidget>
 #include <QWebEngineView>
 #include <QString>
 #include <QFont>
 #include <QColor>
 #include <QUrl>
-#include <QWebChannel>
 #include <QWebEngineProfile>
 
 #include "qspwebengineurlschemehandler.h"
