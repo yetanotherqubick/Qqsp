@@ -13,7 +13,7 @@ void QspInputBox::SetText(const QString& text)
     setPlainText(text);
 }
 
-QString QspInputBox::GetText()
+QString QspInputBox::GetText() const
 {
     return toPlainText();
 }
