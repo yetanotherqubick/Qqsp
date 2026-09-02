@@ -8,15 +8,12 @@
 #include <QList>
 #include <QSize>
 #include <QImage>
-#include <QString>
-//#include <QTimer>
 
 class VideoFrameProcessor : public QAbstractVideoSurface
 {
     Q_OBJECT
 
 signals:
-    void medialLoaded();
     void newFrame(QImage);
 
 public:
@@ -25,14 +22,8 @@ public:
     bool present(const QVideoFrame& frame);
     QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const;
     bool isFormatSupported(const QVideoSurfaceFormat &format) const;
-    //QImage curFrame;
     QSize mediaResolution;
     bool hasFrame = false;
-//    QTimer timer;
-private:
-
-private slots:
-    void OnFrameTimeout();
 };
 
 #endif // VIDEOFRAMEPROCESSOR_H
