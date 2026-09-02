@@ -73,7 +73,6 @@ private:
     QspWebEngineUrlSchemeHandler qweush;
     QspExecWebEngineUrlSchemeHandler qeweush;
     QWebEngineProfile profile;
-    QWebChannel *channel;
     QspWebChannel qspJS;
     bool m_isQuit;
 
