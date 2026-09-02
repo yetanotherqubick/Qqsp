@@ -36,7 +36,6 @@ QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *paren
     layout.addWidget(&okButton);
     setLayout(&layout);
     setModal(true);
-    //exec();
 }
 
 QspMsgDlg::QspMsgDlg(const QColor& backColor,
@@ -57,7 +56,6 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     m_desc.setBackgroundRole(QPalette::NoRole);
     QPalette p = palette();
     p.setColor(QPalette::Base, backColor);
-    //p.setColor(QPalette::Window, backColor);
     setPalette(p);
     // ----------
     setWindowTitle(caption);
@@ -79,7 +77,6 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     layout.addWidget(&okButton);
     setLayout(&layout);
     setModal(true);
-    //exec();
 }
 
 void QspMsgDlg::OnLinkClicked(const QUrl &url)
