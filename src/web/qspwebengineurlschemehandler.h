@@ -20,16 +20,18 @@ public:
     void SetGamePath(const QString &path);
     void SetLinkColor(const QColor &color);
     void SetBackgroundColor(const QColor& color);
-    void SetForegroundColor(const QColor& color);
+    void SetForegroundColor(const QColor &color);
     void SetBackgroundImage(const QString &path);
-    void SetTextFont(const QFont& new_font);
+    void SetTextFont(const QFont &new_font);
     void SetHead(const QString &head);
-    void SetFontType(const int fontType);
-    void SetSizeType(const int sizeType);
+    void SetFontType(int fontType);
+    void SetSizeType(int sizeType);
     void SetCustomCSS(bool customCSS);
 
 private:
-    QString  m_text;
+    QString createHtml() const;
+
+    QString m_text;
     QString m_path;
     QString m_bmpBg;
     QString m_head;

@@ -7,29 +7,10 @@
 #include <QMediaPlayer>
 #include "mainwindow.h"
 
-typedef QMap<QString, QMediaPlayer*> QSPSounds;
-
-//static QSPString qspStringFromPair(const QSP_CHAR *start, const QSP_CHAR *end)
-//{
-//    QSPString string;
-//    string.Str = (QSP_CHAR *)start;
-//    string.End = (QSP_CHAR *)end;
-//    return string;
-//}
-
-//static QSPString qspStringFromLen(const QSP_CHAR *s, int len)
-//{
-//    QSPString string;
-//    string.Str = (QSP_CHAR *)s;
-//    string.End = (QSP_CHAR *)s + len;
-//    return string;
-//}
+using QSPSounds = QMap<QString, QMediaPlayer *>;
 
 static const QSP_CHAR *qspStringFromQString(const QString &s)
 {
-    //QSPString string;
-    //string.Str = (QSP_CHAR *)s.utf16();
-    //string.End = (QSP_CHAR *)s.utf16() + s.length();
     return (QSP_CHAR *)s.utf16();
 }
 
@@ -58,7 +39,6 @@ public:
     static int ShowMenu();
     static void Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen);
     static void ShowImage(const QSP_CHAR *file);
-    //static void OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame);
     static void OpenGameStatus(const QSP_CHAR *file);
     static void SaveGameStatus(const QSP_CHAR *file);
 

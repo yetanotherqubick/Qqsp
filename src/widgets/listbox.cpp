@@ -194,54 +194,44 @@ void QspListBox::createList()
     clear();
     for(int i = 0; i < qMin(m_images.size(), m_descs.size()); i++)
     {
-        QString item_tmp;
-        item_tmp = formatItem(i);
+        const QString itemText = formatItem(i);
 
-        QListWidgetItem* listItem;
-        listItem = new QListWidgetItem(this);
+        auto *listItem = new QListWidgetItem(this);
         listItem->setBackground(m_backgroundColor);
-        QspTextBox *item_widget;
-        item_widget = new QspTextBox(this);
+        auto *itemWidget = new QspTextBox(this);
         //item_widget->setFrameStyle(QFrame::Box);
-        item_widget->setLineWidth(0);
-        item_widget->viewport()->setMouseTracking(false);
-        item_widget->setAttribute(Qt::WA_TransparentForMouseEvents);
+        itemWidget->setLineWidth(0);
+        itemWidget->viewport()->setMouseTracking(false);
+        itemWidget->setAttribute(Qt::WA_TransparentForMouseEvents);
 
-        item_widget->SetIsHtml(m_isUseHtml);
-        item_widget->SetShowPlainText(showPlainText);
-        item_widget->SetDisableVideo(true);
+        itemWidget->SetIsHtml(m_isUseHtml);
+        itemWidget->SetShowPlainText(showPlainText);
+        itemWidget->SetDisableVideo(true);
 
-        item_widget->SetLinkColor(m_linkColor);
-        item_widget->SetBackgroundColor(m_backgroundColor);
-        item_widget->SetForegroundColor(m_textColor);
-        item_widget->SetTextFont(m_font);
+        itemWidget->SetLinkColor(m_linkColor);
+        itemWidget->SetBackgroundColor(m_backgroundColor);
+        itemWidget->SetForegroundColor(m_textColor);
+        itemWidget->SetTextFont(m_font);
 
-        item_widget->SetGamePath(m_path);
+        itemWidget->SetGamePath(m_path);
         //item_widget->setMaximumHeight(800);
-        item_widget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        item_widget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-        item_widget->verticalScrollBar()->setEnabled(false);
-        item_widget->horizontalScrollBar()->setEnabled(false);
-        item_widget->setReadOnly(true);
-        item_widget->setBackgroundRole(QPalette::NoRole);
-        item_widget->setTextInteractionFlags(Qt::NoTextInteraction);
+        itemWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        itemWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        itemWidget->verticalScrollBar()->setEnabled(false);
+        itemWidget->horizontalScrollBar()->setEnabled(false);
+        itemWidget->setReadOnly(true);
+        itemWidget->setBackgroundRole(QPalette::NoRole);
+        itemWidget->setTextInteractionFlags(Qt::NoTextInteraction);
         //item_widget->setWordWrapMode(QTextOption::NoWrap);
-        item_widget->setWordWrapMode(QTextOption::WordWrap);
+        itemWidget->setWordWrapMode(QTextOption::WordWrap);
         //QFontMetrics font_metrics(item_widget->font());
         //item_widget->setFixedHeight(font_metrics.height() + 4* item_widget->frameWidth());
-        item_widget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
-        item_widget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        itemWidget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
+        itemWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-        item_widget->SetText(item_tmp);
-
-        //QSize sizehint = QSize(item->sizeHint().width(), font_metrics.height()*2 + item_widget->frameWidth()*2);
-        //QSize sizehint = item_widget->sizeHint();
-        //sizehint.setHeight(item_widget->document()->size().toSize().height());
-        //sizehint.setHeight(item_widget->heightForWidth(this->width()));
-        item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
-        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
-        listItem->setSizeHint(sizehint);
-        setItemWidget(listItem, item_widget);
+        itemWidget->SetText(itemText);
+        setItemWidget(listItem, itemWidget);
+        resizeItem(listItem);
     }
     if(oldSelection != -1)
     {
@@ -252,6 +242,21 @@ void QspListBox::createList()
     adjustSize();
     //resizeEvent(0);
     //blockSignals(oldState);
+}
+
+void QspListBox::resizeItem(QListWidgetItem *listItem)
+{
+    if (listItem == nullptr)
+        return;
+
+    QspTextBox *item_widget = qobject_cast<QspTextBox*>(itemWidget(listItem));
+    if (item_widget == nullptr)
+        return;
+
+    const int width = this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth() * 4;
+    item_widget->document()->setTextWidth(width);
+    const QSize sizeHint(width, item_widget->document()->size().toSize().height() + item_widget->frameWidth() * 2);
+    listItem->setSizeHint(sizeHint);
 }
 
 QString QspListBox::formatItem(int itemIndex)
@@ -305,19 +310,8 @@ QString QspListBox::formatItem(int itemIndex)
 void QspListBox::resizeEvent(QResizeEvent *e)
 {
     for(int i = 0; i<count(); i++)
-    {
-        QListWidgetItem* listItem = item(i);
-        if(listItem != nullptr)
-        {
-            QspTextBox *item_widget = qobject_cast<QspTextBox*>(itemWidget(listItem));
-            if(item_widget != nullptr)
-            {
-                item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
-                QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
-                listItem->setSizeHint(sizehint);
-            }
-        }
-    }
+        resizeItem(item(i));
+
     QListWidget::resizeEvent(e);
 }
 

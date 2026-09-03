@@ -17,20 +17,16 @@ class VideoLabel : public QLabel
     Q_OBJECT
 
 public:
-    explicit VideoLabel(QString path, QString filename, QWidget *parent = nullptr);
-    ~VideoLabel() = default;
+    explicit VideoLabel(const QString &path, const QString &filename, QWidget *parent = nullptr);
     bool videoError() const;
-    QSize getResolution() const { return vfp.mediaResolution; }
+    QSize resolution() const { return vfp.mediaResolution; }
     bool hasFrame() const { return m_medialLoaded; }
 
 private:
-    QString m_path;
-    QString m_filename;
     VideoFrameProcessor vfp;
     QMediaPlayer mediaPlayer;
     QMediaPlaylist playlist;
     bool m_medialLoaded = false;
-    bool resolution_set = false;
     QMutex mutex;
 
 private slots:

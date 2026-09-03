@@ -2,16 +2,14 @@
 
 #include <QUrl>
 
-VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel(parent)
+VideoLabel::VideoLabel(const QString &path, const QString &filename, QWidget *parent) : QLabel(parent)
 {
-    m_path = path;
-    m_filename = filename;
     setScaledContents(true);
     setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     setAttribute(Qt::WA_TransparentForMouseEvents);
 
     playlist.setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
-    playlist.addMedia(QUrl::fromLocalFile(m_path + m_filename));
+    playlist.addMedia(QUrl::fromLocalFile(path + filename));
     mediaPlayer.setPlaylist(&playlist);
     mediaPlayer.setVideoOutput(&vfp);
     mediaPlayer.play();

@@ -198,7 +198,7 @@ QColor QSPTools::wxtoQColor(int wxColor)
         return col;
     }
     col = QColor::fromRgba(wxColor);
-    int red = col.red();
+    const int red = col.red();
     col.setRed(col.blue());
     col.setBlue(red);
     return col;

@@ -17,12 +17,6 @@ public:
 
 signals:
     void qspLinkClicked(QUrl url);
-
-public slots:
-    void QspLinkClicked();
-
-private:
-    QUrl url;
 };
 
 #endif // QSPEXECWEBENGINEURLSCHEMEHANDLER_H

@@ -9,10 +9,6 @@
 #include <QVBoxLayout>
 #include <QMovie>
 
-namespace Ui {
-class QspImgCanvas;
-}
-
 class QspImgCanvas : public QWidget
 {
     Q_OBJECT
