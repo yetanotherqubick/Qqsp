@@ -11,7 +11,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 option(QQSP_ENABLE_WEBBOX "Build the Qt WebEngine web box" ON)
 option(QQSP_ENABLE_DEBUG "Enable Qqsp memory debugging" OFF)
 
-find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Multimedia Test)
 if(QQSP_ENABLE_WEBBOX)
     find_package(Qt5 REQUIRED COMPONENTS WebChannel WebEngine WebEngineWidgets)
 endif()
@@ -174,3 +174,6 @@ include(GNUInstallDirs)
 install(TARGETS Qqsp
     BUNDLE DESTINATION .
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+
+enable_testing()
+add_subdirectory(tests)
