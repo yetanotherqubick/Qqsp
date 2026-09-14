@@ -209,15 +209,15 @@ void qspInitStats()
 	qspAddStatName(qspStatExec, QSP_FMT("EXEC"), 2);
 	qspAddStatName(qspStatExit, QSP_FMT("EXIT"), 2);
 	qspAddStatName(qspStatFreeLib, QSP_FMT("FREELIB"), 2);
-    qspAddStatName(qspStatFreeLib, QSP_FMT("DELLIB"), 2);
-    qspAddStatName(qspStatFreeLib, QSP_FMT("KILLQST"), 2);
+	qspAddStatName(qspStatFreeLib, QSP_FMT("DELLIB"), 2);
+	qspAddStatName(qspStatFreeLib, QSP_FMT("KILLQST"), 2);
 	qspAddStatName(qspStatGoSub, QSP_FMT("GOSUB"), 2);
 	qspAddStatName(qspStatGoSub, QSP_FMT("GS"), 2);
 	qspAddStatName(qspStatGoTo, QSP_FMT("GOTO"), 2);
 	qspAddStatName(qspStatGoTo, QSP_FMT("GT"), 2);
 	qspAddStatName(qspStatIncLib, QSP_FMT("INCLIB"), 2);
-    qspAddStatName(qspStatIncLib, QSP_FMT("ADDLIB"), 2);
-    qspAddStatName(qspStatIncLib, QSP_FMT("ADDQST"), 2);
+	qspAddStatName(qspStatIncLib, QSP_FMT("ADDLIB"), 2);
+	qspAddStatName(qspStatIncLib, QSP_FMT("ADDQST"), 2);
 	qspAddStatName(qspStatJump, QSP_FMT("JUMP"), 2);
 	qspAddStatName(qspStatKillAll, QSP_FMT("KILLALL"), 2);
 	qspAddStatName(qspStatKillObj, QSP_FMT("KILLOBJ"), 2);
@@ -1472,7 +1472,7 @@ static QSP_BOOL qspStatementView(QSPVariant *args, int count, QSP_CHAR **jumpTo,
 	if (count && qspIsAnyString(QSP_STR(args[0])))
 	{
 		qspViewPath = qspGetAddText(qspViewPath, QSP_STR(args[0]), 0, -1);
-        file = qspGetPathAsIs(qspViewPath);
+		file = qspGetPathAsIs(qspViewPath);
 		qspCallShowPicture(file);
 		free(file);
 	}

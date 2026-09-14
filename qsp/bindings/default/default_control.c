@@ -418,23 +418,23 @@ QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh)
 	}
 	size = len * sizeof(QSP_CHAR);
 	*realSize = size;
-    //
-    *buf = malloc(size);
-    if (*buf == NULL)
-    {
-        free(data);
-        return QSP_FALSE;
-    }
-    memcpy(*buf, data, size);
-    //
+	//
+	*buf = malloc(size);
+	if (*buf == NULL)
+	{
+		free(data);
+		return QSP_FALSE;
+	}
+	memcpy(*buf, data, size);
+	//
 
-    //if (size > bufSize)
-    //{
-    //	free(data);
-    //	return QSP_FALSE;
-    //}
+	//if (size > bufSize)
+	//{
+	//	free(data);
+	//	return QSP_FALSE;
+	//}
 
-    memcpy(buf, data, size);
+	memcpy(buf, data, size);
 	free(data);
 	if (isRefresh) qspCallRefreshInt(QSP_FALSE);
 	return QSP_TRUE;
@@ -503,7 +503,7 @@ void QSPSetCallBack(int type, QSP_CALLBACK func)
 /* Инициализация */
 void QSPInit()
 {
-    #ifdef _DEBUGMW
+	#ifdef _DEBUGMW
 		mwInit();
 	#endif
 	qspIsDebug = QSP_FALSE;
@@ -536,7 +536,7 @@ void QSPDeInit()
 	qspCreateWorld(0, 0);
 	if (qspQstPath) free(qspQstPath);
 	if (qspQstFullPath) free(qspQstFullPath);
-    #ifdef _DEBUGMW
+	#ifdef _DEBUGMW
 		mwTerm();
 	#endif
 }

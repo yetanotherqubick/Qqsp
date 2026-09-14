@@ -157,14 +157,14 @@ int qspCallShowMenu()
 {
 	/* Здесь показываем меню */
 	QSPCallState state;
-    int index = -1;
+	int index = -1;
 	if (qspCallBacks[QSP_CALL_SHOWMENU])
 	{
 		qspSaveCallState(&state, QSP_FALSE, QSP_TRUE);
-        index = qspCallBacks[QSP_CALL_SHOWMENU]();
+		index = qspCallBacks[QSP_CALL_SHOWMENU]();
 		qspRestoreCallState(&state);
 	}
-    return index;
+	return index;
 }
 
 void qspCallShowPicture(QSP_CHAR *file)

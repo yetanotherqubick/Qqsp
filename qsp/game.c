@@ -94,16 +94,16 @@ static int qspCRC(void *data, int len)
 
 QSP_CHAR *qspGetAbsFromRelPath(QSP_CHAR *path)
 {
-    QSP_CHAR *absPath;
+	QSP_CHAR *absPath;
 	absPath = qspGetNewText(qspQstPath, qspQstPathLen);
-    return qspGetAddText(absPath, path, qspQstPathLen, -1);
+	return qspGetAddText(absPath, path, qspQstPathLen, -1);
 }
 
 QSP_CHAR *qspGetPathAsIs(QSP_CHAR *path)
 {
-    QSP_CHAR *newPath;
-    qspAddText(&newPath, path, 0, -1, QSP_TRUE);
-    return newPath;
+	QSP_CHAR *newPath;
+	qspAddText(&newPath, path, 0, -1, QSP_TRUE);
+	return newPath;
 }
 
 void qspClearIncludes(QSP_BOOL isFirst)
@@ -350,12 +350,12 @@ void qspOpenQuest(QSP_CHAR *fileName, QSP_BOOL isAddLocs)
 int qspSaveGameStatusToString(QSP_CHAR **buf)
 {
 	QSP_CHAR *locName;
-    QSPVar *savedVars;
-    int i, j, len, varsCount, oldRefreshCount = qspRefreshCount;
+	QSPVar *savedVars;
+	int i, j, len, varsCount, oldRefreshCount = qspRefreshCount;
 	qspExecLocByVarNameWithArgs(QSP_FMT("ONGSAVE"), 0, 0);
 	if (qspRefreshCount != oldRefreshCount || qspErrorNum) return 0;
-    varsCount = qspPrepareLocalVars(&savedVars);
-    if (qspErrorNum) return 0;
+	varsCount = qspPrepareLocalVars(&savedVars);
+	if (qspErrorNum) return 0;
 	*buf = 0;
 	qspRefreshPlayList();
 	locName = (qspCurLoc >= 0 ? qspLocs[qspCurLoc].Name : 0);
@@ -411,7 +411,7 @@ int qspSaveGameStatusToString(QSP_CHAR **buf)
 	}
 	len = qspCodeWriteIntVal(buf, len, qspGetVarsCount(), QSP_TRUE);
 	for (i = 0; i < QSP_VARSCOUNT; ++i)
-    {
+	{
 		if (qspVars[i].Name)
 		{
 			len = qspCodeWriteIntVal(buf, len, i, QSP_TRUE);
@@ -429,13 +429,13 @@ int qspSaveGameStatusToString(QSP_CHAR **buf)
 				len = qspCodeWriteVal(buf, len, qspVars[i].Indices[j].Str, QSP_TRUE);
 			}
 		}
-    }
-    qspRestoreLocalVars(savedVars, varsCount, qspSavedVarsGroups, qspSavedVarsGroupsCount);
-    if (qspErrorNum)
-    {
-        free(*buf);
-        return 0;
-    }
+	}
+	qspRestoreLocalVars(savedVars, varsCount, qspSavedVarsGroups, qspSavedVarsGroupsCount);
+	if (qspErrorNum)
+	{
+		free(*buf);
+		return 0;
+	}
 	return len;
 }
 
@@ -560,7 +560,7 @@ void qspOpenGameStatusFromString(QSP_CHAR *str)
 		if (*strs[ind])
 		{
 			str = qspCodeReCode(strs[ind], QSP_FALSE);
-            qspCurActions[i].Image = qspGetPathAsIs(str);
+			qspCurActions[i].Image = qspGetPathAsIs(str);
 			free(str);
 		}
 		else
@@ -590,7 +590,7 @@ void qspOpenGameStatusFromString(QSP_CHAR *str)
 		if (*strs[ind])
 		{
 			str = qspCodeReCode(strs[ind], QSP_FALSE);
-            qspCurObjects[i].Image = qspGetPathAsIs(str);
+			qspCurObjects[i].Image = qspGetPathAsIs(str);
 			free(str);
 		}
 		else
@@ -640,7 +640,7 @@ void qspOpenGameStatusFromString(QSP_CHAR *str)
 	qspCallSetInputStrText(qspCurInput);
 	if (qspViewPath)
 	{
-        file = qspGetPathAsIs(qspViewPath);
+		file = qspGetPathAsIs(qspViewPath);
 		qspCallShowPicture(file);
 		free(file);
 	}

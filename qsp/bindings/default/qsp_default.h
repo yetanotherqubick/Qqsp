@@ -21,13 +21,13 @@
 	#define QSP_DEFAULTDEFINES
 
 	#ifdef _UNICODE
-        #ifdef __APPLE__
-        #include <stddef.h>
-        #include <stdint.h>
-        #else
-        #include <uchar.h>
-        #endif
-    typedef char16_t QSP_CHAR;
+		#ifdef __APPLE__
+		#include <stddef.h>
+		#include <stdint.h>
+		#else
+		#include <uchar.h>
+		#endif
+	typedef char16_t QSP_CHAR;
 	#endif
 
 	#ifdef __cplusplus
@@ -82,11 +82,11 @@
 	QSP_EXTERN QSP_BOOL QSPLoadGameWorld(const QSP_CHAR *file);
 	QSP_EXTERN QSP_BOOL QSPLoadGameWorldFromData(const void *data, int dataSize, const QSP_CHAR *file);
 	QSP_EXTERN QSP_BOOL QSPSaveGame(const QSP_CHAR *file, QSP_BOOL isRefresh);
-    QSP_EXTERN QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh);
+	QSP_EXTERN QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh);
 	QSP_EXTERN QSP_BOOL QSPOpenSavedGame(const QSP_CHAR *file, QSP_BOOL isRefresh);
 	QSP_EXTERN QSP_BOOL QSPOpenSavedGameFromData(const void *data, int dataSize, QSP_BOOL isRefresh);
 	QSP_EXTERN QSP_BOOL QSPRestartGame(QSP_BOOL isRefresh);
-    //QSP_EXTERN void QSPSelectMenuItem(int ind);
+	//QSP_EXTERN void QSPSelectMenuItem(int ind);
 	QSP_EXTERN void QSPSetCallBack(int type, QSP_CALLBACK func);
 	QSP_EXTERN void QSPInit();
 	QSP_EXTERN void QSPDeInit();
