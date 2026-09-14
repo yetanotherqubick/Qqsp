@@ -1,25 +1,19 @@
 #include "qspmsgdlg.h"
 
-#include <QRect>
-#include <QPalette>
-#include <QDesktopServices>
-
-#include "mainwindow.h"
-
 #include "callbacks_gui.h"
 #include "comtools.h"
+#include "mainwindow.h"
 
-QspMsgDlg::QspMsgDlg(QWidget *parent) : QDialog(parent)
+#include <QDesktopServices>
+#include <QPalette>
+#include <QRect>
+
+QspMsgDlg::QspMsgDlg(QWidget *parent) : QDialog(parent) {}
+
+QspMsgDlg::~QspMsgDlg() {}
+
+QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *parent) : QDialog(parent)
 {
-
-}
-
-QspMsgDlg::~QspMsgDlg()
-{
-
-}
-
-QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *parent) : QDialog(parent) {
     setWindowTitle(caption);
     sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
@@ -36,17 +30,12 @@ QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *paren
     layout.addWidget(&okButton);
     setLayout(&layout);
     setModal(true);
-    //exec();
+    // exec();
 }
 
-QspMsgDlg::QspMsgDlg(const QColor& backColor,
-                     const QColor& fontColor,
-                     const QFont& new_font,
-                     const QString& caption,
-                     const QString& text,
-                     bool isHtml,
-                     const QString& gamePath,
-                     QWidget *parent) : QDialog(parent)
+QspMsgDlg::QspMsgDlg(const QColor &backColor, const QColor &fontColor, const QFont &new_font, const QString &caption, const QString &text,
+                     bool isHtml, const QString &gamePath, QWidget *parent)
+    : QDialog(parent)
 {
     m_desc.SetGamePath(gamePath);
     m_desc.SetIsHtml(isHtml);
@@ -57,7 +46,7 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     m_desc.setBackgroundRole(QPalette::NoRole);
     QPalette p = palette();
     p.setColor(QPalette::Base, backColor);
-    //p.setColor(QPalette::Window, backColor);
+    // p.setColor(QPalette::Window, backColor);
     setPalette(p);
     // ----------
     setWindowTitle(caption);
@@ -79,7 +68,7 @@ QspMsgDlg::QspMsgDlg(const QColor& backColor,
     layout.addWidget(&okButton);
     setLayout(&layout);
     setModal(true);
-    //exec();
+    // exec();
 }
 
 void QspMsgDlg::OnLinkClicked(const QUrl &url)
@@ -91,13 +80,13 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
     {
         m_desc.setSource(url);
     }
-    else if (href.startsWith("EXEC:", Qt::CaseInsensitive)) //NOTE: was not part of original player
+    else if (href.startsWith("EXEC:", Qt::CaseInsensitive)) // NOTE: was not part of original player
     {
         QString string = href.mid(5);
         if (!QSPExecString(qspStringFromQString(string), QSP_TRUE))
-            if(this->parent() != 0)
-                if(this->parent()->objectName() == QStringLiteral("MainWindow"))
-                    qobject_cast<MainWindow*>(this->parent())->ShowError(); //TODO: replace with signal
+            if (this->parent() != 0)
+                if (this->parent()->objectName() == QStringLiteral("MainWindow"))
+                    qobject_cast<MainWindow *>(this->parent())->ShowError(); // TODO: replace with signal
     }
     else
     {

@@ -1,15 +1,15 @@
 #ifndef VIDEOFRAMEPROCESSOR_H
 #define VIDEOFRAMEPROCESSOR_H
 
-#include <QObject>
-#include <QAbstractVideoSurface>
 #include <QAbstractVideoBuffer>
-#include <QVideoFrame>
-#include <QList>
-#include <QSize>
+#include <QAbstractVideoSurface>
 #include <QImage>
+#include <QList>
+#include <QObject>
+#include <QSize>
 #include <QString>
-//#include <QTimer>
+#include <QVideoFrame>
+// #include <QTimer>
 
 class VideoFrameProcessor : public QAbstractVideoSurface
 {
@@ -22,15 +22,14 @@ signals:
 public:
     explicit VideoFrameProcessor(QObject *parent = 0);
     ~VideoFrameProcessor();
-    bool present(const QVideoFrame& frame);
+    bool present(const QVideoFrame &frame);
     QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType handleType) const;
     bool isFormatSupported(const QVideoSurfaceFormat &format) const;
-    //QImage curFrame;
+    // QImage curFrame;
     QSize mediaResolution;
     bool hasFrame;
-//    QTimer timer;
+    //    QTimer timer;
 private:
-
 private slots:
     void OnFrameTimeout();
 };

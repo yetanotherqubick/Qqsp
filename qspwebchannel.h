@@ -9,6 +9,7 @@ class QspWebChannel : public QObject
 public:
     explicit QspWebChannel(QObject *parent = nullptr);
     Q_INVOKABLE void ExecString(const QString &string);
+
 private:
     void ShowError();
 };

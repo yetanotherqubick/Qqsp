@@ -1,0 +1,45 @@
+BasedOnStyle: LLVM
+
+Language: Cpp
+
+# Indentation
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# Braces
+BreakBeforeBraces: Allman
+
+# Pointers and references
+PointerAlignment: Right
+ReferenceAlignment: Right
+DerivePointerAlignment: false
+
+# Line length
+ColumnLimit: 140
+
+# Short constructs
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortFunctionsOnASingleLine: Empty
+
+# Classes
+AccessModifierOffset: -4
+IndentCaseLabels: false
+
+# Continuations
+ContinuationIndentWidth: 4
+ConstructorInitializerIndentWidth: 4
+
+# Comments
+ReflowComments: true
+
+# Includes
+SortIncludes: CaseSensitive
+IncludeBlocks: Regroup
+
+# C++ language
+Standard: c++14
+
+# Namespaces
+NamespaceIndentation: None

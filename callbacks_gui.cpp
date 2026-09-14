@@ -1,18 +1,18 @@
 #include "callbacks_gui.h"
 
+#include "comtools.h"
+#include "qspinputdlg.h"
+#include "qspmsgdlg.h"
+
 #include <QCoreApplication>
-#include <QThread>
 #include <QElapsedTimer>
-#include <QFileInfo>
+#include <QEventLoop>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QInputDialog>
 #include <QLineEdit>
+#include <QThread>
 #include <QTimer>
-#include <QEventLoop>
-
-#include "comtools.h"
-#include "qspmsgdlg.h"
-#include "qspinputdlg.h"
 #ifdef _WEBBOX
 #include "qspwebbox.h"
 #endif
@@ -49,11 +49,11 @@ void QSPCallBacks::Init(MainWindow *frame)
     QSPSetCallBack(QSP_CALL_INPUTBOX, (QSP_CALLBACK)&Input);
     QSPSetCallBack(QSP_CALL_SHOWIMAGE, (QSP_CALLBACK)&ShowImage);
     QSPSetCallBack(QSP_CALL_SHOWWINDOW, (QSP_CALLBACK)&ShowPane);
-    //QSPSetCallBack(QSP_CALL_OPENGAME, (QSP_CALLBACK)&OpenGame); //replace
+    // QSPSetCallBack(QSP_CALL_OPENGAME, (QSP_CALLBACK)&OpenGame); //replace
     QSPSetCallBack(QSP_CALL_OPENGAMESTATUS, (QSP_CALLBACK)&OpenGameStatus);
     QSPSetCallBack(QSP_CALL_SAVEGAMESTATUS, (QSP_CALLBACK)&SaveGameStatus);
-    //TODO: implement this?
-    //QSP_CALL_DEBUG, /* void func(QSPString str) */
+    // TODO: implement this?
+    // QSP_CALL_DEBUG, /* void func(QSPString str) */
 }
 
 void QSPCallBacks::DeInit()
@@ -91,12 +91,12 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
     if (QSPIsVarsDescChanged())
     {
         m_frame->EnableControls(false, true);
-        if(m_isAllowHTML5Extras)
+        if (m_isAllowHTML5Extras)
         {
             if (QSPGetVarValues(QSP_FMT("SETSTATHEAD"), 0, &numVal, &strVal) && strVal)
                 m_frame->GetVars()->SetHead(QSPTools::qspStrToQt(strVal));
             else
-                 m_frame->GetVars()->SetHead(QString(""));
+                m_frame->GetVars()->SetHead(QString(""));
         }
         m_frame->GetVars()->SetText(QSPTools::qspStrToQt(varsDesc), isScroll);
         m_frame->EnableControls(true, true);
@@ -112,12 +112,12 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
     if (QSPIsMainDescChanged())
     {
         m_frame->EnableControls(false, true);
-        if(m_isAllowHTML5Extras)
+        if (m_isAllowHTML5Extras)
         {
             if (QSPGetVarValues(QSP_FMT("SETMAINDESCHEAD"), 0, &numVal, &strVal) && strVal)
                 m_frame->GetDesc()->SetHead(QSPTools::qspStrToQt(strVal));
             else
-                 m_frame->GetDesc()->SetHead(QString(""));
+                m_frame->GetDesc()->SetHead(QString(""));
         }
         m_frame->GetDesc()->SetText(QSPTools::qspStrToQt(mainDesc), isScroll);
         m_frame->EnableControls(true, true);
@@ -132,7 +132,8 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         for (i = 0; i < actionsCount; ++i)
         {
             QSPGetActionData(i, &imgPath, &strVal);
-            m_frame->GetActions()->AddItem(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)), QSPTools::qspStrToQt(strVal));
+            m_frame->GetActions()->AddItem(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)),
+                                           QSPTools::qspStrToQt(strVal));
         }
         m_frame->GetActions()->EndItems();
     }
@@ -145,7 +146,8 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         for (i = 0; i < objectsCount; ++i)
         {
             QSPGetObjectData(i, &imgPath, &strVal);
-            m_frame->GetObjects()->AddItem(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)), QSPTools::qspStrToQt(strVal));
+            m_frame->GetObjects()->AddItem(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(imgPath)),
+                                           QSPTools::qspStrToQt(strVal));
         }
         m_frame->GetObjects()->EndItems();
     }
@@ -160,8 +162,8 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
     if (isRedraw)
     {
         m_frame->EnableControls(false, true);
-        //m_frame->Update();
-        //QCoreApplication::processEvents();
+        // m_frame->Update();
+        // QCoreApplication::processEvents();
         if (m_frame->IsQuit()) return;
         m_frame->EnableControls(true, true);
     }
@@ -177,10 +179,10 @@ void QSPCallBacks::SetInputStrText(const QSP_CHAR *text)
 QSP_BOOL QSPCallBacks::IsPlay(const QSP_CHAR *file)
 {
     QSP_BOOL playing = QSP_FALSE;
-    QSPSounds::iterator elem = m_sounds.find(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
+    QSPSounds::iterator elem = m_sounds.find(
+        QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     if (elem != m_sounds.end())
-        if(elem.value()->state() == QMediaPlayer::PlayingState)
-            playing = QSP_TRUE;
+        if (elem.value()->state() == QMediaPlayer::PlayingState) playing = QSP_TRUE;
     return playing;
 }
 
@@ -188,7 +190,8 @@ void QSPCallBacks::CloseFile(const QSP_CHAR *file)
 {
     if (file)
     {
-        QSPSounds::iterator elem = m_sounds.find(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
+        QSPSounds::iterator elem = m_sounds.find(
+            QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
         if (elem != m_sounds.end())
         {
             delete elem.value();
@@ -197,8 +200,7 @@ void QSPCallBacks::CloseFile(const QSP_CHAR *file)
     }
     else
     {
-        for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
-            delete i.value();
+        for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i) delete i.value();
         m_sounds.clear();
     }
 }
@@ -207,10 +209,11 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
 {
     if (SetVolume(file, volume)) return;
     CloseFile(file);
-    QString strFile(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
+    QString strFile(
+        QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     QMediaPlayer *snd = new QMediaPlayer();
     snd->setMedia(QUrl::fromLocalFile(strFile));
-    snd->setVolume(volume*m_volumeCoeff);
+    snd->setVolume(volume * m_volumeCoeff);
     snd->play();
     m_sounds.insert(strFile, snd);
     UpdateSounds();
@@ -244,7 +247,7 @@ void QSPCallBacks::Sleep(int msecs)
     QObject::connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
     wtimer.start(50);
     loop.exec();
-    //RefreshInt(QSP_TRUE);
+    // RefreshInt(QSP_TRUE);
     if (m_frame->IsQuit()) return;
     bool isSave = m_frame->GetGameMenu()->isEnabled();
     bool isBreak = false;
@@ -252,26 +255,25 @@ void QSPCallBacks::Sleep(int msecs)
     int i, count = msecs / 50;
     for (i = 0; i < count; ++i)
     {
-        //QThread::msleep(50);
+        // QThread::msleep(50);
         wtimer.start(50);
         loop.exec();
-        //qDebug() << QSPTools::qspStrToQt(QSPGetMainDesc());
-        //m_frame->Update();
-        //QCoreApplication::processEvents();
-        if (m_frame->IsQuit() ||
-            m_frame->IsKeyPressedWhileDisabled()) //TODO: implement
+        // qDebug() << QSPTools::qspStrToQt(QSPGetMainDesc());
+        // m_frame->Update();
+        // QCoreApplication::processEvents();
+        if (m_frame->IsQuit() || m_frame->IsKeyPressedWhileDisabled()) // TODO: implement
         {
             isBreak = true;
             break;
         }
     }
-    if (!isBreak) //NOTE: no check in old code
+    if (!isBreak) // NOTE: no check in old code
     {
-        //QThread::msleep(msecs % 50);
+        // QThread::msleep(msecs % 50);
         wtimer.start(msecs % 50);
         loop.exec();
-        //m_frame->Update();
-        //QCoreApplication::processEvents();
+        // m_frame->Update();
+        // QCoreApplication::processEvents();
     }
     m_frame->EnableControls(true, true);
     m_frame->GetGameMenu()->setEnabled(isSave);
@@ -280,8 +282,7 @@ void QSPCallBacks::Sleep(int msecs)
 int QSPCallBacks::GetMSCount()
 {
     static QElapsedTimer stopWatch;
-    if(stopWatch.isValid() == false)
-        stopWatch.start();
+    if (stopWatch.isValid() == false) stopWatch.start();
     int ret = stopWatch.restart();
     return ret;
 }
@@ -290,15 +291,9 @@ void QSPCallBacks::Msg(const QSP_CHAR *str)
 {
     if (m_frame->IsQuit()) return;
     RefreshInt(QSP_FALSE);
-    QspMsgDlg dialog(m_frame->GetDesc()->GetBackgroundColor(),
-        m_frame->GetDesc()->GetForegroundColor(),
-        m_frame->GetDesc()->GetTextFont(),
-        MainWindow::tr("Info"), //caption
-        QSPTools::qspStrToQt(str),
-        m_isHtml,
-        m_gamePath,
-        m_frame
-    );
+    QspMsgDlg dialog(m_frame->GetDesc()->GetBackgroundColor(), m_frame->GetDesc()->GetForegroundColor(), m_frame->GetDesc()->GetTextFont(),
+                     MainWindow::tr("Info"), // caption
+                     QSPTools::qspStrToQt(str), m_isHtml, m_gamePath, m_frame);
     m_frame->EnableControls(false);
     dialog.exec();
     m_frame->EnableControls(true);
@@ -329,25 +324,25 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 {
     if (m_frame->IsQuit()) return;
     RefreshInt(QSP_FALSE);
-//  QSPInputDlg dialog(m_frame,
-//      wxID_ANY,
-//      m_frame->GetDesc()->GetBackgroundColor(),
-//      m_frame->GetDesc()->GetForegroundColor(),
-//      m_frame->GetDesc()->GetTextFont(),
-//      _("Input data"),
-//      wxString(text.Str, text.End),
-//      m_isHtml,
-//      m_gamePath
-//  );
-//  m_frame->EnableControls(false);
-//  dialog.ShowModal();
-//  m_frame->EnableControls(true);
-//  #ifdef _UNICODE
-//      wcsncpy(buffer, dialog.GetText().c_str(), maxLen);
-//  #else
-//      strncpy(buffer, dialog.GetText().c_str(), maxLen);
-//  #endif
-    //QString inputText = QInputDialog::getMultiLineText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text));
+    //  QSPInputDlg dialog(m_frame,
+    //      wxID_ANY,
+    //      m_frame->GetDesc()->GetBackgroundColor(),
+    //      m_frame->GetDesc()->GetForegroundColor(),
+    //      m_frame->GetDesc()->GetTextFont(),
+    //      _("Input data"),
+    //      wxString(text.Str, text.End),
+    //      m_isHtml,
+    //      m_gamePath
+    //  );
+    //  m_frame->EnableControls(false);
+    //  dialog.ShowModal();
+    //  m_frame->EnableControls(true);
+    //  #ifdef _UNICODE
+    //      wcsncpy(buffer, dialog.GetText().c_str(), maxLen);
+    //  #else
+    //      strncpy(buffer, dialog.GetText().c_str(), maxLen);
+    //  #endif
+    // QString inputText = QInputDialog::getMultiLineText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text));
     QString inputText = QInputDialog::getText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text), QLineEdit::Normal);
     c16sncpy(buffer, (QSP_CHAR *)(inputText.utf16()), maxLen);
 }
@@ -355,8 +350,9 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
 void QSPCallBacks::ShowImage(const QSP_CHAR *file)
 {
     if (m_frame->IsQuit()) return;
-    m_frame->GetImgView()->OpenFile(QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))); //NOTE: will not display image if file is not found
-    if(QSPTools::qspStrToQt(file) == "")
+    m_frame->GetImgView()->OpenFile(
+        QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))); // NOTE: will not display image if file is not found
+    if (QSPTools::qspStrToQt(file) == "")
     {
         m_frame->GetImageDock()->setVisible(false);
     }
@@ -365,20 +361,20 @@ void QSPCallBacks::ShowImage(const QSP_CHAR *file)
         m_frame->GetImageDock()->setVisible(true);
     }
 
-    //m_frame->GetImgView()->setVisible(true);
+    // m_frame->GetImgView()->setVisible(true);
 }
 
-//void QSPCallBacks::OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame)
+// void QSPCallBacks::OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame)
 //{
-//  if (m_frame->IsQuit()) return;
-//  if (QSPLoadGameWorld(file, isNewGame) && isNewGame)
-//  {
-//        QFileInfo fileName(QSPTools::qspStrToQt(file));
-//        m_gamePath = fileName.canonicalPath();
-//        if(!m_gamePath.endsWith('/')) m_gamePath+="/";
-//      m_frame->UpdateGamePath(m_gamePath);
-//  }
-//}
+//   if (m_frame->IsQuit()) return;
+//   if (QSPLoadGameWorld(file, isNewGame) && isNewGame)
+//   {
+//         QFileInfo fileName(QSPTools::qspStrToQt(file));
+//         m_gamePath = fileName.canonicalPath();
+//         if(!m_gamePath.endsWith('/')) m_gamePath+="/";
+//       m_frame->UpdateGamePath(m_gamePath);
+//   }
+// }
 
 void QSPCallBacks::OpenGameStatus(const QSP_CHAR *file)
 {
@@ -386,12 +382,13 @@ void QSPCallBacks::OpenGameStatus(const QSP_CHAR *file)
     if (file)
     {
         QFileInfo fileInfo(QSPTools::qspStrToQt(file));
-        if ( fileInfo.exists() && fileInfo.isFile() ) QSPOpenSavedGame(file, QSP_FALSE);
+        if (fileInfo.exists() && fileInfo.isFile()) QSPOpenSavedGame(file, QSP_FALSE);
     }
     else
     {
         m_frame->EnableControls(false);
-        QString path = QFileDialog::getOpenFileName(m_frame, MainWindow::tr("Select saved game file"), m_frame->GetLastPath(), MainWindow::tr("Saved game files (*.sav)"));
+        QString path = QFileDialog::getOpenFileName(m_frame, MainWindow::tr("Select saved game file"), m_frame->GetLastPath(),
+                                                    MainWindow::tr("Saved game files (*.sav)"));
         m_frame->EnableControls(true);
         if (!path.isEmpty())
         {
@@ -409,7 +406,8 @@ void QSPCallBacks::SaveGameStatus(const QSP_CHAR *file)
     else
     {
         m_frame->EnableControls(false);
-        QString path = QFileDialog::getSaveFileName(m_frame, MainWindow::tr("Select file to save"), m_frame->GetLastPath(), MainWindow::tr("Saved game files (*.sav)"));
+        QString path = QFileDialog::getSaveFileName(m_frame, MainWindow::tr("Select file to save"), m_frame->GetLastPath(),
+                                                    MainWindow::tr("Saved game files (*.sav)"));
         m_frame->EnableControls(true);
         if (!path.isEmpty())
         {
@@ -423,8 +421,8 @@ void QSPCallBacks::UpdateGamePath()
 {
     QFileInfo fileName(QSPTools::qspStrToQt(QSPGetQstFullPath()));
     m_gamePath = fileName.canonicalPath();
-    if(!m_gamePath.endsWith("/")) m_gamePath+="/";
-    //m_frame->UpdateGamePath(m_gamePath);
+    if (!m_gamePath.endsWith("/")) m_gamePath += "/";
+    // m_frame->UpdateGamePath(m_gamePath);
     m_frame->GetDesc()->SetGamePath(m_gamePath);
     m_frame->GetObjects()->SetGamePath(m_gamePath);
     m_frame->GetActions()->SetGamePath(m_gamePath);
@@ -435,9 +433,10 @@ void QSPCallBacks::UpdateGamePath()
 bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
 {
     if (!IsPlay(file)) return false;
-    QSPSounds::iterator elem = m_sounds.find(QString(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
+    QSPSounds::iterator elem = m_sounds.find(
+        QString(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
     QMediaPlayer *snd = elem.value();
-    snd->setVolume(volume*m_volumeCoeff);
+    snd->setVolume(volume * m_volumeCoeff);
     return true;
 }
 
@@ -452,8 +451,7 @@ void QSPCallBacks::SetOverallVolume(float coeff)
     for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
     {
         snd = i.value();
-        if (snd->state() == QMediaPlayer::PlayingState)
-            snd->setVolume(snd->volume()*m_volumeCoeff);
+        if (snd->state() == QMediaPlayer::PlayingState) snd->setVolume(snd->volume() * m_volumeCoeff);
     }
 }
 
@@ -469,7 +467,7 @@ void QSPCallBacks::UpdateSounds()
     while (i != m_sounds.end())
     {
         snd = i.value();
-        if(snd->state() == QMediaPlayer::PlayingState)
+        if (snd->state() == QMediaPlayer::PlayingState)
             ++i;
         else
         {

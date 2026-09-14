@@ -1,12 +1,13 @@
 #ifndef OPTIONSDIALOG_H
 #define OPTIONSDIALOG_H
 
+#include <QColor>
 #include <QDialog>
 #include <QFont>
-#include <QColor>
 #include <QString>
 
-namespace Ui {
+namespace Ui
+{
 class OptionsDialog;
 }
 

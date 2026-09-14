@@ -1,16 +1,18 @@
 #include "mainwindow.h"
-#include <QCoreApplication>
+
 #include <QApplication>
+#include <QCommandLineParser>
+#include <QCoreApplication>
+#include <QFileInfo>
+#include <QLocale>
 #include <QObject>
 #include <QSettings>
-#include <QTranslator>
 #include <QString>
-#include <QLocale>
-#include <QCommandLineParser>
-#include <QFileInfo>
+#include <QTranslator>
 #ifdef _WEBBOX
-#include <QtWebEngine>
 #include "url_schemes.h"
+
+#include <QtWebEngine>
 #endif
 
 int main(int argc, char *argv[])
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
 
     QString langid;
     QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
-    if(settingsFile.exists() && settingsFile.isFile())
+    if (settingsFile.exists() && settingsFile.isFile())
     {
         QSettings settings(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG, QSettings::IniFormat);
         langid = settings.value("application/language", QLocale::system().name()).toString();
@@ -39,11 +41,10 @@ int main(int argc, char *argv[])
     }
     QTranslator qtTranslator;
 
-    if(qtTranslator.load(QApplication::applicationName() + "." + langid, QApplication::applicationDirPath()))
+    if (qtTranslator.load(QApplication::applicationName() + "." + langid, QApplication::applicationDirPath()))
         a.installTranslator(&qtTranslator);
-    else
-        if(qtTranslator.load(QApplication::applicationName() + "." + langid, ":/translations/"))
-            a.installTranslator(&qtTranslator);
+    else if (qtTranslator.load(QApplication::applicationName() + "." + langid, ":/translations/"))
+        a.installTranslator(&qtTranslator);
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Qqsp");
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
 
     MainWindow w;
 
-    if(parser.positionalArguments().size() != 0)
+    if (parser.positionalArguments().size() != 0)
     {
         QFileInfo file(parser.positionalArguments().at(0));
         w.OpenGameFile(file.filePath());

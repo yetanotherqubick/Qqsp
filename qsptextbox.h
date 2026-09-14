@@ -1,21 +1,21 @@
 #ifndef QSPTEXTBOX_H
 #define QSPTEXTBOX_H
 
-#include <QWidget>
-#include <QTextBrowser>
-#include <QString>
-#include <QFont>
+#include "videolabel.h"
+
 #include <QColor>
+#include <QFont>
 #include <QImage>
-#include <QVariant>
-#include <QUrl>
-#include <QMovie>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QMap>
-#include <QKeyEvent>
+#include <QMovie>
 #include <QMutex>
-
-#include "videolabel.h"
+#include <QString>
+#include <QTextBrowser>
+#include <QUrl>
+#include <QVariant>
+#include <QWidget>
 
 struct animation_gif
 {
@@ -28,7 +28,8 @@ struct animation_video
     VideoLabel *videoLabel;
 };
 
-namespace Ui {
+namespace Ui
+{
 class QspTextBox;
 }
 
@@ -45,24 +46,36 @@ public:
 
     // Accessors
     void SetIsHtml(bool isHtml);
-    void SetText(const QString& text, bool isScroll = false);
-    void SetTextFont(const QFont& new_font);
-    QFont GetTextFont() const { return m_font; }
-    QString GetText() const { return m_text; }
+    void SetText(const QString &text, bool isScroll = false);
+    void SetTextFont(const QFont &new_font);
+    QFont GetTextFont() const
+    {
+        return m_font;
+    }
+    QString GetText() const
+    {
+        return m_text;
+    }
     bool SetLinkColor(const QColor &color);
-    QColor GetLinkColor() { return m_linkColor; }
-    void SetGamePath(const QString& path);
+    QColor GetLinkColor()
+    {
+        return m_linkColor;
+    }
+    void SetGamePath(const QString &path);
     QColor GetBackgroundColor();
-    QColor GetForegroundColor(); //text color
-    bool SetBackgroundColor(const QColor& color);
-    bool SetForegroundColor(const QColor& color);
+    QColor GetForegroundColor(); // text color
+    bool SetBackgroundColor(const QColor &color);
+    bool SetForegroundColor(const QColor &color);
     void SetShowPlainText(bool isPlain);
-    void SetDisableVideo(bool isDisableVideo) { disableVideo = isDisableVideo; }
+    void SetDisableVideo(bool isDisableVideo)
+    {
+        disableVideo = isDisableVideo;
+    }
     void keyPressEvent(QKeyEvent *event);
 #ifndef _WEBBOX_COMMON
-    void SetBackgroundImage(const QImage& bmpBg);
-    void LoadBackImage(const QString& fileName);
-    //TODO:
+    void SetBackgroundImage(const QImage &bmpBg);
+    void LoadBackImage(const QString &fileName);
+    // TODO:
     void SetHead(const QString &head) {};
     void SetFontType(const int fontType) {};
     void SetSizeType(const int sizeType) {};

@@ -1,21 +1,22 @@
 #ifndef QSPWEBBOX_H
 #define QSPWEBBOX_H
 
-#include <QWidget>
-#include <QWebEngineView>
-#include <QString>
-#include <QFont>
-#include <QColor>
-#include <QVariant>
-#include <QUrl>
-#include <QWebChannel>
-#include <QWebEngineProfile>
-
-#include "qspwebengineurlschemehandler.h"
 #include "qspexecwebengineurlschemehandler.h"
 #include "qspwebchannel.h"
+#include "qspwebengineurlschemehandler.h"
 
-namespace Ui {
+#include <QColor>
+#include <QFont>
+#include <QString>
+#include <QUrl>
+#include <QVariant>
+#include <QWebChannel>
+#include <QWebEngineProfile>
+#include <QWebEngineView>
+#include <QWidget>
+
+namespace Ui
+{
 class QspWebBox;
 }
 
@@ -29,21 +30,30 @@ public:
 
     // Methods
     void RefreshUI(bool isScroll = false);
-    void LoadBackImage(const QString& fileName);
+    void LoadBackImage(const QString &fileName);
 
     // Accessors
     void SetIsHtml(bool isHtml);
-    void SetText(const QString& text, bool isScroll = false);
-    void SetTextFont(const QFont& new_font);
-    QFont GetTextFont() const { return m_font; }
-    QString GetText() const { return m_text; }
+    void SetText(const QString &text, bool isScroll = false);
+    void SetTextFont(const QFont &new_font);
+    QFont GetTextFont() const
+    {
+        return m_font;
+    }
+    QString GetText() const
+    {
+        return m_text;
+    }
     bool SetLinkColor(const QColor &color);
-    QColor GetLinkColor() { return m_linkColor; }
-    void SetGamePath(const QString& path);
+    QColor GetLinkColor()
+    {
+        return m_linkColor;
+    }
+    void SetGamePath(const QString &path);
     QColor GetBackgroundColor();
-    QColor GetForegroundColor(); //text color
-    bool SetBackgroundColor(const QColor& color);
-    bool SetForegroundColor(const QColor& color);
+    QColor GetForegroundColor(); // text color
+    bool SetBackgroundColor(const QColor &color);
+    bool SetForegroundColor(const QColor &color);
     void SetShowPlainText(bool isPlain);
     void SetVideoFix(bool isFix);
     void SetHead(const QString &head);

@@ -1,18 +1,15 @@
 #include "qspexecwebengineurlschemehandler.h"
 
-#include <QString>
-#include <QBuffer>
-#include <QUrl>
-#include <QMessageBox>
-
-#include <qsp_default.h>
 #include "callbacks_gui.h"
 #include "comtools.h"
 
-QspExecWebEngineUrlSchemeHandler::QspExecWebEngineUrlSchemeHandler(QObject *parent) : QWebEngineUrlSchemeHandler(parent)
-{
+#include <QBuffer>
+#include <QMessageBox>
+#include <QString>
+#include <QUrl>
+#include <qsp_default.h>
 
-}
+QspExecWebEngineUrlSchemeHandler::QspExecWebEngineUrlSchemeHandler(QObject *parent) : QWebEngineUrlSchemeHandler(parent) {}
 
 void QspExecWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *request)
 {
@@ -40,18 +37,16 @@ void QspExecWebEngineUrlSchemeHandler::legacyLinkClicked(QWebEngineUrlRequestJob
         QString desc = QSPTools::qspStrToQt(QSPGetErrorDesc(code));
         if (loc)
             errorMessage = QString("Location: %1\nArea: %2\nLine: %3\nCode: %4\nDesc: %5")
-                    .arg(QSPTools::qspStrToQt(loc))
-                    .arg(actIndex < 0 ? QString("on visit") : QString("on action"))
-                    .arg(line)
-                    .arg(code)
-                    .arg(desc);
+                               .arg(QSPTools::qspStrToQt(loc))
+                               .arg(actIndex < 0 ? QString("on visit") : QString("on action"))
+                               .arg(line)
+                               .arg(code)
+                               .arg(desc);
         else
-            errorMessage = QString("Code: %1\nDesc: %2")
-                    .arg(code)
-                    .arg(desc);
+            errorMessage = QString("Code: %1\nDesc: %2").arg(code).arg(desc);
         QMessageBox dialog(QMessageBox::Critical, tr("Error"), errorMessage, QMessageBox::Ok);
         dialog.exec();
         QSPCallBacks::RefreshInt(QSP_FALSE);
     }
-    //request->redirect(QUrl("qsp:/"));
+    // request->redirect(QUrl("qsp:/"));
 }

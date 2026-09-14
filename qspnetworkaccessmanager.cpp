@@ -1,29 +1,27 @@
 #include "qspnetworkaccessmanager.h"
+
 #include "qspreply.h"
 
 QspNetworkAccessManager::QspNetworkAccessManager(QNetworkAccessManager *oldManager, QObject *parent) : QNetworkAccessManager(parent)
 {
-    //setCache(oldManager->cache());
+    // setCache(oldManager->cache());
     setCookieJar(oldManager->cookieJar());
-    //setProxy(oldManager->proxy());
-    //setProxyFactory(oldManager->proxyFactory());
+    // setProxy(oldManager->proxy());
+    // setProxyFactory(oldManager->proxyFactory());
 }
 
-QspNetworkAccessManager::~QspNetworkAccessManager()
-{
-
-}
+QspNetworkAccessManager::~QspNetworkAccessManager() {}
 
 void QspNetworkAccessManager::SetPlainText(const QString &text)
 {
     m_isUseHtml = false;
-    m_text= text;
+    m_text = text;
 }
 
 void QspNetworkAccessManager::SetHtml(const QString &text)
 {
     m_isUseHtml = true;
-    m_text =text;
+    m_text = text;
 }
 
 void QspNetworkAccessManager::SetGamePath(const QString &path)
@@ -56,9 +54,8 @@ void QspNetworkAccessManager::SetTextFont(const QFont &new_font)
     m_font = new_font;
 }
 
-QNetworkReply *QspNetworkAccessManager::createRequest(
-    QNetworkAccessManager::Operation operation, const QNetworkRequest &request,
-    QIODevice *device)
+QNetworkReply *QspNetworkAccessManager::createRequest(QNetworkAccessManager::Operation operation, const QNetworkRequest &request,
+                                                      QIODevice *device)
 {
     if (request.url().scheme() == "http" || request.url().scheme() == "https")
         return QNetworkAccessManager::createRequest(operation, request, device);

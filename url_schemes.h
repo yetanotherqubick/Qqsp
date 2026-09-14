@@ -1,11 +1,11 @@
 #ifndef URL_SCHEMES_H
 #define URL_SCHEMES_H
 
-#include "qspwebengineurlschemehandler.h"
 #include "qspexecwebengineurlschemehandler.h"
+#include "qspwebengineurlschemehandler.h"
 
-//static QspWebEngineUrlSchemeHandler qweush;
-//static QspExecWebEngineUrlSchemeHandler qeweush;
+// static QspWebEngineUrlSchemeHandler qweush;
+// static QspExecWebEngineUrlSchemeHandler qeweush;
 
 void register_url_schemes();
 

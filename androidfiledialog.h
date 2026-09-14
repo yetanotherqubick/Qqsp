@@ -1,10 +1,10 @@
 #ifndef ANDROIDFILEDIALOG_H
 #define ANDROIDFILEDIALOG_H
 
-#include <QObject>
-#include <QAndroidJniObject>
-#include <QtAndroid>
 #include <QAndroidActivityResultReceiver>
+#include <QAndroidJniObject>
+#include <QObject>
+#include <QtAndroid>
 
 class AndroidFileDialog : public QObject
 {
@@ -16,8 +16,10 @@ public:
     bool provideExistingFileName();
 
 private:
-    class ResultReceiver : public QAndroidActivityResultReceiver {
+    class ResultReceiver : public QAndroidActivityResultReceiver
+    {
         AndroidFileDialog *_dialog;
+
     public:
         ResultReceiver(AndroidFileDialog *dialog);
         virtual ~ResultReceiver();

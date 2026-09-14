@@ -1,15 +1,14 @@
 #include "qsplistbox.h"
 
-#include <QListWidgetItem>
+#include "comtools.h"
+#include "qsptextbox.h"
+
+#include <QFileInfo>
 #include <QLabel>
 #include <QList>
-#include <QFileInfo>
-#include <QScrollBar>
+#include <QListWidgetItem>
 #include <QPalette>
-
-#include "comtools.h"
-
-#include "qsptextbox.h"
+#include <QScrollBar>
 
 QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
 {
@@ -17,30 +16,27 @@ QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
     setFocusPolicy(Qt::NoFocus);
     setEditTriggers(QAbstractItemView::NoEditTriggers);
     setSizeAdjustPolicy(QListWidget::AdjustToContents);
-    setContentsMargins(0,0,0,0);
+    setContentsMargins(0, 0, 0, 0);
     setSpacing(0);
     setFrameStyle(QFrame::NoFrame);
     setFrameShadow(QFrame::Plain);
     m_isUseHtml = false;
     m_isShowNums = false;
     showPlainText = false;
-    //m_linkColor = palette().color(QPalette::Link);
-    //m_textColor = palette().color(QPalette::Text);
-    //m_backgroundColor = QColor(224, 224, 224);
+    // m_linkColor = palette().color(QPalette::Link);
+    // m_textColor = palette().color(QPalette::Text);
+    // m_backgroundColor = QColor(224, 224, 224);
     m_selectionColor = palette().color(QPalette::Highlight);
     m_font = font();
     oldSelection = -1;
     m_mouseTracking = false;
 }
 
-QspListBox::~QspListBox()
-{
-
-}
+QspListBox::~QspListBox() {}
 
 void QspListBox::RefreshUI()
 {
-//	RefreshAll();
+    //	RefreshAll();
 }
 
 void QspListBox::BeginItems()
@@ -49,7 +45,7 @@ void QspListBox::BeginItems()
     m_newDescs.clear();
 }
 
-void QspListBox::AddItem(const QString& image, const QString& desc)
+void QspListBox::AddItem(const QString &image, const QString &desc)
 {
     m_newImages.append(image);
     m_newDescs.append(desc);
@@ -89,7 +85,7 @@ void QspListBox::SetIsShowNums(bool isShow)
     }
 }
 
-void QspListBox::SetTextFont(const QFont& new_font)
+void QspListBox::SetTextFont(const QFont &new_font)
 {
     if (m_font != new_font)
     {
@@ -101,11 +97,11 @@ void QspListBox::SetTextFont(const QFont& new_font)
 
 bool QspListBox::SetLinkColor(const QColor &color)
 {
-    if(m_linkColor != color)
+    if (m_linkColor != color)
     {
         m_linkColor = color;
         createList();
-        //RefreshUI();
+        // RefreshUI();
         return true;
     }
     return false;
@@ -128,7 +124,7 @@ QColor QspListBox::GetForegroundColor()
 
 bool QspListBox::SetBackgroundColor(const QColor &color)
 {
-    if(m_backgroundColor != color)
+    if (m_backgroundColor != color)
     {
         QPalette p = palette();
         p.setColor(QPalette::Base, color);
@@ -142,7 +138,7 @@ bool QspListBox::SetBackgroundColor(const QColor &color)
 
 bool QspListBox::SetForegroundColor(const QColor &color)
 {
-    if(m_textColor != color)
+    if (m_textColor != color)
     {
         m_textColor = color;
         createList();
@@ -153,22 +149,19 @@ bool QspListBox::SetForegroundColor(const QColor &color)
 
 void QspListBox::SetSelection(int selection)
 {
-    if(selection != oldSelection)
+    if (selection != oldSelection)
     {
-        if(selection != -1 && selection < (count() - 1))
-            if(item(selection) != 0)
-                scrollToItem(item(selection));
-        if(selection != -1)
+        if (selection != -1 && selection < (count() - 1))
+            if (item(selection) != 0) scrollToItem(item(selection));
+        if (selection != -1)
         {
-            QListWidgetItem *curItem =item(selection);
-            if (curItem != 0)
-                qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+            QListWidgetItem *curItem = item(selection);
+            if (curItem != 0) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
         }
-        if(oldSelection != -1)
+        if (oldSelection != -1)
         {
-            QListWidgetItem *curItem =item(oldSelection);
-            if (curItem != 0)
-                qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
+            QListWidgetItem *curItem = item(oldSelection);
+            if (curItem != 0) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
         }
         oldSelection = selection;
         emit SelectionChange(selection);
@@ -190,25 +183,25 @@ void QspListBox::SetMouseTracking(bool trackMouse)
 
 void QspListBox::createList()
 {
-    //clear(); //NOTE: clear() only deletes items but does not delete the widgets belonging to it. The widgets will be deleted if the QListWidget is deleted.
-    //bool oldState = blockSignals(true);
-    for(int i = 0; i<count(); i++)
+    // clear(); //NOTE: clear() only deletes items but does not delete the widgets belonging to it. The widgets will be deleted if the
+    // QListWidget is deleted. bool oldState = blockSignals(true);
+    for (int i = 0; i < count(); i++)
     {
         removeItemWidget(item(i));
     }
     clear();
-    for(int i = 0; i < qMin(m_images.size(), m_descs.size()); i++)
+    for (int i = 0; i < qMin(m_images.size(), m_descs.size()); i++)
     {
         QString item_tmp;
         item_tmp = formatItem(i);
 
-        QListWidgetItem* listItem;
+        QListWidgetItem *listItem;
         listItem = new QListWidgetItem(this);
         listItem->setBackground(m_backgroundColor);
         addItem(listItem);
         QspTextBox *item_widget;
         item_widget = new QspTextBox(this);
-        //item_widget->setFrameStyle(QFrame::Box);
+        // item_widget->setFrameStyle(QFrame::Box);
         item_widget->setLineWidth(0);
         item_widget->viewport()->setMouseTracking(false);
         item_widget->setAttribute(Qt::WA_TransparentForMouseEvents);
@@ -223,7 +216,7 @@ void QspListBox::createList()
         item_widget->SetTextFont(m_font);
 
         item_widget->SetGamePath(m_path);
-        //item_widget->setMaximumHeight(800);
+        // item_widget->setMaximumHeight(800);
         item_widget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         item_widget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         item_widget->verticalScrollBar()->setEnabled(false);
@@ -231,44 +224,44 @@ void QspListBox::createList()
         item_widget->setReadOnly(true);
         item_widget->setBackgroundRole(QPalette::NoRole);
         item_widget->setTextInteractionFlags(Qt::NoTextInteraction);
-        //item_widget->setWordWrapMode(QTextOption::NoWrap);
+        // item_widget->setWordWrapMode(QTextOption::NoWrap);
         item_widget->setWordWrapMode(QTextOption::WordWrap);
-        //QFontMetrics font_metrics(item_widget->font());
-        //item_widget->setFixedHeight(font_metrics.height() + 4* item_widget->frameWidth());
+        // QFontMetrics font_metrics(item_widget->font());
+        // item_widget->setFixedHeight(font_metrics.height() + 4* item_widget->frameWidth());
         item_widget->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
         item_widget->sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
         item_widget->sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
 
         item_widget->SetText(item_tmp);
 
-        //QSize sizehint = QSize(item->sizeHint().width(), font_metrics.height()*2 + item_widget->frameWidth()*2);
-        //QSize sizehint = item_widget->sizeHint();
-        //sizehint.setHeight(item_widget->document()->size().toSize().height());
-        //sizehint.setHeight(item_widget->heightForWidth(this->width()));
-        item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
-        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
+        // QSize sizehint = QSize(item->sizeHint().width(), font_metrics.height()*2 + item_widget->frameWidth()*2);
+        // QSize sizehint = item_widget->sizeHint();
+        // sizehint.setHeight(item_widget->document()->size().toSize().height());
+        // sizehint.setHeight(item_widget->heightForWidth(this->width()));
+        item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 -
+                                              item_widget->frameWidth() * 4);
+        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth() * 4,
+                               item_widget->document()->size().toSize().height() + item_widget->frameWidth() * 2);
         listItem->setSizeHint(sizehint);
         setItemWidget(listItem, item_widget);
     }
-    if(oldSelection != -1)
+    if (oldSelection != -1)
     {
-        QListWidgetItem *curItem =item(oldSelection);
-        if (curItem != 0)
-            qobject_cast<QspTextBox*>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+        QListWidgetItem *curItem = item(oldSelection);
+        if (curItem != 0) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
     }
     adjustSize();
-    //resizeEvent(0);
-    //blockSignals(oldState);
+    // resizeEvent(0);
+    // blockSignals(oldState);
 }
 
 QString QspListBox::formatItem(int itemIndex)
 {
-    if(itemIndex >= m_images.size() || itemIndex >= m_descs.size())
-        return QString("");
+    if (itemIndex >= m_images.size() || itemIndex >= m_descs.size()) return QString("");
 
     bool isImage = false;
     QString imgPath;
-    if(!m_images.at(itemIndex).isEmpty())
+    if (!m_images.at(itemIndex).isEmpty())
     {
         QFileInfo imgFile(m_path + m_images.at(itemIndex));
         if (imgFile.exists() && imgFile.isFile())
@@ -284,34 +277,34 @@ QString QspListBox::formatItem(int itemIndex)
         if (isImage)
         {
             return QString("<table cellspacing = 4 cellpadding = 0><td>[%1]</td><td><img src=\"%2\"></td><td WIDTH = 100%>%3</td></table>")
-                    .arg(itemIndex+1)
-                    .arg(imgPath)
-                    .arg(m_descs.at(itemIndex));
+                .arg(itemIndex + 1)
+                .arg(imgPath)
+                .arg(m_descs.at(itemIndex));
         }
         else
         {
             return QString("<table cellspacing = 4 cellpadding = 0><tr><td>[%1]</td><td width = 100%>%2</td></td></table>")
-                    .arg(itemIndex+1)
-                    .arg(m_descs.at(itemIndex));
+                .arg(itemIndex + 1)
+                .arg(m_descs.at(itemIndex));
         }
     }
     else
     {
-        if(isImage)
+        if (isImage)
         {
             return QString("<table cellspacing = 4 cellpadding = 0><td><img src=\"%2\"></td><td WIDTH = 100%>%3</td></table>")
-                    .arg(imgPath)
-                    .arg(m_descs.at(itemIndex));
+                .arg(imgPath)
+                .arg(m_descs.at(itemIndex));
         }
-        if(!m_descs.at(itemIndex).isEmpty())
+        if (!m_descs.at(itemIndex).isEmpty())
         {
             return m_descs.at(itemIndex);
         }
     }
     return formatedText;
 
-    //TODO: make this variant work
-    if(m_descs.at(itemIndex).isEmpty())
+    // TODO: make this variant work
+    if (m_descs.at(itemIndex).isEmpty())
     {
         formatedText = "";
     }
@@ -326,50 +319,53 @@ QString QspListBox::formatItem(int itemIndex)
     {
         if (isImage)
         {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; margin-right:4px;\">[%2]</div><div style=\"padding:0px; margin-right:4px;\"><img src=\"%3\"></div>%4</div>")
-                    .arg(color)
-                    .arg(itemIndex+1)
-                    .arg(imgPath)
-                    .arg(formatedText);
+            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; "
+                           "margin-right:4px;\">[%2]</div><div style=\"padding:0px; margin-right:4px;\"><img src=\"%3\"></div>%4</div>")
+                .arg(color)
+                .arg(itemIndex + 1)
+                .arg(imgPath)
+                .arg(formatedText);
         }
         else
         {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; margin-right:4px;\">[%2]</div>%3</div>")
-                    .arg(color)
-                    .arg(itemIndex+1)
-                    .arg(formatedText);
+            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; "
+                           "margin-right:4px;\">[%2]</div>%3</div>")
+                .arg(color)
+                .arg(itemIndex + 1)
+                .arg(formatedText);
         }
     }
     else
     {
         if (isImage)
         {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; margin-right:4px;\"><img src=\"%2\"></div>%3</div>")
-                    .arg(color)
-                    .arg(imgPath)
-                    .arg(formatedText);
+            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\"><div style=\"padding:0px; "
+                           "margin-right:4px;\"><img src=\"%2\"></div>%3</div>")
+                .arg(color)
+                .arg(imgPath)
+                .arg(formatedText);
         }
         else
         {
-            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\">%2</div>")
-                    .arg(color)
-                    .arg(formatedText);
+            return QString("<div style=\"color : #%1; -qt-block-indent:0; text-indent:0px;\">%2</div>").arg(color).arg(formatedText);
         }
     }
 }
 
 void QspListBox::resizeEvent(QResizeEvent *e)
 {
-    for(int i = 0; i<count(); i++)
+    for (int i = 0; i < count(); i++)
     {
-        QListWidgetItem* listItem = item(i);
-        if(listItem != 0)
+        QListWidgetItem *listItem = item(i);
+        if (listItem != 0)
         {
-            QspTextBox *item_widget = qobject_cast<QspTextBox*>(itemWidget(listItem));
-            if(item_widget != 0)
+            QspTextBox *item_widget = qobject_cast<QspTextBox *>(itemWidget(listItem));
+            if (item_widget != 0)
             {
-                item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4);
-                QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth()*4, item_widget->document()->size().toSize().height() + item_widget->frameWidth()*2);
+                item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 -
+                                                      item_widget->frameWidth() * 4);
+                QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth() * 4,
+                                       item_widget->document()->size().toSize().height() + item_widget->frameWidth() * 2);
                 listItem->setSizeHint(sizehint);
             }
         }
@@ -379,7 +375,7 @@ void QspListBox::resizeEvent(QResizeEvent *e)
 
 void QspListBox::mouseMoveEvent(QMouseEvent *event)
 {
-    if(m_mouseTracking)
+    if (m_mouseTracking)
     {
         QListWidgetItem *curItem = itemAt(event->pos());
         if (curItem != 0)

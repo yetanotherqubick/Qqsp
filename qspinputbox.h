@@ -1,12 +1,13 @@
 #ifndef QSPINPUTBOX_H
 #define QSPINPUTBOX_H
 
-#include <QWidget>
 #include <QPlainTextEdit>
 #include <QString>
 #include <QStringList>
+#include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class QspInputBox;
 }
 
@@ -15,13 +16,13 @@ class QspInputBox : public QPlainTextEdit
     Q_OBJECT
 
 signals:
-   void InputTextEnter();
+    void InputTextEnter();
 
 public:
     explicit QspInputBox(QWidget *parent = 0);
     ~QspInputBox();
     // Accessors
-    void SetText(const QString& text);
+    void SetText(const QString &text);
     QString GetText();
 
 private:

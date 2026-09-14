@@ -1,35 +1,36 @@
 #ifndef CALLBACKS_GUI_H
 #define CALLBACKS_GUI_H
 
-#include <QString>
-#include <qsp_default.h>
-#include <QMap>
-#include <QMediaPlayer>
 #include "mainwindow.h"
 
-typedef QMap<QString, QMediaPlayer*> QSPSounds;
+#include <QMap>
+#include <QMediaPlayer>
+#include <QString>
+#include <qsp_default.h>
 
-//static QSPString qspStringFromPair(const QSP_CHAR *start, const QSP_CHAR *end)
-//{
-//    QSPString string;
-//    string.Str = (QSP_CHAR *)start;
-//    string.End = (QSP_CHAR *)end;
-//    return string;
-//}
+typedef QMap<QString, QMediaPlayer *> QSPSounds;
 
-//static QSPString qspStringFromLen(const QSP_CHAR *s, int len)
+// static QSPString qspStringFromPair(const QSP_CHAR *start, const QSP_CHAR *end)
 //{
-//    QSPString string;
-//    string.Str = (QSP_CHAR *)s;
-//    string.End = (QSP_CHAR *)s + len;
-//    return string;
-//}
+//     QSPString string;
+//     string.Str = (QSP_CHAR *)start;
+//     string.End = (QSP_CHAR *)end;
+//     return string;
+// }
+
+// static QSPString qspStringFromLen(const QSP_CHAR *s, int len)
+//{
+//     QSPString string;
+//     string.Str = (QSP_CHAR *)s;
+//     string.End = (QSP_CHAR *)s + len;
+//     return string;
+// }
 
 static const QSP_CHAR *qspStringFromQString(const QString &s)
 {
-    //QSPString string;
-    //string.Str = (QSP_CHAR *)s.utf16();
-    //string.End = (QSP_CHAR *)s.utf16() + s.length();
+    // QSPString string;
+    // string.Str = (QSP_CHAR *)s.utf16();
+    // string.End = (QSP_CHAR *)s.utf16() + s.length();
     return (QSP_CHAR *)s.utf16();
 }
 
@@ -58,11 +59,12 @@ public:
     static int ShowMenu();
     static void Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen);
     static void ShowImage(const QSP_CHAR *file);
-    //static void OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame);
+    // static void OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame);
     static void OpenGameStatus(const QSP_CHAR *file);
     static void SaveGameStatus(const QSP_CHAR *file);
 
     static QString m_gamePath;
+
 private:
     // Internal methods
     static void UpdateGamePath();

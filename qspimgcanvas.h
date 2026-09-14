@@ -1,17 +1,18 @@
 #ifndef QSPIMGCANVAS_H
 #define QSPIMGCANVAS_H
 
-#include <QWidget>
-#include <QLabel>
-#include <QString>
-#include <QColor>
-#include <QPixmap>
-#include <QVBoxLayout>
-#include <QKeyEvent>
 #include <QCloseEvent>
+#include <QColor>
+#include <QKeyEvent>
+#include <QLabel>
 #include <QMovie>
+#include <QPixmap>
+#include <QString>
+#include <QVBoxLayout>
+#include <QWidget>
 
-namespace Ui {
+namespace Ui
+{
 class QspImgCanvas;
 }
 
@@ -24,12 +25,12 @@ public:
     ~QspImgCanvas();
 
     // Methods
-    bool OpenFile(const QString& fileName);
+    bool OpenFile(const QString &fileName);
     void RefreshUI();
-    void SetGamePath(const QString& path);
+    void SetGamePath(const QString &path);
 
     // Overloaded methods
-    virtual bool SetBackgroundColor(const QColor& color);
+    virtual bool SetBackgroundColor(const QColor &color);
 
 private:
     void resizeEvent(QResizeEvent *event);
@@ -42,8 +43,8 @@ private:
     QString m_path;
     int m_posX;
     int m_posY;
-//    void keyPressEvent(QKeyEvent *event);
-//    void closeEvent(QCloseEvent *event);
+    //    void keyPressEvent(QKeyEvent *event);
+    //    void closeEvent(QCloseEvent *event);
 private slots:
     void OnNewFrame(int frameNumber);
 };
