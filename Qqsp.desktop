@@ -8,4 +8,4 @@ Icon=qsp
 Terminal=false
 StartupNotify=false
 Categories=Application;Game;
-MimeType=application/x-qsp; 
+MimeType=application/x-qsp;
