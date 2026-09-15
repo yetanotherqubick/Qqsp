@@ -32,7 +32,7 @@ QspListBox::QspListBox(QWidget *parent) : QListWidget(parent)
     m_mouseTracking = false;
 }
 
-QspListBox::~QspListBox() {}
+QspListBox::~QspListBox() = default;
 
 void QspListBox::RefreshUI()
 {

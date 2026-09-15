@@ -31,7 +31,7 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
     m_videoError = false;
 }
 
-VideoLabel::~VideoLabel() {}
+VideoLabel::~VideoLabel() = default;
 
 bool VideoLabel::videoError()
 {

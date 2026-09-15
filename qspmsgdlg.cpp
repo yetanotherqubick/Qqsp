@@ -10,7 +10,7 @@
 
 QspMsgDlg::QspMsgDlg(QWidget *parent) : QDialog(parent) {}
 
-QspMsgDlg::~QspMsgDlg() {}
+QspMsgDlg::~QspMsgDlg() = default;
 
 QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *parent) : QDialog(parent)
 {

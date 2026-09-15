@@ -12,7 +12,7 @@ VideoFrameProcessor::VideoFrameProcessor(QObject *parent) : QAbstractVideoSurfac
     //    timer.start(10000);
 }
 
-VideoFrameProcessor::~VideoFrameProcessor() {}
+VideoFrameProcessor::~VideoFrameProcessor() = default;
 
 bool VideoFrameProcessor::present(const QVideoFrame &frame)
 {

@@ -26,7 +26,7 @@ QspImgCanvas::QspImgCanvas(QWidget *parent) : QWidget(parent)
     connect(&m_movie, SIGNAL(frameChanged(int)), this, SLOT(OnNewFrame(int)));
 }
 
-QspImgCanvas::~QspImgCanvas() {}
+QspImgCanvas::~QspImgCanvas() = default;
 
 bool QspImgCanvas::OpenFile(const QString &fileName)
 {

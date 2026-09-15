@@ -2,7 +2,7 @@
 
 QspInputDlg::QspInputDlg(QWidget *parent) : QWidget(parent) {}
 
-QspInputDlg::~QspInputDlg() {}
+QspInputDlg::~QspInputDlg() = default;
 
 QspInputDlg::QspInputDlg(const QColor &backColor, const QColor &fontColor, const QFont &font, const QString &caption, const QString &text,
                          bool isHtml, const QString &gamePath, QWidget *parent)

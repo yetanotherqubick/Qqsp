@@ -5,7 +5,7 @@ QspInputBox::QspInputBox(QWidget *parent) : QPlainTextEdit(parent)
     m_selIndex = -1;
 }
 
-QspInputBox::~QspInputBox() {}
+QspInputBox::~QspInputBox() = default;
 
 void QspInputBox::SetText(const QString &text)
 {

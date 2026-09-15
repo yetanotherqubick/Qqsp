@@ -51,7 +51,7 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     loop.exec();
 }
 
-QspWebBox::~QspWebBox() {}
+QspWebBox::~QspWebBox() = default;
 
 void QspWebBox::SetIsHtml(bool isHtml)
 {

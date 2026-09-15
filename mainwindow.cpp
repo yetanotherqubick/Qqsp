@@ -151,7 +151,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     }
 }
 
-MainWindow::~MainWindow() {}
+MainWindow::~MainWindow() = default;
 
 void MainWindow::EnableControls(bool status, bool isExtended)
 {
