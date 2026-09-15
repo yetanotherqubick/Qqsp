@@ -334,3 +334,9 @@ void QspWebBox::OnQspLinkClicked(QUrl url)
 {
     Q_EMIT qspLinkClicked(url);
 }
+#include <QColor>
+#include <QEvent>
+#include <QFont>
+#include <QStringLiteral>
+#include <QUrl>
+#include <QWidget>

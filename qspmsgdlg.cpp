@@ -99,3 +99,14 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
         QDesktopServices::openUrl(url);
     }
 }
+#include <QAbstractButton>
+#include <QColor>
+#include <QDialog>
+#include <QFont>
+#include <QHashFunctions>
+#include <QPaintDevice>
+#include <QSizePolicy>
+#include <QStringLiteral>
+#include <QTextBrowser>
+#include <QUrl>
+#include <QWidget>

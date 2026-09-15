@@ -191,3 +191,10 @@ void OptionsDialog::on_pushButton_ok_clicked()
 
     close();
 }
+#include <QColor>
+#include <QDir>
+#include <QFont>
+#include <QList>
+#include <QObject>
+#include <QVariant>
+#include <QWidget>

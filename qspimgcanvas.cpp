@@ -136,3 +136,10 @@ void QspImgCanvas::OnNewFrame(int frameNumber)
 //     setVisible(false);
 //     event->ignore();
 // }
+#include <QColor>
+#include <QEvent>
+#include <QFileInfo>
+#include <QFrame>
+#include <QMovie>
+#include <QSizePolicy>
+#include <QWidget>

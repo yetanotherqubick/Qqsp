@@ -1,4 +1,7 @@
 #include "qspinputbox.h"
+#include <QEvent>
+#include <QPlainTextEdit>
+#include <QWidget>
 
 QspInputBox::QspInputBox(QWidget *parent) : QPlainTextEdit(parent)
 {

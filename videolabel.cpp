@@ -58,3 +58,12 @@ void VideoLabel::OnNewFrame(QImage newVideoFrame)
         mutex.unlock();
     }
 }
+#include <QAbstractVideoSurface>
+#include <QHashFunctions>
+#include <QImage>
+#include <QLabel>
+#include <QMediaPlayer>
+#include <QMediaPlaylist>
+#include <QPixmap>
+#include <QSizePolicy>
+#include <QWidget>

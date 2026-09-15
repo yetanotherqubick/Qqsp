@@ -164,3 +164,6 @@ void QspWebEngineUrlSchemeHandler::SetCustomCSS(bool customCSS)
 {
     m_isCustomCSS = customCSS;
 }
+#include <QColor>
+#include <QFont>
+#include <QHashFunctions>

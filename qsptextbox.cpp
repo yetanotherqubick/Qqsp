@@ -461,3 +461,12 @@ void QspTextBox::repaintAnimation()
     viewport()->update();
 }
 #endif
+#include <QColor>
+#include <QEvent>
+#include <QFont>
+#include <QFrame>
+#include <QHashFunctions>
+#include <QList>
+#include <QTextBrowser>
+#include <QTextDocument>
+#include <QWidget>

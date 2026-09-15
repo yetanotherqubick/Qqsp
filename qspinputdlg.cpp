@@ -1,4 +1,8 @@
 #include "qspinputdlg.h"
+#include <QColor>
+#include <QFont>
+#include <QHashFunctions>
+#include <QWidget>
 
 QspInputDlg::QspInputDlg(QWidget *parent) : QWidget(parent) {}
 

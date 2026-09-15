@@ -95,3 +95,11 @@ void VideoFrameProcessor::OnFrameTimeout()
         hasFrame = true;
     }
 }
+#include <QAbstractVideoBuffer>
+#include <QAbstractVideoSurface>
+#include <QtGlobal>
+#include <QImage>
+#include <QList>
+#include <QObject>
+#include <QSize>
+#include <QVideoFrame>

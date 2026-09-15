@@ -42,3 +42,4 @@ void QspWebChannel::ShowError()
     dialog.exec();
     QSPCallBacks::RefreshInt(QSP_FALSE);
 }
+#include <QObject>

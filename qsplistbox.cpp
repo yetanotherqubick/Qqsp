@@ -406,3 +406,15 @@ void QspListBox::mouseMoveEvent(QMouseEvent *event)
     }
     QListWidget::mouseMoveEvent(event);
 }
+#include <QAbstractItemView>
+#include <QAbstractScrollArea>
+#include <QColor>
+#include <QEvent>
+#include <QFont>
+#include <QFrame>
+#include <QHashFunctions>
+#include <QSize>
+#include <QSizePolicy>
+#include <QStyle>
+#include <QTextOption>
+#include <QWidget>

@@ -73,3 +73,4 @@ void QspWebEngineUrlRequestInterceptor::interceptRequest(QWebEngineUrlRequestInf
     qDebug() << "\t" << Q_FUNC_INFO << ":\n\t\t" << "WebUrlRequestInterceptor::interceptRequest    " << info.requestMethod() << "\r\n  "
              << info.requestUrl() << "   " << rsrct << "\r\n";
 }
+#include <QUrl>

@@ -572,3 +572,6 @@ void QSPCallBacks::UpdateSounds()
         }
     }
 }
+#include <QMediaPlayer>
+#include <QObject>
+#include <QUrl>

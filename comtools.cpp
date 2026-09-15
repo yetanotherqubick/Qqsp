@@ -273,3 +273,8 @@ QColor QSPTools::wxtoQColor(int wxColor)
     col.setBlue(red);
     return col;
 }
+#include <cstddef>
+#include <QChar>
+#include <QColor>
+#include <QHash>
+#include <QHashFunctions>

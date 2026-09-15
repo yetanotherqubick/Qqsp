@@ -56,3 +56,5 @@ void QspExecWebEngineUrlSchemeHandler::legacyLinkClicked(QWebEngineUrlRequestJob
     }
     // request->redirect(QUrl("qsp:/"));
 }
+#include <QObject>
+#include <QTimer>

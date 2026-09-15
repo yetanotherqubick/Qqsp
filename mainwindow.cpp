@@ -1607,3 +1607,21 @@ void MainWindow::OnInputTextEnter()
         ShowError();
     }
 }
+#include <QAction>
+#include <QColor>
+#include <QCoreApplication>
+#include <QDockWidget>
+#include <QEvent>
+#include <QFont>
+#include <QKeySequence>
+#include <QListWidget>
+#include <QMainWindow>
+#include <QMenu>
+#include <QMenuBar>
+#include <QObject>
+#include <QPixmap>
+#include <QPlainTextEdit>
+#include <QStringLiteral>
+#include <QTimer>
+#include <QUrl>
+#include <QVariant>
