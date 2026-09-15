@@ -100,7 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_isShowHotkeys = false;
 
-    m_volume = 1.0f;
+    m_volume = 1.0F;
 
     disableVideo = false;
     m_videoFix = false;

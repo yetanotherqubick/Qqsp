@@ -184,9 +184,9 @@ void OptionsDialog::on_pushButton_ok_clicked()
     {
         mw->SetLangID(ui->comboBox_language->itemData(ui->comboBox_language->currentIndex()).toString());
     }
-    if (mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100.0f)
+    if (mw->GetOverallVolume() != ui->horizontalSlider_volume->value() / 100.0F)
     {
-        mw->SetOverallVolume(ui->horizontalSlider_volume->value() / 100.0f);
+        mw->SetOverallVolume(ui->horizontalSlider_volume->value() / 100.0F);
     }
 
     close();

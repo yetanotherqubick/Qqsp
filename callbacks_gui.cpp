@@ -30,7 +30,7 @@ bool QSPCallBacks::m_isAllowHTML5Extras;
 void QSPCallBacks::Init(MainWindow *frame)
 {
     m_frame = frame;
-    m_volumeCoeff = 1.0f;
+    m_volumeCoeff = 1.0F;
 
     m_isAllowHTML5Extras = false;
 
