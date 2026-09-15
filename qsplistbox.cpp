@@ -257,7 +257,7 @@ void QspListBox::createList()
 
 QString QspListBox::formatItem(int itemIndex)
 {
-    if (itemIndex >= m_images.size() || itemIndex >= m_descs.size()) return QString("");
+    if (itemIndex >= m_images.size() || itemIndex >= m_descs.size()) return {""};
 
     bool isImage = false;
     QString imgPath;

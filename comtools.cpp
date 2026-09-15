@@ -215,7 +215,7 @@ QString QSPTools::qspStrToQt(const QSP_CHAR *str)
 {
     // return QString::fromWCharArray(str.Str, (int)(str.End - str.Str));
     if (str == nullptr)
-        return QString("");
+        return {""};
     else
         return QString::fromUtf16(str);
 }
