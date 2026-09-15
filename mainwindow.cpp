@@ -1438,26 +1438,16 @@ void MainWindow::OnToggleCaptions(bool checked)
         _descWidget->setTitleBarWidget(nullptr);
         _inputWidget->setTitleBarWidget(nullptr);
     }
-    if (mainTitleBarWidget)
-    {
+
         delete mainTitleBarWidget;
-    }
-    if (objectsTitleBarWidget)
-    {
+
         delete objectsTitleBarWidget;
-    }
-    if (actionsTitleBarWidget)
-    {
+
         delete actionsTitleBarWidget;
-    }
-    if (descTitleBarWidget)
-    {
+
         delete descTitleBarWidget;
-    }
-    if (inputTitleBarWidget)
-    {
+
         delete inputTitleBarWidget;
-    }
 }
 
 void MainWindow::OnToggleMenuBar(bool checked)
