@@ -49,7 +49,7 @@ void VideoLabel::OnNewFrame(QImage newVideoFrame)
         if (!m_medialLoaded)
         {
             m_medialLoaded = true;
-            emit medialLoaded();
+            Q_EMIT medialLoaded();
         }
         mutex.unlock();
     }

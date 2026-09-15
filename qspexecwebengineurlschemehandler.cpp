@@ -19,7 +19,7 @@ void QspExecWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *r
 
 void QspExecWebEngineUrlSchemeHandler::QspLinkClicked()
 {
-    emit qspLinkClicked(url);
+    Q_EMIT qspLinkClicked(url);
 }
 
 void QspExecWebEngineUrlSchemeHandler::legacyLinkClicked(QWebEngineUrlRequestJob *request)

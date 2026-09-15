@@ -304,5 +304,5 @@ void QspWebBox::Quit()
 
 void QspWebBox::OnQspLinkClicked(QUrl url)
 {
-    emit qspLinkClicked(url);
+    Q_EMIT qspLinkClicked(url);
 }

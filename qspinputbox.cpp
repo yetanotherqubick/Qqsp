@@ -28,7 +28,7 @@ void QspInputBox::keyPressEvent(QKeyEvent *event)
     }
     else if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
     {
-        emit InputTextEnter();
+        Q_EMIT InputTextEnter();
         return;
     }
     QPlainTextEdit::keyPressEvent(event);

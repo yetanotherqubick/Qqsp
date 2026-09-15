@@ -35,8 +35,8 @@ bool VideoFrameProcessor::present(const QVideoFrame &frame)
                 mediaResolution = videoFrame.size();
                 hasFrame = true;
             }
-            emit newFrame(QImage(videoFrame.bits(), videoFrame.width(), videoFrame.height(), videoFrame.bytesPerLine(),
-                                 QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat())));
+            Q_EMIT newFrame(QImage(videoFrame.bits(), videoFrame.width(), videoFrame.height(), videoFrame.bytesPerLine(),
+                                   QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat())));
         }
         videoFrame.unmap();
     }

@@ -164,7 +164,7 @@ void QspListBox::SetSelection(int selection)
             if (curItem != nullptr) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
         }
         oldSelection = selection;
-        emit SelectionChange(selection);
+        Q_EMIT SelectionChange(selection);
     }
 }
 
