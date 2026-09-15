@@ -253,9 +253,9 @@ void QspListBox::createList()
         // sizehint.setHeight(item_widget->document()->size().toSize().height());
         // sizehint.setHeight(item_widget->heightForWidth(this->width()));
         item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 -
-                                              item_widget->frameWidth() * 4);
-        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth() * 4,
-                               item_widget->document()->size().toSize().height() + item_widget->frameWidth() * 2);
+                                              (item_widget->frameWidth() * 4));
+        QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - (item_widget->frameWidth() * 4),
+                               item_widget->document()->size().toSize().height() + (item_widget->frameWidth() * 2));
         listItem->setSizeHint(sizehint);
         setItemWidget(listItem, item_widget);
     }
@@ -383,9 +383,10 @@ void QspListBox::resizeEvent(QResizeEvent *e)
             if (item_widget != nullptr)
             {
                 item_widget->document()->setTextWidth(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 -
-                                                      item_widget->frameWidth() * 4);
-                QSize sizehint = QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - item_widget->frameWidth() * 4,
-                                       item_widget->document()->size().toSize().height() + item_widget->frameWidth() * 2);
+                                                      (item_widget->frameWidth() * 4));
+                QSize sizehint =
+                    QSize(this->width() - style()->pixelMetric(QStyle::PM_ScrollBarExtent) - 4 - (item_widget->frameWidth() * 4),
+                          item_widget->document()->size().toSize().height() + (item_widget->frameWidth() * 2));
                 listItem->setSizeHint(sizehint);
             }
         }

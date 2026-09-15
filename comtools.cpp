@@ -127,7 +127,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
         }
         else if (ch == QChar('\t'))
         {
-            for (j = 4 - linepos % 4; j > 0; --j)
+            for (j = 4 - (linepos % 4); j > 0; --j)
             {
                 if (isLastSpace)
                 {
@@ -139,7 +139,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
                 }
                 isLastSpace = !isLastSpace;
             }
-            linepos += 4 - linepos % 4;
+            linepos += 4 - (linepos % 4);
         }
         else
         {
