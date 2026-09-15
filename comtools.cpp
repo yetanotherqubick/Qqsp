@@ -19,9 +19,11 @@ QString QSPTools::GetHexColor(const QColor color)
 QString QSPTools::HtmlizeWhitespaces(const QString &str)
 {
     QString::const_iterator i;
-    QChar ch, quote;
+    QChar ch;
+    QChar quote;
     QString out;
-    size_t j, linepos = 0;
+    size_t j;
+    size_t linepos = 0;
     bool isLastSpace = true;
     for (i = str.begin(); i != str.end(); ++i)
     {

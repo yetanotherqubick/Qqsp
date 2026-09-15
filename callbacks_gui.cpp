@@ -80,9 +80,12 @@ void QSPCallBacks::SetTimer(int msecs)
 void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
 {
     static int oldFullRefreshCount = 0;
-    int i, numVal;
-    bool isScroll, isCanSave;
-    QSP_CHAR *strVal, *imgPath;
+    int i;
+    int numVal;
+    bool isScroll;
+    bool isCanSave;
+    QSP_CHAR *strVal;
+    QSP_CHAR *imgPath;
     if (m_frame->IsQuit())
     {
         return;
@@ -297,7 +300,8 @@ void QSPCallBacks::Sleep(int msecs)
     bool isSave = m_frame->GetGameMenu()->isEnabled();
     bool isBreak = false;
     m_frame->EnableControls(false, true);
-    int i, count = msecs / 50;
+    int i;
+    int count = msecs / 50;
     for (i = 0; i < count; ++i)
     {
         // QThread::msleep(50);

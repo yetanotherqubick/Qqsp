@@ -20,7 +20,9 @@ void QspWebChannel::ShowError()
 {
     QString errorMessage;
     QSP_CHAR *loc;
-    int code, actIndex, line;
+    int code;
+    int actIndex;
+    int line;
     QSPGetLastErrorData(&code, &loc, &actIndex, &line);
     QString desc = QSPTools::qspStrToQt(QSPGetErrorDesc(code));
     if (loc)

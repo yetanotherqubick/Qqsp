@@ -179,7 +179,9 @@ void MainWindow::ApplyParams()
 {
     int numVal;
     QSP_CHAR *strVal;
-    QColor setBackColor, setFontColor, setLinkColor;
+    QColor setBackColor;
+    QColor setFontColor;
+    QColor setLinkColor;
     setPalette(m_palette);
     // --------------
     if (!m_isUseBackColor)
@@ -368,7 +370,9 @@ void MainWindow::ShowError()
     bool oldIsProcessEvents;
     QString errorMessage;
     QSP_CHAR *loc;
-    int code, actIndex, line;
+    int code;
+    int actIndex;
+    int line;
     if (m_isQuit)
     {
         return;
