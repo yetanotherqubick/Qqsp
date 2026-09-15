@@ -58,7 +58,7 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
             }
             if (ret)
             {
-                resizeEvent(0);
+                resizeEvent(nullptr);
                 // setVisible(true);
             }
             return ret;

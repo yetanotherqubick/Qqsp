@@ -214,7 +214,7 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString searchDir, QString 
 QString QSPTools::qspStrToQt(const QSP_CHAR *str)
 {
     // return QString::fromWCharArray(str.Str, (int)(str.End - str.Str));
-    if (str == 0)
+    if (str == nullptr)
         return QString("");
     else
         return QString::fromUtf16(str);

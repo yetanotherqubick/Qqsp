@@ -13,7 +13,7 @@
 OptionsDialog::OptionsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::OptionsDialog)
 {
     ui->setupUi(this);
-    if (this->parent() == 0) return;
+    if (this->parent() == nullptr) return;
     MainWindow *mw = qobject_cast<MainWindow *>(this->parent());
     ui->checkBox_fontSize->setChecked(mw->GetUseFontSize());
     ui->spinBox_fontSize->setValue(mw->GetFontSize());
@@ -132,7 +132,7 @@ void OptionsDialog::on_pushButton_cancel_clicked()
 
 void OptionsDialog::on_pushButton_ok_clicked()
 {
-    if (this->parent() == 0)
+    if (this->parent() == nullptr)
     {
         close();
         return;

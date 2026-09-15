@@ -58,7 +58,7 @@ void QSPCallBacks::Init(MainWindow *frame)
 
 void QSPCallBacks::DeInit()
 {
-    CloseFile(0);
+    CloseFile(nullptr);
 }
 
 void QSPCallBacks::SetTimer(int msecs)

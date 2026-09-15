@@ -234,7 +234,7 @@ void MainWindow::ApplyParams()
     {
         if (QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
         {
-            if (strVal != 0)
+            if (strVal != nullptr)
             {
                 if (!QSPTools::qspStrToQt(strVal).isEmpty())
                 {
@@ -665,7 +665,7 @@ void MainWindow::CreateMenuBar()
     action = _showHideMenu->addAction(tr("Captions"));
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     action->setCheckable(true);
-    if (_objectsWidget->titleBarWidget() == 0)
+    if (_objectsWidget->titleBarWidget() == nullptr)
         action->setChecked(true);
     else
         action->setChecked(false);
@@ -1204,11 +1204,11 @@ void MainWindow::OnToggleCaptions(bool checked)
     }
     else
     {
-        _mainDescWidget->setTitleBarWidget(0);
-        _objectsWidget->setTitleBarWidget(0);
-        _actionsWidget->setTitleBarWidget(0);
-        _descWidget->setTitleBarWidget(0);
-        _inputWidget->setTitleBarWidget(0);
+        _mainDescWidget->setTitleBarWidget(nullptr);
+        _objectsWidget->setTitleBarWidget(nullptr);
+        _actionsWidget->setTitleBarWidget(nullptr);
+        _descWidget->setTitleBarWidget(nullptr);
+        _inputWidget->setTitleBarWidget(nullptr);
     }
     if (mainTitleBarWidget) delete mainTitleBarWidget;
     if (objectsTitleBarWidget) delete objectsTitleBarWidget;

@@ -84,7 +84,7 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
     {
         QString string = href.mid(5);
         if (!QSPExecString(qspStringFromQString(string), QSP_TRUE))
-            if (this->parent() != 0)
+            if (this->parent() != nullptr)
                 if (this->parent()->objectName() == QStringLiteral("MainWindow"))
                     qobject_cast<MainWindow *>(this->parent())->ShowError(); // TODO: replace with signal
     }
