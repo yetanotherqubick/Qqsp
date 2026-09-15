@@ -69,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_timer = new QTimer(this);
     m_timer->setObjectName(QStringLiteral("m_timer"));
-    connect(m_timer, SIGNAL(timeout()), this, SLOT(OnTimer()));
+    connect(m_timer, &QTimer::timeout, this, &MainWindow::OnTimer);
     m_savedGamePath.clear();
     m_isQuit = false;
     m_keyPressedWhileDisabled = false;
@@ -133,7 +133,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 
     m_menu = new QMenu(this);
     m_menu->setObjectName(QStringLiteral("m_menu"));
-    connect(m_menu, SIGNAL(triggered(QAction *)), this, SLOT(OnMenu(QAction *)));
+    connect(m_menu, &QMenu::triggered, this, &MainWindow::OnMenu);
 
     QSPInit();
     QSPCallBacks::Init(this);
@@ -587,20 +587,20 @@ void MainWindow::CreateMenuBar()
     _fileMenu = menuBar()->addMenu(tr("&Quest"));
 
     // Open item
-    action =
-        _fileMenu->addAction(QIcon(":/gfx/menu/open"), tr("Open game..."), this, SLOT(OnOpenGame()), QKeySequence(Qt::ALT + Qt::Key_O));
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/open"), tr("Open game..."), this, &MainWindow::OnOpenGame,
+                                  QKeySequence(Qt::ALT + Qt::Key_O));
     mainToolBar->addAction(action);
 
     // New game item
-    action =
-        _fileMenu->addAction(QIcon(":/gfx/menu/new"), tr("Restart game"), this, SLOT(OnRestartGame()), QKeySequence(Qt::ALT + Qt::Key_N));
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/new"), tr("Restart game"), this, &MainWindow::OnRestartGame,
+                                  QKeySequence(Qt::ALT + Qt::Key_N));
     mainToolBar->addAction(action);
 
     _fileMenu->addSeparator();
     mainToolBar->addSeparator();
 
     // Exit item
-    action = _fileMenu->addAction(QIcon(":/gfx/menu/exit"), tr("Exit"), this, SLOT(close()), QKeySequence(Qt::ALT + Qt::Key_X));
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/exit"), tr("Exit"), this, &QWidget::close, QKeySequence(Qt::ALT + Qt::Key_X));
     mainToolBar->addAction(action);
     //------------------------------------------------------------------
     mainToolBar->addSeparator();
@@ -608,18 +608,18 @@ void MainWindow::CreateMenuBar()
     _gameMenu = menuBar()->addMenu(tr("&Game"));
 
     // Open saved game item
-    action = _gameMenu->addAction(QIcon(":/gfx/menu/statusopen"), tr("Open saved game..."), this, SLOT(OnOpenSavedGame()),
+    action = _gameMenu->addAction(QIcon(":/gfx/menu/statusopen"), tr("Open saved game..."), this, &MainWindow::OnOpenSavedGame,
                                   QKeySequence(Qt::CTRL + Qt::Key_O));
     mainToolBar->addAction(action);
     // Save game item
-    action = _gameMenu->addAction(QIcon(":/gfx/menu/statussave"), tr("Save game..."), this, SLOT(OnSaveGame()),
+    action = _gameMenu->addAction(QIcon(":/gfx/menu/statussave"), tr("Save game..."), this, &MainWindow::OnSaveGame,
                                   QKeySequence(Qt::CTRL + Qt::Key_S));
     mainToolBar->addAction(action);
     // Open quicksave item
-    action = _gameMenu->addAction(tr("Quick Load"), this, SLOT(OnOpenQuickSavedGame()), QKeySequence(Qt::Key_F9));
+    action = _gameMenu->addAction(tr("Quick Load"), this, &MainWindow::OnOpenQuickSavedGame, QKeySequence(Qt::Key_F9));
     mainToolBar->addAction(action);
     // Quicksave item
-    action = _gameMenu->addAction(tr("Quick Save"), this, SLOT(OnQuickSaveGame()), QKeySequence(Qt::Key_F5));
+    action = _gameMenu->addAction(tr("Quick Save"), this, &MainWindow::OnQuickSaveGame, QKeySequence(Qt::Key_F5));
     mainToolBar->addAction(action);
     //------------------------------------------------------------------
     mainToolBar->addSeparator();
@@ -669,7 +669,7 @@ void MainWindow::CreateMenuBar()
         action->setChecked(true);
     else
         action->setChecked(false);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleCaptions(bool)));
+    connect(action, &QAction::toggled, this, &MainWindow::OnToggleCaptions);
 
     // ToolBar
     action = mainToolBar->toggleViewAction();
@@ -692,10 +692,10 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
     action->setCheckable(true);
     action->setChecked(m_isShowHotkeys);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleHotkeys(bool)));
+    connect(action, &QAction::toggled, this, &MainWindow::OnToggleHotkeys);
 
     // Window / Fullscreen mode item
-    action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"), this, SLOT(OnToggleWinMode()),
+    action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"), this, &MainWindow::OnToggleWinMode,
                                       QKeySequence(Qt::Key_F11));
     mainToolBar->addAction(action);
 
@@ -707,14 +707,14 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::ALT + Qt::Key_D));
     action->setCheckable(true);
     action->setChecked(showPlainText);
-    connect(action, SIGNAL(toggled(bool)), this, SLOT(OnToggleShowPlainText(bool)));
+    connect(action, &QAction::toggled, this, &MainWindow::OnToggleShowPlainText);
     //    _settingsMenu->addAction(tr("Display HTML code as plain text"),
     //        this, SLOT(OnToggleShowPlainText()), QKeySequence(Qt::ALT + Qt::Key_D))->setCheckable(true);
 
     _settingsMenu->addSeparator();
 
     // Options item
-    action = _settingsMenu->addAction(tr("Options..."), this, SLOT(OnOptions()), QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_O));
+    action = _settingsMenu->addAction(tr("Options..."), this, &MainWindow::OnOptions, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_O));
     // mainToolBar->addAction(action);
     //------------------------------------------------------------------
     // mainToolBar->addSeparator();
@@ -722,7 +722,7 @@ void MainWindow::CreateMenuBar()
     QMenu *helpMenu(menuBar()->addMenu(tr("&Help")));
 
     // About item
-    action = helpMenu->addAction(QIcon(":/gfx/menu/about"), tr("About..."), this, SLOT(OnAbout()), QKeySequence(Qt::CTRL + Qt::Key_H));
+    action = helpMenu->addAction(QIcon(":/gfx/menu/about"), tr("About..."), this, &MainWindow::OnAbout, QKeySequence(Qt::CTRL + Qt::Key_H));
     mainToolBar->addAction(action);
 }
 
@@ -735,7 +735,7 @@ void MainWindow::CreateDockWindows()
 #endif
 #ifdef _WEBBOX
     _mainDescTextBox = new QspWebBox(this);
-    connect(_mainDescTextBox, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+    connect(_mainDescTextBox, &QspWebBox::qspLinkClicked, this, &MainWindow::OnLinkClicked);
 #endif
 #ifdef _WEBBOX_WEBKIT
     _mainDescTextBox = new QspWebBox(this);
@@ -759,9 +759,9 @@ void MainWindow::CreateDockWindows()
     addDockWidget(Qt::RightDockWidgetArea, _objectsWidget, Qt::Vertical);
     _objectsListBox = new QspListBox(this);
     _objectsListBox->setObjectName(QStringLiteral("_objectsListBox"));
-    connect(_objectsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
+    connect(_objectsListBox, &QListWidget::itemClicked, this, &MainWindow::OnObjectListBoxItemClicked);
     // connect(_objectsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
-    connect(_objectsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
+    connect(_objectsListBox, &QListWidget::itemDoubleClicked, this, &MainWindow::OnObjectListBoxItemClicked);
     // connect(_objectsListBox, SIGNAL(currentRowChanged(int)), this, SLOT(OnObjectChange(int)));
     _objectsWidget->setWidget(_objectsListBox);
 
@@ -771,10 +771,10 @@ void MainWindow::CreateDockWindows()
     addDockWidget(Qt::BottomDockWidgetArea, _actionsWidget, Qt::Vertical);
     _actionsListBox = new QspListBox(this);
     _actionsListBox->setObjectName(QStringLiteral("_actionsListBox"));
-    connect(_actionsListBox, SIGNAL(itemClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
+    connect(_actionsListBox, &QListWidget::itemClicked, this, &MainWindow::OnActionsListBoxItemClicked);
     // connect(_actionsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
-    connect(_actionsListBox, SIGNAL(itemDoubleClicked(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
-    connect(_actionsListBox, SIGNAL(SelectionChange(int)), this, SLOT(OnActionChange(int)));
+    connect(_actionsListBox, &QListWidget::itemDoubleClicked, this, &MainWindow::OnActionsListBoxItemClicked);
+    connect(_actionsListBox, &QspListBox::SelectionChange, this, &MainWindow::OnActionChange);
     _actionsListBox->SetMouseTracking(true);
     _actionsWidget->setWidget(_actionsListBox);
 
@@ -788,7 +788,7 @@ void MainWindow::CreateDockWindows()
 #endif
 #ifdef _WEBBOX
     _descTextBox = new QspWebBox(this);
-    connect(_descTextBox, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+    connect(_descTextBox, &QspWebBox::qspLinkClicked, this, &MainWindow::OnLinkClicked);
 #endif
 #ifdef _WEBBOX_WEBKIT
     _descTextBox = new QspWebBox(this);
@@ -810,8 +810,8 @@ void MainWindow::CreateDockWindows()
     _inputTextBox = new QspInputBox(this);
     _inputTextBox->setObjectName(QStringLiteral("_inputTextBox"));
     _inputWidget->setWidget(_inputTextBox);
-    connect(_inputTextBox, SIGNAL(textChanged()), this, SLOT(OnInputTextChange()));
-    connect(_inputTextBox, SIGNAL(InputTextEnter()), this, SLOT(OnInputTextEnter()));
+    connect(_inputTextBox, &QPlainTextEdit::textChanged, this, &MainWindow::OnInputTextChange);
+    connect(_inputTextBox, &QspInputBox::InputTextEnter, this, &MainWindow::OnInputTextEnter);
 
     m_imgView = new QspImgCanvas(this);
     m_imgView->setObjectName(QStringLiteral("m_imgView"));

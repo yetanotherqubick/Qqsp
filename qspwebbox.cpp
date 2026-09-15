@@ -46,7 +46,7 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     setPage(newpage);
     connect(&qeweush, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnQspLinkClicked(QUrl)));
     QEventLoop loop;
-    connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
     page()->load(QUrl("qsp:/"));
     loop.exec();
 }
@@ -137,7 +137,7 @@ void QspWebBox::RefreshUI(bool isScroll)
         newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
         setPage(newpage);
         QEventLoop loop;
-        connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+        connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
         page()->load(QUrl("qsp:/"));
         loop.exec();
     }
@@ -297,7 +297,7 @@ void QspWebBox::Quit()
     QWebEnginePage *newpage = new QWebEnginePage(this);
     setPage(newpage);
     QEventLoop loop;
-    connect(page(), SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
+    connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
     page()->load(QUrl("about:blank"));
     loop.exec();
 }

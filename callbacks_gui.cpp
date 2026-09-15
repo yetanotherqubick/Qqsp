@@ -244,7 +244,7 @@ void QSPCallBacks::Sleep(int msecs)
     QTimer wtimer;
     wtimer.setSingleShot(true);
     QEventLoop loop;
-    QObject::connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    QObject::connect(&wtimer, &QTimer::timeout, &loop, &QEventLoop::quit);
     wtimer.start(50);
     loop.exec();
     // RefreshInt(QSP_TRUE);

@@ -17,11 +17,11 @@ QspMsgDlg::QspMsgDlg(const QString &caption, const QString &text, QWidget *paren
     setWindowTitle(caption);
     sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    connect(&m_desc, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
+    connect(&m_desc, &QTextBrowser::anchorClicked, this, &QspMsgDlg::OnLinkClicked);
     m_desc.setHtml(text);
     m_desc.sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     m_desc.sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    connect(&okButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(&okButton, &QAbstractButton::clicked, this, &QWidget::close);
     okButton.setGeometry(QRect(10, 130, 100, 20));
     okButton.setText(tr("OK"));
     m_desc.document()->setTextWidth(400);
@@ -54,7 +54,7 @@ QspMsgDlg::QspMsgDlg(const QColor &backColor, const QColor &fontColor, const QFo
     sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
     m_desc.sizePolicy().setHorizontalPolicy(QSizePolicy::Expanding);
     m_desc.sizePolicy().setVerticalPolicy(QSizePolicy::Expanding);
-    connect(&okButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(&okButton, &QAbstractButton::clicked, this, &QWidget::close);
     okButton.setGeometry(QRect(10, 130, 100, 20));
     okButton.setText("OK");
     okButton.setDefault(true);

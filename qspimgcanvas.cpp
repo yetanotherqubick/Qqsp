@@ -23,7 +23,7 @@ QspImgCanvas::QspImgCanvas(QWidget *parent) : QWidget(parent)
     setMinimumSize(50, 50);
     // setVisible(false);
     // setModal(false);
-    connect(&m_movie, SIGNAL(frameChanged(int)), this, SLOT(OnNewFrame(int)));
+    connect(&m_movie, &QMovie::frameChanged, this, &QspImgCanvas::OnNewFrame);
 }
 
 QspImgCanvas::~QspImgCanvas() = default;
