@@ -61,8 +61,14 @@ void QspTextBox::RefreshUI(bool isScroll)
     QString text;
     if (m_isUseHtml)
     {
-        if (str.endsWith("\r")) str.chop(1);
-        if (str.endsWith("\n")) str.chop(1);
+        if (str.endsWith("\r"))
+        {
+            str.chop(1);
+        }
+        if (str.endsWith("\n"))
+        {
+            str.chop(1);
+        }
         str = str.replace("\r", "").replace("\n", "<br>").replace("<video ", "<img ", Qt::CaseInsensitive);
         text = str.replace("</center><br>", "</center>", Qt::CaseInsensitive).replace("</table><br>", "</table>", Qt::CaseInsensitive);
     }
@@ -72,10 +78,17 @@ void QspTextBox::RefreshUI(bool isScroll)
     }
     // TODO: set colour and font
     if (showPlainText)
+    {
         setPlainText(text);
+    }
     else
+    {
         setHtml(text);
-    if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+    }
+    if (isScroll)
+    {
+        verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+    }
 }
 
 void QspTextBox::SetText(const QString &text, bool isScroll)
@@ -87,7 +100,10 @@ void QspTextBox::SetText(const QString &text, bool isScroll)
 #endif
         if (isScroll)
         {
-            if (m_text.isEmpty() || !text.startsWith(m_text)) isScroll = false;
+            if (m_text.isEmpty() || !text.startsWith(m_text))
+            {
+                isScroll = false;
+            }
         }
         m_text = text;
         RefreshUI(isScroll);
@@ -189,7 +205,10 @@ void QspTextBox::SetShowPlainText(bool isPlain)
 
 void QspTextBox::wheelEvent(QWheelEvent *e)
 {
-    if (e->modifiers() == Qt::ControlModifier) return;
+    if (e->modifiers() == Qt::ControlModifier)
+    {
+        return;
+    }
     QTextBrowser::wheelEvent(e);
 }
 

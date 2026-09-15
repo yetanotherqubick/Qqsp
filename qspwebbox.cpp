@@ -64,7 +64,10 @@ void QspWebBox::SetIsHtml(bool isHtml)
 
 void QspWebBox::RefreshUI(bool isScroll)
 {
-    if (m_isQuit) return;
+    if (m_isQuit)
+    {
+        return;
+    }
     QString color(QSPTools::GetHexColor(GetForegroundColor()));
     QString str = m_text;
     QString text;
@@ -90,24 +93,40 @@ void QspWebBox::RefreshUI(bool isScroll)
         while (startIndex >= 0)
         {
             int endIndex = str.indexOf(">", startIndex, Qt::CaseInsensitive);
-            if (endIndex < 0) break;
+            if (endIndex < 0)
+            {
+                break;
+            }
             endIndex = endIndex + 1;
             text.append(str.mid(copypos, startIndex + 6 - copypos));
-            if (!str.mid(startIndex, endIndex - startIndex).contains("autoplay", Qt::CaseInsensitive)) text.append(" autoplay");
-            if (!str.mid(startIndex, endIndex - startIndex).contains("loop", Qt::CaseInsensitive)) text.append(" loop");
+            if (!str.mid(startIndex, endIndex - startIndex).contains("autoplay", Qt::CaseInsensitive))
+            {
+                text.append(" autoplay");
+            }
+            if (!str.mid(startIndex, endIndex - startIndex).contains("loop", Qt::CaseInsensitive))
+            {
+                text.append(" loop");
+            }
             text.append(str.mid(startIndex + 6, endIndex - startIndex - 6));
             copypos = endIndex;
             int cloaseTegPos = str.indexOf("</video>", 0, Qt::CaseInsensitive);
             if (cloaseTegPos == -1)
+            {
                 text.append("</video>");
+            }
             else
             {
                 int nextV = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
                 if (nextV == -1)
+                {
                     text.append("</video>");
+                }
                 else
                 {
-                    if (cloaseTegPos > nextV) text.append("</video>");
+                    if (cloaseTegPos > nextV)
+                    {
+                        text.append("</video>");
+                    }
                 }
             }
             startIndex = str.indexOf("<video", endIndex, Qt::CaseInsensitive);
@@ -115,13 +134,19 @@ void QspWebBox::RefreshUI(bool isScroll)
         text.append(str.mid(copypos));
     }
     else
+    {
         text = str;
+    }
 
     text = QSPTools::HtmlizeWhitespaces(m_isUseHtml ? text : QSPTools::ProceedAsPlain(text));
     if (showPlainText)
+    {
         qweush.SetPlainText(text);
+    }
     else
+    {
         qweush.SetHtml(text);
+    }
 
     QString url_str = QByteArray::fromPercentEncoding(url().toString().toUtf8());
     if (url_str.compare("qsp:", Qt::CaseInsensitive) != 0 && url_str.compare("qsp:/", Qt::CaseInsensitive) != 0)
@@ -170,7 +195,10 @@ void QspWebBox::SetText(const QString &text, bool isScroll)
     {
         if (isScroll)
         {
-            if (m_text.isEmpty() || !text.startsWith(m_text)) isScroll = false;
+            if (m_text.isEmpty() || !text.startsWith(m_text))
+            {
+                isScroll = false;
+            }
         }
         m_text = text;
         RefreshUI(isScroll);

@@ -24,21 +24,43 @@ void QspWebEngineUrlSchemeHandler::requestStarted(QWebEngineUrlRequestJob *reque
         {
             QString replystr;
             replystr.append("<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"UTF-8\">\n<style>\nbody {\n");
-            if (m_backColor.isValid()) replystr.append(QString("background-color: %1;\n").arg(m_backColor.name()));
-            if (m_fontColor.isValid()) replystr.append(QString("color: %1;\n").arg(m_fontColor.name()));
-            if (m_fontType == 1) // set in qsp
+            if (m_backColor.isValid())
+            {
+                replystr.append(QString("background-color: %1;\n").arg(m_backColor.name()));
+            }
+            if (m_fontColor.isValid())
+            {
+                replystr.append(QString("color: %1;\n").arg(m_fontColor.name()));
+            }
+            if (m_fontType == 1)
+            { // set in qsp
                 replystr.append(QString("font-family: %1;\n").arg(m_font.family()));
-            if (m_fontType == 2) // set by user
+            }
+            if (m_fontType == 2)
+            { // set by user
                 replystr.append(QString("font-family: %1 !important;\n").arg(m_font.family()));
-            if (m_sizeType == 1) // set in qsp
+            }
+            if (m_sizeType == 1)
+            { // set in qsp
                 replystr.append(QString("font-size: %1pt;\n").arg(m_font.pointSize()));
-            if (m_sizeType == 2) // set by user
+            }
+            if (m_sizeType == 2)
+            { // set by user
                 replystr.append(QString("font-size: %1pt !important;\n").arg(m_font.pointSize()));
+            }
             if (!m_bmpBg.isEmpty())
+            {
                 replystr.append(QString("background: url(%1) no-repeat center center fixed;\nbackground-size: cover;\n").arg(m_bmpBg));
-            if (m_linkColor.isValid()) replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
+            }
+            if (m_linkColor.isValid())
+            {
+                replystr.append(QString("}\na:link {\ncolor: %1;\n").arg(m_linkColor.name()));
+            }
             replystr.append("}\n</style>\n");
-            if (m_isCustomCSS) replystr.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"custom.css\">\n");
+            if (m_isCustomCSS)
+            {
+                replystr.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"custom.css\">\n");
+            }
             replystr.append("<script src=\"qrc:///qtwebchannel/qwebchannel.js\"></script>\n");
             replystr.append(
                 "<script type=\"text/javascript\"> \nvar qsp; \ndocument.addEventListener(\"DOMContentLoaded\", function () { \nnew "

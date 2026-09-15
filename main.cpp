@@ -42,9 +42,13 @@ int main(int argc, char *argv[])
     QTranslator qtTranslator;
 
     if (qtTranslator.load(QApplication::applicationName() + "." + langid, QApplication::applicationDirPath()))
+    {
         a.installTranslator(&qtTranslator);
+    }
     else if (qtTranslator.load(QApplication::applicationName() + "." + langid, ":/translations/"))
+    {
         a.installTranslator(&qtTranslator);
+    }
 
     QCommandLineParser parser;
     parser.setApplicationDescription("Qqsp");

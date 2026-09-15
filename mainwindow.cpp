@@ -111,7 +111,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_isAllowHTML5Extras = true;
 
     langid = QObject::tr("__LANGID__");
-    if (langid == QStringLiteral("__LANGID__")) langid = QLocale::system().name();
+    if (langid == QStringLiteral("__LANGID__"))
+    {
+        langid = QLocale::system().name();
+    }
 
     CreateDockWindows();
 
@@ -147,7 +150,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     }
     else
     {
-        if (autostartLastGame) OpenGameFile(lastGame);
+        if (autostartLastGame)
+        {
+            OpenGameFile(lastGame);
+        }
     }
 }
 
@@ -155,7 +161,10 @@ MainWindow::~MainWindow() = default;
 
 void MainWindow::EnableControls(bool status, bool isExtended)
 {
-    if (isExtended) _fileMenu->setEnabled(status); // TODO: ???
+    if (isExtended)
+    {
+        _fileMenu->setEnabled(status); // TODO: ???
+    }
     _fileMenu->setEnabled(status);                 // TODO: ???
     _gameMenu->setEnabled(status);
     _settingsMenu->setEnabled(status);
@@ -178,12 +187,18 @@ void MainWindow::ApplyParams()
         if (QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
         {
             if (numVal == 0)
+            {
                 setBackColor = m_defaultBackColor;
+            }
             else
+            {
                 setBackColor = QSPTools::wxtoQColor(numVal);
+            }
         }
         else
+        {
             setBackColor = m_defaultBackColor;
+        }
     }
     else
     {
@@ -196,12 +211,18 @@ void MainWindow::ApplyParams()
         if (QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal))
         {
             if (numVal == 0)
+            {
                 setFontColor = m_defaultFontColor;
+            }
             else
+            {
                 setFontColor = QSPTools::wxtoQColor(numVal);
+            }
         }
         else
+        {
             setFontColor = m_defaultFontColor;
+        }
     }
     else
     {
@@ -214,12 +235,18 @@ void MainWindow::ApplyParams()
         if (QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal))
         {
             if (numVal == 0)
+            {
                 setLinkColor = m_defaultLinkColor;
+            }
             else
+            {
                 setLinkColor = QSPTools::wxtoQColor(numVal);
+            }
         }
         else
+        {
             setLinkColor = m_defaultLinkColor;
+        }
     }
     else
     {
@@ -282,7 +309,9 @@ void MainWindow::DeleteMenu()
 void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
 {
     if (name == QString("-"))
+    {
         m_menu->addSeparator();
+    }
     else
     {
         bool pixmap_ok = false;
@@ -291,7 +320,10 @@ void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
         QString itemPath(file.absoluteFilePath());
         if (file.exists() && file.isFile())
         {
-            if (itemPixmap.load(itemPath)) pixmap_ok = true;
+            if (itemPixmap.load(itemPath))
+            {
+                pixmap_ok = true;
+            }
         }
         QAction *action;
         if (pixmap_ok)
@@ -319,7 +351,10 @@ int MainWindow::ShowMenu()
 void MainWindow::UpdateGamePath(const QString &path)
 {
     QString new_path = path;
-    if (!new_path.endsWith("/")) new_path += "/";
+    if (!new_path.endsWith("/"))
+    {
+        new_path += "/";
+    }
     m_path = new_path;
     _mainDescTextBox->SetGamePath(new_path);
     _descTextBox->SetGamePath(new_path);
@@ -334,24 +369,34 @@ void MainWindow::ShowError()
     QString errorMessage;
     QSP_CHAR *loc;
     int code, actIndex, line;
-    if (m_isQuit) return;
+    if (m_isQuit)
+    {
+        return;
+    }
     QSPGetLastErrorData(&code, &loc, &actIndex, &line);
     QString desc = QSPTools::qspStrToQt(QSPGetErrorDesc(code));
     if (loc)
+    {
         errorMessage = QString("Location: %1\nArea: %2\nLine: %3\nCode: %4\nDesc: %5")
                            .arg(QSPTools::qspStrToQt(loc))
                            .arg(actIndex < 0 ? QString("on visit") : QString("on action"))
                            .arg(line)
                            .arg(code)
                            .arg(desc);
+    }
     else
+    {
         errorMessage = QString("Code: %1\nDesc: %2").arg(code).arg(desc);
+    }
     QMessageBox dialog(QMessageBox::Critical, tr("Error"), errorMessage, QMessageBox::Ok, this);
     oldIsProcessEvents = m_isProcessEvents;
     m_isProcessEvents = false;
     dialog.exec();
     m_isProcessEvents = oldIsProcessEvents;
-    if (m_isGameOpened) QSPCallBacks::RefreshInt(QSP_FALSE);
+    if (m_isGameOpened)
+    {
+        QSPCallBacks::RefreshInt(QSP_FALSE);
+    }
 }
 
 void MainWindow::SetShowPlainText(bool isPlain)
@@ -464,17 +509,30 @@ void MainWindow::LoadSettings(QString filePath)
 {
     QSettings *settings;
     if (filePath.isEmpty())
+    {
         settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(),
                                  QApplication::applicationName(), this);
+    }
     else
+    {
         settings = new QSettings(filePath, QSettings::IniFormat);
+    }
 
     restoreGeometry(settings->value("mainWindow/geometry").toByteArray());
-    if (isMaximized()) setGeometry(QApplication::desktop()->availableGeometry(this));
+    if (isMaximized())
+    {
+        setGeometry(QApplication::desktop()->availableGeometry(this));
+    }
     restoreState(settings->value("mainWindow/windowState").toByteArray());
 
-    if (settings->value("mainWindow/isMaximized", isMaximized()).toBool()) showMaximized();
-    if (settings->value("mainWindow/isFullScreen", isFullScreen()).toBool()) showFullScreen();
+    if (settings->value("mainWindow/isMaximized", isMaximized()).toBool())
+    {
+        showMaximized();
+    }
+    if (settings->value("mainWindow/isFullScreen", isFullScreen()).toBool())
+    {
+        showFullScreen();
+    }
 
     OnToggleCaptions(settings->value("mainWindow/showCaptions", showCaptions).toBool());
 
@@ -486,14 +544,26 @@ void MainWindow::LoadSettings(QString filePath)
     m_isUseFontSize = settings->value("application/isUseFontSize", m_isUseFontSize).toBool();
     m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
     m_isUseFont = settings->value("application/isUseFont", m_isUseFont).toBool();
-    if (m_isUseFont) ApplyFont(qvariant_cast<QFont>(settings->value("application/font", m_font)), 2, 2);
+    if (m_isUseFont)
+    {
+        ApplyFont(qvariant_cast<QFont>(settings->value("application/font", m_font)), 2, 2);
+    }
 
     m_isUseBackColor = settings->value("application/isUseBackColor", m_isUseBackColor).toBool();
     m_isUseLinkColor = settings->value("application/isUseLinkColor", m_isUseLinkColor).toBool();
     m_isUseFontColor = settings->value("application/isUseFontColor", m_isUseFontColor).toBool();
-    if (m_isUseBackColor) ApplyBackColor(qvariant_cast<QColor>(settings->value("application/backColor", m_backColor)));
-    if (m_isUseLinkColor) ApplyLinkColor(qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor)));
-    if (m_isUseFontColor) ApplyFontColor(qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor)));
+    if (m_isUseBackColor)
+    {
+        ApplyBackColor(qvariant_cast<QColor>(settings->value("application/backColor", m_backColor)));
+    }
+    if (m_isUseLinkColor)
+    {
+        ApplyLinkColor(qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor)));
+    }
+    if (m_isUseFontColor)
+    {
+        ApplyFontColor(qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor)));
+    }
     m_settingsBackColor = qvariant_cast<QColor>(settings->value("application/backColor", m_backColor));
     m_settingsLinkColor = qvariant_cast<QColor>(settings->value("application/linkColor", m_linkColor));
     m_settingsFontColor = qvariant_cast<QColor>(settings->value("application/fontColor", m_fontColor));
@@ -526,10 +596,14 @@ void MainWindow::SaveSettings(QString filePath)
 {
     QSettings *settings;
     if (filePath.isEmpty())
+    {
         settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, QApplication::organizationName(),
                                  QApplication::applicationName(), this);
+    }
     else
+    {
         settings = new QSettings(filePath, QSettings::IniFormat);
+    }
 
     bool maximized = isMaximized();
 
@@ -666,9 +740,13 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     action->setCheckable(true);
     if (_objectsWidget->titleBarWidget() == nullptr)
+    {
         action->setChecked(true);
+    }
     else
+    {
         action->setChecked(false);
+    }
     connect(action, &QAction::toggled, this, &MainWindow::OnToggleCaptions);
 
     // ToolBar
@@ -832,7 +910,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     // delete _mainDescTextBox;
     // delete _descTextBox;
 #endif
-    if (!m_configPath.isEmpty()) SaveSettings(m_configPath);
+    if (!m_configPath.isEmpty())
+    {
+        SaveSettings(m_configPath);
+    }
     QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
     if (settingsFile.exists() && settingsFile.isFile())
     {
@@ -857,29 +938,85 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 {
     int action = -1;
     if (event->key() == Qt::Key_1)
-        if (_actionsListBox->count() >= 1) action = 0;
+    {
+        if (_actionsListBox->count() >= 1)
+        {
+            action = 0;
+        }
+    }
     if (event->key() == Qt::Key_2)
-        if (_actionsListBox->count() >= 2) action = 1;
+    {
+        if (_actionsListBox->count() >= 2)
+        {
+            action = 1;
+        }
+    }
     if (event->key() == Qt::Key_3)
-        if (_actionsListBox->count() >= 3) action = 2;
+    {
+        if (_actionsListBox->count() >= 3)
+        {
+            action = 2;
+        }
+    }
     if (event->key() == Qt::Key_4)
-        if (_actionsListBox->count() >= 4) action = 3;
+    {
+        if (_actionsListBox->count() >= 4)
+        {
+            action = 3;
+        }
+    }
     if (event->key() == Qt::Key_5)
-        if (_actionsListBox->count() >= 5) action = 4;
+    {
+        if (_actionsListBox->count() >= 5)
+        {
+            action = 4;
+        }
+    }
     if (event->key() == Qt::Key_6)
-        if (_actionsListBox->count() >= 6) action = 5;
+    {
+        if (_actionsListBox->count() >= 6)
+        {
+            action = 5;
+        }
+    }
     if (event->key() == Qt::Key_7)
-        if (_actionsListBox->count() >= 7) action = 6;
+    {
+        if (_actionsListBox->count() >= 7)
+        {
+            action = 6;
+        }
+    }
     if (event->key() == Qt::Key_8)
-        if (_actionsListBox->count() >= 8) action = 7;
+    {
+        if (_actionsListBox->count() >= 8)
+        {
+            action = 7;
+        }
+    }
     if (event->key() == Qt::Key_9)
-        if (_actionsListBox->count() >= 9) action = 8;
+    {
+        if (_actionsListBox->count() >= 9)
+        {
+            action = 8;
+        }
+    }
     if (event->key() == Qt::Key_0)
-        if (_actionsListBox->count() >= 10) action = 9;
+    {
+        if (_actionsListBox->count() >= 10)
+        {
+            action = 9;
+        }
+    }
     if (action != -1)
     {
-        if (!QSPSetSelActionIndex(action, QSP_TRUE)) ShowError();
-        if (!QSPExecuteSelActionCode(QSP_TRUE)) ShowError();
+        if (!QSPSetSelActionIndex(action, QSP_TRUE))
+        {
+            ShowError();
+        }
+        if (!QSPExecuteSelActionCode(QSP_TRUE))
+        {
+            ShowError();
+        }
         return;
     }
 
@@ -889,9 +1026,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         {
             int newSel = _actionsListBox->GetSelection() - 1;
             if (newSel < 0)
+            {
                 _actionsListBox->SetSelection(_actionsListBox->count() - 1);
+            }
             else
+            {
                 _actionsListBox->SetSelection(newSel);
+            }
         }
         return;
     }
@@ -901,21 +1042,32 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         {
             int newSel = _actionsListBox->GetSelection() + 1;
             if (newSel <= 0 || newSel >= _actionsListBox->count())
+            {
                 _actionsListBox->SetSelection(0);
+            }
             else
+            {
                 _actionsListBox->SetSelection(newSel);
+            }
         }
         return;
     }
     if (event->key() == Qt::Key_Return || event->key() == Qt::Key_Enter)
+    {
         if (_actionsListBox->GetSelection() != -1)
         {
             ActionsListBoxDoAction(_actionsListBox->GetSelection());
             return;
         }
+    }
 
     if (event->key() == Qt::Key_Escape)
-        if (isFullScreen()) showNormal();
+    {
+        if (isFullScreen())
+        {
+            showNormal();
+        }
+    }
 #ifndef _WEBBOX_COMMON
     _descTextBox->keyPressEvent(event);
     _mainDescTextBox->keyPressEvent(event);
@@ -929,7 +1081,10 @@ void MainWindow::OpenGameFile(const QString &path)
     {
         QFileInfo fileName(path);
         QSPCallBacks::m_gamePath = fileName.canonicalPath();
-        if (!QSPCallBacks::m_gamePath.endsWith("/")) QSPCallBacks::m_gamePath += "/";
+        if (!QSPCallBacks::m_gamePath.endsWith("/"))
+        {
+            QSPCallBacks::m_gamePath += "/";
+        }
         _mainDescTextBox->SetGamePath(QSPCallBacks::m_gamePath);
         _objectsListBox->SetGamePath(QSPCallBacks::m_gamePath);
         _actionsListBox->SetGamePath(QSPCallBacks::m_gamePath);
@@ -940,7 +1095,10 @@ void MainWindow::OpenGameFile(const QString &path)
             lastGame = path;
             QFileInfo file(path);
             QString filePath(file.canonicalPath());
-            if (!filePath.endsWith("/")) filePath += "/";
+            if (!filePath.endsWith("/"))
+            {
+                filePath += "/";
+            }
             QString configString(filePath + QSP_CONFIG);
             if (configString != m_configPath && perGameConfig)
             {
@@ -962,12 +1120,27 @@ void MainWindow::OpenGameFile(const QString &path)
                 }
                 m_configPath = configString;
                 QFileInfo configFile(configString);
-                if (configFile.exists() && configFile.isFile()) LoadSettings(configString);
+                if (configFile.exists() && configFile.isFile())
+                {
+                    LoadSettings(configString);
+                }
             }
-            if (!m_isUseBackColor) ApplyBackColor(m_defaultBackColor);
-            if (!m_isUseLinkColor) ApplyLinkColor(m_defaultLinkColor);
-            if (!m_isUseFontColor) ApplyFontColor(m_defaultFontColor);
-            if (!m_isUseFont) ApplyFont(m_defaultFont, 0, 0);
+            if (!m_isUseBackColor)
+            {
+                ApplyBackColor(m_defaultBackColor);
+            }
+            if (!m_isUseLinkColor)
+            {
+                ApplyLinkColor(m_defaultLinkColor);
+            }
+            if (!m_isUseFontColor)
+            {
+                ApplyFontColor(m_defaultFontColor);
+            }
+            if (!m_isUseFont)
+            {
+                ApplyFont(m_defaultFont, 0, 0);
+            }
             QFileInfo cssFile(filePath + "custom.css");
             if (cssFile.exists() && cssFile.isFile())
             {
@@ -981,14 +1154,19 @@ void MainWindow::OpenGameFile(const QString &path)
             }
             UpdateGamePath(filePath);
             OnNewGame();
-            if (m_isQuit) return;
+            if (m_isQuit)
+            {
+                return;
+            }
             // UpdateTitle();
             EnableControls(true);
             m_savedGamePath.clear();
             ApplyParams();
         }
         else
+        {
             ShowError();
+        }
     }
 }
 
@@ -998,8 +1176,14 @@ void MainWindow::ActionsListBoxDoAction(int action)
     {
         if (action != -1)
         {
-            if (!QSPSetSelActionIndex(action, QSP_TRUE)) ShowError();
-            if (!QSPExecuteSelActionCode(QSP_TRUE)) ShowError();
+            if (!QSPSetSelActionIndex(action, QSP_TRUE))
+            {
+                ShowError();
+            }
+            if (!QSPExecuteSelActionCode(QSP_TRUE))
+            {
+                ShowError();
+            }
         }
     }
 }
@@ -1020,9 +1204,13 @@ void MainWindow::dropEvent(QDropEvent *event)
                 if (m_isGameOpened)
                 {
                     if (!QSPOpenSavedGame(qspStringFromQString(event->mimeData()->urls().at(0).toLocalFile()), QSP_TRUE))
+                    {
                         ShowError();
+                    }
                     else
+                    {
                         ApplyParams();
+                    }
                 }
                 event->acceptProposedAction();
             }
@@ -1076,15 +1264,22 @@ void MainWindow::OnRestartGame()
     if (m_isGameOpened)
     {
         if (!QSPRestartGame(QSP_TRUE))
+        {
             ShowError();
+        }
         else
+        {
             ApplyParams();
+        }
     }
 }
 
 void MainWindow::OnOpenSavedGame()
 {
-    if (!m_isGameOpened) return;
+    if (!m_isGameOpened)
+    {
+        return;
+    }
 #ifndef _NONATIVEDIALOG
     QString path = QFileDialog::getOpenFileName(this, tr("Select saved game file"), GetLastPath(), tr("Saved game files (*.sav)"));
 #else
@@ -1095,15 +1290,22 @@ void MainWindow::OnOpenSavedGame()
     {
         SetLastPath(QFileInfo(path).canonicalPath());
         if (!QSPOpenSavedGame(qspStringFromQString(path), QSP_TRUE))
+        {
             ShowError();
+        }
         else
+        {
             ApplyParams();
+        }
     }
 }
 
 void MainWindow::OnSaveGame()
 {
-    if (!m_isGameOpened) return;
+    if (!m_isGameOpened)
+    {
+        return;
+    }
 #ifndef _NONATIVEDIALOG
     QString path = QFileDialog::getSaveFileName(this, tr("Select file to save"), GetLastPath(), tr("Saved game files (*.sav)"));
 #else
@@ -1112,7 +1314,10 @@ void MainWindow::OnSaveGame()
 #endif
     if (!path.isEmpty())
     {
-        if (!path.endsWith(".sav")) path.append(".sav");
+        if (!path.endsWith(".sav"))
+        {
+            path.append(".sav");
+        }
         QString p = GetLastPath();
         if (QSPSaveGame(qspStringFromQString(path), QSP_TRUE))
         {
@@ -1120,39 +1325,58 @@ void MainWindow::OnSaveGame()
             m_savedGamePath = path;
         }
         else
+        {
             ShowError();
+        }
     }
 }
 
 void MainWindow::OnOpenQuickSavedGame()
 {
-    if (!m_isGameOpened) return;
+    if (!m_isGameOpened)
+    {
+        return;
+    }
     QString path = m_path + QSP_QUICKSAVE;
     QFileInfo fileInfo(path);
     if (fileInfo.exists() && fileInfo.isFile())
     {
         if (!QSPOpenSavedGame(qspStringFromQString(path), QSP_TRUE))
+        {
             ShowError();
+        }
         else
+        {
             ApplyParams();
+        }
     }
 }
 
 void MainWindow::OnQuickSaveGame()
 {
-    if (!m_isGameOpened) return;
+    if (!m_isGameOpened)
+    {
+        return;
+    }
     QString path = m_path + QSP_QUICKSAVE;
     if (QSPSaveGame(qspStringFromQString(path), QSP_TRUE))
+    {
         m_savedGamePath = path;
+    }
     else
+    {
         ShowError();
+    }
 }
 
 void MainWindow::OnOptions()
 {
     OptionsDialog optdlg(this);
     optdlg.exec();
-    if (!m_configPath.isEmpty()) SaveSettings(m_configPath);
+    if (!m_configPath.isEmpty())
+    {
+        SaveSettings(m_configPath);
+    }
     QFileInfo settingsFile(QApplication::applicationDirPath() + "/" + QSP_CUSTOM_CONFIG);
     if (settingsFile.exists() && settingsFile.isFile())
     {
@@ -1210,11 +1434,26 @@ void MainWindow::OnToggleCaptions(bool checked)
         _descWidget->setTitleBarWidget(nullptr);
         _inputWidget->setTitleBarWidget(nullptr);
     }
-    if (mainTitleBarWidget) delete mainTitleBarWidget;
-    if (objectsTitleBarWidget) delete objectsTitleBarWidget;
-    if (actionsTitleBarWidget) delete actionsTitleBarWidget;
-    if (descTitleBarWidget) delete descTitleBarWidget;
-    if (inputTitleBarWidget) delete inputTitleBarWidget;
+    if (mainTitleBarWidget)
+    {
+        delete mainTitleBarWidget;
+    }
+    if (objectsTitleBarWidget)
+    {
+        delete objectsTitleBarWidget;
+    }
+    if (actionsTitleBarWidget)
+    {
+        delete actionsTitleBarWidget;
+    }
+    if (descTitleBarWidget)
+    {
+        delete descTitleBarWidget;
+    }
+    if (inputTitleBarWidget)
+    {
+        delete inputTitleBarWidget;
+    }
 }
 
 void MainWindow::OnToggleMenuBar(bool checked)
@@ -1247,17 +1486,26 @@ void MainWindow::OnToggleShowPlainText(bool checked)
 
 void MainWindow::OnNewGame()
 {
-    if (!QSPRestartGame(QSP_TRUE)) ShowError();
+    if (!QSPRestartGame(QSP_TRUE))
+    {
+        ShowError();
+    }
 }
 
 void MainWindow::OnTimer()
 {
-    if (m_isProcessEvents && !QSPExecCounter(QSP_TRUE)) ShowError();
+    if (m_isProcessEvents && !QSPExecCounter(QSP_TRUE))
+    {
+        ShowError();
+    }
 }
 
 void MainWindow::OnLinkClicked(const QUrl &url)
 {
-    if (!m_isProcessEvents) return;
+    if (!m_isProcessEvents)
+    {
+        return;
+    }
     QString href;
     href = QByteArray::fromPercentEncoding(url.toString().toUtf8());
 
@@ -1265,22 +1513,29 @@ void MainWindow::OnLinkClicked(const QUrl &url)
     {
         QObject *obj = sender();
         if (obj == _mainDescTextBox)
+        {
 #ifndef _WEBBOX_COMMON
             _mainDescTextBox->setSource(url);
 #else
             _mainDescTextBox->setUrl(url);
 #endif
+        }
         else
+        {
 #ifndef _WEBBOX_COMMON
             _descTextBox->setSource(url);
 #else
             _descTextBox->setUrl(url);
+        }
 #endif
-    }
+        }
     else if (href.startsWith("EXEC:", Qt::CaseInsensitive))
     {
         QString string = href.mid(5);
-        if (m_isProcessEvents && !QSPExecString(qspStringFromQString(string), QSP_TRUE)) ShowError();
+        if (m_isProcessEvents && !QSPExecString(qspStringFromQString(string), QSP_TRUE))
+        {
+            ShowError();
+        }
     }
     else
     {
@@ -1290,29 +1545,50 @@ void MainWindow::OnLinkClicked(const QUrl &url)
 
 void MainWindow::OnObjectListBoxItemClicked(QListWidgetItem *itemClicked)
 {
-    if (!m_isProcessEvents) return;
+    if (!m_isProcessEvents)
+    {
+        return;
+    }
     int object = _objectsListBox->row(itemClicked);
-    if (!QSPSetSelObjectIndex(object, QSP_TRUE)) ShowError();
+    if (!QSPSetSelObjectIndex(object, QSP_TRUE))
+    {
+        ShowError();
+    }
 }
 
 void MainWindow::OnActionsListBoxItemClicked(QListWidgetItem *itemClicked)
 {
-    if (!m_isProcessEvents) return;
+    if (!m_isProcessEvents)
+    {
+        return;
+    }
     int action = _actionsListBox->row(itemClicked);
     ActionsListBoxDoAction(action);
 }
 
 void MainWindow::OnObjectChange(int currentRow)
 {
-    if (!m_isProcessEvents) return;
+    if (!m_isProcessEvents)
+    {
+        return;
+    }
     // QThread::msleep(20);
-    if (!QSPSetSelObjectIndex(currentRow, QSP_TRUE)) ShowError();
+    if (!QSPSetSelObjectIndex(currentRow, QSP_TRUE))
+    {
+        ShowError();
+    }
 }
 
 void MainWindow::OnActionChange(int currentRow)
 {
-    if (!m_isProcessEvents) return;
-    if (!QSPSetSelActionIndex(currentRow, QSP_TRUE)) ShowError();
+    if (!m_isProcessEvents)
+    {
+        return;
+    }
+    if (!QSPSetSelActionIndex(currentRow, QSP_TRUE))
+    {
+        ShowError();
+    }
 }
 
 void MainWindow::OnMenu(QAction *action)
@@ -1327,7 +1603,13 @@ void MainWindow::OnInputTextChange()
 
 void MainWindow::OnInputTextEnter()
 {
-    if (!m_isProcessEvents) return;
+    if (!m_isProcessEvents)
+    {
+        return;
+    }
     QSPSetInputStrText(qspStringFromQString(_inputTextBox->GetText()));
-    if (!QSPExecUserInput(QSP_TRUE)) ShowError();
+    if (!QSPExecUserInput(QSP_TRUE))
+    {
+        ShowError();
+    }
 }

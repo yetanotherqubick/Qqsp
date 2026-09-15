@@ -61,7 +61,10 @@ void QspListBox::EndItems()
         count = m_descs.count();
         createList();
         RefreshUI();
-        if (count) scrollToItem(item(0));
+        if (count)
+        {
+            scrollToItem(item(0));
+        }
     }
 }
 
@@ -152,16 +155,27 @@ void QspListBox::SetSelection(int selection)
     if (selection != oldSelection)
     {
         if (selection != -1 && selection < (count() - 1))
-            if (item(selection) != nullptr) scrollToItem(item(selection));
+        {
+            if (item(selection) != nullptr)
+            {
+                scrollToItem(item(selection));
+            }
+        }
         if (selection != -1)
         {
             QListWidgetItem *curItem = item(selection);
-            if (curItem != nullptr) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+            if (curItem != nullptr)
+            {
+                qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+            }
         }
         if (oldSelection != -1)
         {
             QListWidgetItem *curItem = item(oldSelection);
-            if (curItem != nullptr) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
+            if (curItem != nullptr)
+            {
+                qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_backgroundColor);
+            }
         }
         oldSelection = selection;
         Q_EMIT SelectionChange(selection);
@@ -248,7 +262,10 @@ void QspListBox::createList()
     if (oldSelection != -1)
     {
         QListWidgetItem *curItem = item(oldSelection);
-        if (curItem != nullptr) qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+        if (curItem != nullptr)
+        {
+            qobject_cast<QspTextBox *>(itemWidget(curItem))->SetBackgroundColor(m_selectionColor);
+        }
     }
     adjustSize();
     // resizeEvent(0);
@@ -257,7 +274,10 @@ void QspListBox::createList()
 
 QString QspListBox::formatItem(int itemIndex)
 {
-    if (itemIndex >= m_images.size() || itemIndex >= m_descs.size()) return {""};
+    if (itemIndex >= m_images.size() || itemIndex >= m_descs.size())
+    {
+        return {""};
+    }
 
     bool isImage = false;
     QString imgPath;

@@ -36,9 +36,13 @@ VideoLabel::~VideoLabel() = default;
 bool VideoLabel::videoError()
 {
     if (mediaPlayer.error() != QMediaPlayer::FormatError && vfp.error() == QAbstractVideoSurface::NoError)
+    {
         return false;
+    }
     else
+    {
         return true;
+    }
 }
 
 void VideoLabel::OnNewFrame(QImage newVideoFrame)

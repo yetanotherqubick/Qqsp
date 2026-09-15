@@ -44,7 +44,10 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
                 m_movie.stop();
                 m_movie.setFileName(path);
                 m_movie.start();
-                if (m_movie.isValid()) m_isAnim = true;
+                if (m_movie.isValid())
+                {
+                    m_isAnim = true;
+                }
             }
             if (m_isAnim)
             {
@@ -54,7 +57,10 @@ bool QspImgCanvas::OpenFile(const QString &fileName)
             else
             {
                 ret = m_image.load(path);
-                if (ret) label_image.setPixmap(m_image);
+                if (ret)
+                {
+                    label_image.setPixmap(m_image);
+                }
             }
             if (ret)
             {
@@ -98,7 +104,10 @@ void QspImgCanvas::resizeEvent(QResizeEvent *event)
     }
     else
     {
-        if (!m_image.isNull()) label_image.setPixmap(m_image.scaled(label_image.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        if (!m_image.isNull())
+        {
+            label_image.setPixmap(m_image.scaled(label_image.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
+        }
     }
 }
 

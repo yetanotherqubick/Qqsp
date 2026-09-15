@@ -36,7 +36,10 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
                 {
                     if (ch == QChar('\\'))
                     {
-                        if (++i == str.end()) break;
+                        if (++i == str.end())
+                        {
+                            break;
+                        }
                         ch = *i;
                         if (ch == quote)
                         {
@@ -71,7 +74,10 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
                     }
                     else
                     {
-                        if (ch == quote) quote = 0;
+                        if (ch == quote)
+                        {
+                            quote = 0;
+                        }
                         out.append(ch);
                     }
                 }
@@ -79,21 +85,32 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
                 {
                     out.append(ch);
                     if (ch == QChar('>'))
+                    {
                         break;
+                    }
                     else if (ch == QChar('"') || ch == QChar('\''))
+                    {
                         quote = ch;
+                    }
                 }
                 ++i;
             }
-            if (i == str.end()) return out;
+            if (i == str.end())
+            {
+                return out;
+            }
             isLastSpace = true;
         }
         else if (ch == QChar(' '))
         {
             if (isLastSpace)
+            {
                 out.append(QString("&ensp;"));
+            }
             else
+            {
                 out.append(QChar(' '));
+            }
             isLastSpace = !isLastSpace;
             ++linepos;
         }
@@ -111,9 +128,13 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
             for (j = 4 - linepos % 4; j > 0; --j)
             {
                 if (isLastSpace)
+                {
                     out.append(QString("&emsp;"));
+                }
                 else
+                {
                     out.append(QChar(' '));
+                }
                 isLastSpace = !isLastSpace;
             }
             linepos += 4 - linepos % 4;
@@ -164,7 +185,10 @@ QString QSPTools::GetAppPath()
 QString QSPTools::GetCaseInsensitiveFilePath(QString searchDir, QString originalPath)
 {
     QString new_name = originalPath.replace("\\", "/");
-    if (new_name.startsWith("/")) new_name = new_name.remove(0, 1);
+    if (new_name.startsWith("/"))
+    {
+        new_name = new_name.remove(0, 1);
+    }
 #ifndef _WIN32
     if (useCaseInsensitiveFilePath)
     {
@@ -180,7 +204,10 @@ QString QSPTools::GetCaseInsensitiveFilePath(QString searchDir, QString original
             }
             file_path = searchDir;
         }
-        if (file_list.contains(new_name.toLower())) return itDir.relativeFilePath(file_list.value(new_name.toLower()));
+        if (file_list.contains(new_name.toLower()))
+        {
+            return itDir.relativeFilePath(file_list.value(new_name.toLower()));
+        }
     }
 #endif
     return new_name;
@@ -193,7 +220,10 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString searchDir, QString 
     if (useCaseInsensitiveFilePath)
     {
         QDir itDir(searchDir);
-        if (originalPath.startsWith(searchDir)) new_name = new_name.remove(0, searchDir.length());
+        if (originalPath.startsWith(searchDir))
+        {
+            new_name = new_name.remove(0, searchDir.length());
+        }
         if (file_path != searchDir && !searchDir.isEmpty())
         {
             file_list.clear();
@@ -205,7 +235,10 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString searchDir, QString 
             }
             file_path = searchDir;
         }
-        if (file_list.contains(new_name.toLower())) return itDir.absoluteFilePath(file_list.value(new_name.toLower()));
+        if (file_list.contains(new_name.toLower()))
+        {
+            return itDir.absoluteFilePath(file_list.value(new_name.toLower()));
+        }
     }
 #endif
     return new_name;
@@ -215,9 +248,13 @@ QString QSPTools::qspStrToQt(const QSP_CHAR *str)
 {
     // return QString::fromWCharArray(str.Str, (int)(str.End - str.Str));
     if (str == nullptr)
+    {
         return {""};
+    }
     else
+    {
         return QString::fromUtf16(str);
+    }
 }
 
 QColor QSPTools::wxtoQColor(int wxColor)
