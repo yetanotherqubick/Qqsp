@@ -220,19 +220,19 @@ if(QQSP_ENABLE_ANDROID)
 endif()
 
 set(QQSP_SOURCES
-    main.cpp
-    mainwindow.cpp
-    qsptextbox.cpp
-    qsplistbox.cpp
-    qspinputbox.cpp
-    qspimgcanvas.cpp
-    qspmsgdlg.cpp
-    qspinputdlg.cpp
-    callbacks_gui.cpp
-    comtools.cpp
-    optionsdialog.cpp
-    videoframeprocessor.cpp
-    videolabel.cpp
+    src/app/main.cpp
+    src/app/mainwindow.cpp
+    src/widgets/qsptextbox.cpp
+    src/widgets/qsplistbox.cpp
+    src/widgets/qspinputbox.cpp
+    src/widgets/qspimgcanvas.cpp
+    src/dialogs/qspmsgdlg.cpp
+    src/dialogs/qspinputdlg.cpp
+    src/app/callbacks_gui.cpp
+    src/app/comtools.cpp
+    src/dialogs/optionsdialog.cpp
+    src/multimedia/videoframeprocessor.cpp
+    src/multimedia/videolabel.cpp
 
     qsp/actions.c
     qsp/callbacks.c
@@ -279,18 +279,18 @@ set(QQSP_SOURCES
 )
 
 set(QQSP_HEADERS
-    mainwindow.h
-    qsptextbox.h
-    qsplistbox.h
-    qspinputbox.h
-    qspimgcanvas.h
-    qspmsgdlg.h
-    qspinputdlg.h
-    callbacks_gui.h
-    comtools.h
-    optionsdialog.h
-    videoframeprocessor.h
-    videolabel.h
+    src/app/mainwindow.h
+    src/widgets/qsptextbox.h
+    src/widgets/qsplistbox.h
+    src/widgets/qspinputbox.h
+    src/widgets/qspimgcanvas.h
+    src/dialogs/qspmsgdlg.h
+    src/dialogs/qspinputdlg.h
+    src/app/callbacks_gui.h
+    src/app/comtools.h
+    src/dialogs/optionsdialog.h
+    src/multimedia/videoframeprocessor.h
+    src/multimedia/videolabel.h
 
     qsp/actions.h
     qsp/callbacks.h
@@ -323,7 +323,7 @@ set(QQSP_HEADERS
 )
 
 set(QQSP_FORMS
-    optionsdialog.ui
+    src/dialogs/optionsdialog.ui
 )
 
 set(QQSP_RESOURCES
@@ -342,45 +342,45 @@ endif()
 
 if(QQSP_ENABLE_WEBBOX)
     list(APPEND QQSP_SOURCES
-        qspwebbox.cpp
-        qspwebengineurlrequestinterceptor.cpp
-        qspwebengineurlschemehandler.cpp
-        qspexecwebengineurlschemehandler.cpp
-        url_schemes.cpp
-        qspwebchannel.cpp
+        src/web/qspwebbox.cpp
+        src/web/qspwebengineurlrequestinterceptor.cpp
+        src/web/qspwebengineurlschemehandler.cpp
+        src/web/qspexecwebengineurlschemehandler.cpp
+        src/web/url_schemes.cpp
+        src/web/qspwebchannel.cpp
     )
 
     list(APPEND QQSP_HEADERS
-        qspwebbox.h
-        qspwebengineurlrequestinterceptor.h
-        qspwebengineurlschemehandler.h
-        qspexecwebengineurlschemehandler.h
-        url_schemes.h
-        qspwebchannel.h
+        src/web/qspwebbox.h
+        src/web/qspwebengineurlrequestinterceptor.h
+        src/web/qspwebengineurlschemehandler.h
+        src/web/qspexecwebengineurlschemehandler.h
+        src/web/url_schemes.h
+        src/web/qspwebchannel.h
     )
 endif()
 
 if(QQSP_ENABLE_WEBBOX_WEBKIT)
     list(APPEND QQSP_SOURCES
-        qspwebbox_webkit.cpp
-        qspnetworkaccessmanager.cpp
-        qspreply.cpp
+        src/web/qspwebbox_webkit.cpp
+        src/web/qspnetworkaccessmanager.cpp
+        src/web/qspreply.cpp
     )
 
     list(APPEND QQSP_HEADERS
-        qspwebbox_webkit.h
-        qspnetworkaccessmanager.h
-        qspreply.h
+        src/web/qspwebbox_webkit.h
+        src/web/qspnetworkaccessmanager.h
+        src/web/qspreply.h
     )
 endif()
 
 if(QQSP_ENABLE_ANDROID)
     list(APPEND QQSP_SOURCES
-        androidfiledialog.cpp
+        src/platform/android/androidfiledialog.cpp
     )
 
     list(APPEND QQSP_HEADERS
-        androidfiledialog.h
+        src/platform/android/androidfiledialog.h
     )
 endif()
 
@@ -407,6 +407,12 @@ endif()
 
 target_include_directories(Qqsp
     PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/web
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android
         ${CMAKE_CURRENT_SOURCE_DIR}/qsp/bindings/default
         ${CMAKE_CURRENT_SOURCE_DIR}/qsp/onig
         ${QQSP_ONIG_CONFIG_DIR}
