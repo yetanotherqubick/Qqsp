@@ -52,8 +52,8 @@ include(CheckIncludeFiles)
 include(CheckSymbolExists)
 include(CheckTypeSize)
 
-set(QQSP_ONIG_CONFIG_DIR "${CMAKE_CURRENT_BINARY_DIR}/qsp/onig")
-set(QQSP_ONIG_CONFIG_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/qsp/onig/config.h.in")
+set(QQSP_ONIG_CONFIG_DIR "${CMAKE_CURRENT_BINARY_DIR}/src/qsp/onig")
+set(QQSP_ONIG_CONFIG_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/src/qsp/onig/config.h.in")
 
 check_symbol_exists(alloca "alloca.h" QQSP_ONIG_HAVE_ALLOCA)
 check_include_file("alloca.h" QQSP_ONIG_HAVE_ALLOCA_H)
@@ -236,48 +236,48 @@ set(QQSP_SOURCES
     src/multimedia/videoframeprocessor.cpp
     src/multimedia/videolabel.cpp
 
-    qsp/actions.c
-    qsp/callbacks.c
-    qsp/codetools.c
-    qsp/coding.c
-    qsp/common.c
-    qsp/errors.c
-    qsp/game.c
-    qsp/locations.c
-    qsp/mathops.c
-    qsp/menu.c
-    qsp/objects.c
-    qsp/playlist.c
-    qsp/statements.c
-    qsp/text.c
-    qsp/time_qsp.c
-    qsp/towlower.c
-    qsp/towupper.c
-    qsp/variables.c
-    qsp/variant.c
+    src/qsp/actions.c
+    src/qsp/callbacks.c
+    src/qsp/codetools.c
+    src/qsp/coding.c
+    src/qsp/common.c
+    src/qsp/errors.c
+    src/qsp/game.c
+    src/qsp/locations.c
+    src/qsp/mathops.c
+    src/qsp/menu.c
+    src/qsp/objects.c
+    src/qsp/playlist.c
+    src/qsp/statements.c
+    src/qsp/text.c
+    src/qsp/time_qsp.c
+    src/qsp/towlower.c
+    src/qsp/towupper.c
+    src/qsp/variables.c
+    src/qsp/variant.c
 
-    qsp/onig/regcomp.c
-    qsp/onig/regenc.c
-    qsp/onig/regerror.c
-    qsp/onig/regexec.c
-    qsp/onig/regparse.c
-    qsp/onig/regsyntax.c
-    qsp/onig/regtrav.c
-    qsp/onig/regversion.c
-    qsp/onig/st.c
+    src/qsp/onig/regcomp.c
+    src/qsp/onig/regenc.c
+    src/qsp/onig/regerror.c
+    src/qsp/onig/regexec.c
+    src/qsp/onig/regparse.c
+    src/qsp/onig/regsyntax.c
+    src/qsp/onig/regtrav.c
+    src/qsp/onig/regversion.c
+    src/qsp/onig/st.c
 
-    qsp/onig/enc/ascii.c
-    qsp/onig/enc/cp1251.c
-    qsp/onig/enc/koi8_r.c
-    qsp/onig/enc/unicode.c
-    qsp/onig/enc/utf16_be.c
-    qsp/onig/enc/utf16_le.c
-    qsp/onig/enc/utf32_be.c
-    qsp/onig/enc/utf32_le.c
+    src/qsp/onig/enc/ascii.c
+    src/qsp/onig/enc/cp1251.c
+    src/qsp/onig/enc/koi8_r.c
+    src/qsp/onig/enc/unicode.c
+    src/qsp/onig/enc/utf16_be.c
+    src/qsp/onig/enc/utf16_le.c
+    src/qsp/onig/enc/utf32_be.c
+    src/qsp/onig/enc/utf32_le.c
 
-    qsp/bindings/default/default_callbacks.c
-    qsp/bindings/default/default_coding.c
-    qsp/bindings/default/default_control.c
+    src/qsp/bindings/default/default_callbacks.c
+    src/qsp/bindings/default/default_coding.c
+    src/qsp/bindings/default/default_control.c
 )
 
 set(QQSP_HEADERS
@@ -294,34 +294,34 @@ set(QQSP_HEADERS
     src/multimedia/videoframeprocessor.h
     src/multimedia/videolabel.h
 
-    qsp/actions.h
-    qsp/callbacks.h
-    qsp/codetools.h
-    qsp/coding.h
-    qsp/common.h
-    qsp/declarations.h
-    qsp/errors.h
-    qsp/game.h
-    qsp/locations.h
-    qsp/mathops.h
-    qsp/menu.h
-    qsp/objects.h
-    qsp/playlist.h
-    qsp/qsp.h
-    qsp/statements.h
-    qsp/text.h
-    qsp/time_qsp.h
-    qsp/variables.h
-    qsp/variant.h
+    src/qsp/actions.h
+    src/qsp/callbacks.h
+    src/qsp/codetools.h
+    src/qsp/coding.h
+    src/qsp/common.h
+    src/qsp/declarations.h
+    src/qsp/errors.h
+    src/qsp/game.h
+    src/qsp/locations.h
+    src/qsp/mathops.h
+    src/qsp/menu.h
+    src/qsp/objects.h
+    src/qsp/playlist.h
+    src/qsp/qsp.h
+    src/qsp/statements.h
+    src/qsp/text.h
+    src/qsp/time_qsp.h
+    src/qsp/variables.h
+    src/qsp/variant.h
 
-    qsp/onig/oniguruma.h
-    qsp/onig/regenc.h
-    qsp/onig/regint.h
-    qsp/onig/regparse.h
-    qsp/onig/st.h
+    src/qsp/onig/oniguruma.h
+    src/qsp/onig/regenc.h
+    src/qsp/onig/regint.h
+    src/qsp/onig/regparse.h
+    src/qsp/onig/st.h
 
-    qsp/bindings/bindings_config.h
-    qsp/bindings/default/qsp_default.h
+    src/qsp/bindings/bindings_config.h
+    src/qsp/bindings/default/qsp_default.h
 )
 
 set(QQSP_FORMS
@@ -334,11 +334,11 @@ set(QQSP_RESOURCES
 
 if(QQSP_ENABLE_DEBUG)
     list(APPEND QQSP_SOURCES
-        qsp/memwatch.c
+        src/qsp/memwatch.c
     )
 
     list(APPEND QQSP_HEADERS
-        qsp/memwatch.h
+        src/qsp/memwatch.h
     )
 endif()
 
@@ -438,8 +438,8 @@ target_include_directories(Qqsp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
         ${CMAKE_CURRENT_SOURCE_DIR}/src/web
         ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android
-        ${CMAKE_CURRENT_SOURCE_DIR}/qsp/bindings/default
-        ${CMAKE_CURRENT_SOURCE_DIR}/qsp/onig
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/qsp/bindings/default
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/qsp/onig
         ${QQSP_ONIG_CONFIG_DIR}
 )
 
