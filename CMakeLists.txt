@@ -11,8 +11,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Set the language standards used by the application and bundled C code.
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS ON)
 
 # Qt code generation.
 set(CMAKE_AUTOMOC ON)
@@ -192,7 +194,7 @@ find_package(Qt5 5.15 REQUIRED COMPONENTS
 )
 
 if(QQSP_ENABLE_WEBBOX)
-    find_package(Qt5 REQUIRED COMPONENTS
+    find_package(Qt5 5.15 REQUIRED COMPONENTS
         WebEngine
         WebEngineCore
         WebEngineWidgets
@@ -201,7 +203,7 @@ if(QQSP_ENABLE_WEBBOX)
 endif()
 
 if(QQSP_ENABLE_WEBBOX_WEBKIT)
-    find_package(Qt5 REQUIRED COMPONENTS
+    find_package(Qt5 5.15 REQUIRED COMPONENTS
         Network
         WebKitWidgets
     )
@@ -214,7 +216,7 @@ if(QQSP_ENABLE_ANDROID)
         )
     endif()
 
-    find_package(Qt5 REQUIRED COMPONENTS
+    find_package(Qt5 5.15 REQUIRED COMPONENTS
         AndroidExtras
     )
 endif()
@@ -420,8 +422,7 @@ target_include_directories(Qqsp
 
 target_compile_definitions(Qqsp
     PRIVATE
-        QT_DEPRECATED_WARNINGS
-        QT_DISABLE_DEPRECATED_BEFORE=0x060000
+        QT_DISABLE_DEPRECATED_UP_TO=0x050F00
         _UNICODE
         NOT_RUBY
 )
@@ -466,34 +467,34 @@ endif()
 
 target_link_libraries(Qqsp
     PRIVATE
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::Multimedia
+        Qt::Core
+        Qt::Gui
+        Qt::Widgets
+        Qt::Multimedia
 )
 
 if(QQSP_ENABLE_WEBBOX)
     target_link_libraries(Qqsp
         PRIVATE
-            Qt5::WebEngine
-            Qt5::WebEngineCore
-            Qt5::WebEngineWidgets
-            Qt5::WebChannel
+            Qt::WebEngine
+            Qt::WebEngineCore
+            Qt::WebEngineWidgets
+            Qt::WebChannel
     )
 endif()
 
 if(QQSP_ENABLE_WEBBOX_WEBKIT)
     target_link_libraries(Qqsp
         PRIVATE
-            Qt5::Network
-            Qt5::WebKitWidgets
+            Qt::Network
+            Qt::WebKitWidgets
     )
 endif()
 
 if(QQSP_ENABLE_ANDROID)
     target_link_libraries(Qqsp
         PRIVATE
-            Qt5::AndroidExtras
+            Qt::AndroidExtras
     )
 endif()
 

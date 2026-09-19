@@ -16,5 +16,10 @@
       "name": "qt5-cpp14",
       "configurePreset": "qt5-cpp14"
     }
-  ]
+  ],
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  }
 }
