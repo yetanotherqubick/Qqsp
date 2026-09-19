@@ -8,7 +8,7 @@ project(Qqsp
 # Export the compilation database for clangd and other analysis tools.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Match the language standards used by the current qmake project.
+# Set the language standards used by the application and bundled C code.
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_C_STANDARD 11)
@@ -450,7 +450,7 @@ if(QQSP_ENABLE_ANDROID)
     )
 endif()
 
-# Match qmake's unix:!macx disable-nativedialog configuration.
+# Disable native file dialogs on non-macOS Unix builds.
 if(UNIX AND NOT APPLE)
     target_compile_definitions(Qqsp
         PRIVATE
@@ -495,7 +495,7 @@ set_target_properties(Qqsp PROPERTIES
     OUTPUT_NAME Qqsp
 )
 
-# Preserve the qmake application bundle/icon behavior on macOS.
+# Preserve the application bundle/icon behavior on macOS.
 if(APPLE)
     set_target_properties(Qqsp PROPERTIES
         MACOSX_BUNDLE TRUE
