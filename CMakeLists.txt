@@ -386,19 +386,42 @@ if(QQSP_ENABLE_ANDROID)
     )
 endif()
 
+set(QQSP_TRANSLATION_QM_FILES)
+qt_add_translation(
+    QQSP_TRANSLATION_QM_FILES
+    Qqsp.en.ts
+    Qqsp.ru.ts
+)
+
+set(QQSP_TRANSLATION_QRC "${CMAKE_CURRENT_BINARY_DIR}/qqsp-translations.qrc")
+file(WRITE "${QQSP_TRANSLATION_QRC}" [=[
+<RCC>
+    <qresource prefix="/translations">
+        <file>Qqsp.en.qm</file>
+        <file>Qqsp.ru.qm</file>
+    </qresource>
+</RCC>
+]=])
+
+qt_add_resources(
+    QQSP_TRANSLATION_RESOURCES
+    "${QQSP_TRANSLATION_QRC}"
+)
+
 add_executable(Qqsp
     ${QQSP_SOURCES}
     ${QQSP_HEADERS}
     ${QQSP_FORMS}
     ${QQSP_RESOURCES}
+    ${QQSP_TRANSLATION_RESOURCES}
 )
 
-qt_add_translations(Qqsp
-    TS_FILES
-        Qqsp.en.ts
-        Qqsp.ru.ts
-    RESOURCE_PREFIX "/translations"
+add_custom_target(QqspTranslations
+    DEPENDS
+        ${QQSP_TRANSLATION_QM_FILES}
 )
+
+add_dependencies(Qqsp QqspTranslations)
 
 if(QQSP_IGNORE_QSP_INCOMPATIBLE_POINTER_WARNING)
     target_compile_options(Qqsp
