@@ -183,11 +183,12 @@ configure_file(
 
 # Directly used Qt modules. Qt's imported targets carry their own transitive
 # link dependencies, so lower-level Qt/system libraries are not listed here.
-find_package(Qt5 REQUIRED COMPONENTS
+find_package(Qt5 5.15 REQUIRED COMPONENTS
     Core
     Gui
     Widgets
     Multimedia
+    LinguistTools
 )
 
 if(QQSP_ENABLE_WEBBOX)
@@ -388,6 +389,13 @@ add_executable(Qqsp
     ${QQSP_HEADERS}
     ${QQSP_FORMS}
     ${QQSP_RESOURCES}
+)
+
+qt_add_translations(Qqsp
+    TS_FILES
+        Qqsp.en.ts
+        Qqsp.ru.ts
+    RESOURCE_PREFIX "/translations"
 )
 
 if(QQSP_IGNORE_QSP_INCOMPATIBLE_POINTER_WARNING)
