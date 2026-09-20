@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25...4.4)
+cmake_minimum_required(VERSION 3.25)
 
 project(Qqsp
     VERSION 1.9.0.0
