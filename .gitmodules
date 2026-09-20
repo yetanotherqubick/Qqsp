@@ -1,4 +1,0 @@
-[submodule "qsp/onig"]
-	path = src/qsp/onig
-	url = https://github.com/yetanotherqubick/oniguruma.git
-	branch = build/autotools-bootstrap
