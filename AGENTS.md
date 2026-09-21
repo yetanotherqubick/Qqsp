@@ -1,42 +1,48 @@
 # AGENTS.md
-
+ 
 ## Scope
-
-Work only within the requested task. Do not introduce unrelated refactoring, cleanup,
-dependency changes, architectural changes, or behavior changes.
-
-Use `ROADMAP.md` to determine modernization scope and milestone dependencies.
-
+ 
+Do only the requested task. Do not add unrelated refactoring, cleanup, dependency,
+architectural, or behavior changes; leave newly discovered work for a separate task
+unless the current task requires it.
+ 
+`ROADMAP.md` defines modernization scope and milestone order.
+ 
 ## Repository boundaries
-
-Preserve the C11 QSP engine boundary unless the task explicitly targets the engine.
-
-When modifying the Qt application, do not make unrelated changes under `qsp/`.
-
-Do not edit generated artifacts when they should be regenerated from their source configuration.
-
+ 
+- `src/qsp/` is the bundled C11 QSP engine. Leave it unchanged unless the task
+  explicitly targets the engine.
+- Do not edit generated artifacts (for example `build/` and `graft/`); change their
+  source configuration and regenerate them.
+## Verification
+ 
+Configure and build with the CMake preset:
+ 
+```sh
+cmake --preset qt5-cpp14
+cmake --build --preset qt5-cpp14
+```
+ 
+Until automated tests exist, the "deterministic checks" named in `ROADMAP.md` are a
+successful configure and full build. Do not claim verification that was not performed.
+ 
 ## Evidence
-
-Prefer project-local evidence in this order:
-
+ 
+Base conclusions on project-local evidence, in this order:
+ 
 1. repository source and configuration
-2. build metadata and compilation database
+2. build metadata and the compilation database
 3. tests, checks, compiler output, and generated build information
-4. Graft analysis
-5. installed development files
-6. external documentation when local evidence is insufficient or explicitly required
-
-Treat analysis and tool output as evidence, not proof. Verify conclusions that affect
-changes against the applicable source, configuration, build, or test evidence.
-
-Distinguish pre-existing failures from regressions introduced by the current change.
-
-Do not claim verification that was not performed.
-
-## Scope discipline
-
-Leave newly discovered work for a separate task unless it is required to complete the
-current task.
+4. installed development files
+5. external documentation, when local evidence is insufficient or explicitly required
+Treat tool output, including Graft, as evidence to verify against the applicable
+source, configuration, build, or test result, not as proof.
+ 
+## Navigation
+ 
+`graft/` is locally generated, gitignored state and does not exist in a fresh clone.
+If `graft` or its graph is unavailable, or shell access is restricted, use ordinary
+search and source reads (or the Graft MCP tools) instead of blocking on it.
 
 <!-- graft:start -->
 ## Graft — repo context graph
