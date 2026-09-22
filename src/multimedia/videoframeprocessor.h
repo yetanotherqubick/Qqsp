@@ -9,7 +9,6 @@
 #include <QSize>
 #include <QString>
 #include <QVideoFrame>
-// #include <QTimer>
 
 class VideoFrameProcessor : public QAbstractVideoSurface
 {
@@ -28,10 +27,6 @@ public:
     // QImage curFrame;
     QSize mediaResolution;
     bool hasFrame;
-    //    QTimer timer;
-private:
-private slots:
-    void OnFrameTimeout();
 };
 
 #endif // VIDEOFRAMEPROCESSOR_H
