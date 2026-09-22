@@ -7,9 +7,6 @@
 VideoFrameProcessor::VideoFrameProcessor(QObject *parent) : QAbstractVideoSurface(parent)
 {
     hasFrame = false;
-    //    timer.setSingleShot(true);
-    //    connect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
-    //    timer.start(10000);
 }
 
 VideoFrameProcessor::~VideoFrameProcessor() = default;
@@ -30,8 +27,6 @@ bool VideoFrameProcessor::present(const QVideoFrame &frame)
             //                        QVideoFrame::imageFormatFromPixelFormat(videoFrame.pixelFormat()));
             if (!hasFrame)
             {
-                // disconnect(&timer, SIGNAL(timeout()), this, SLOT(OnFrameTimeout()));
-                // timer.stop();
                 mediaResolution = videoFrame.size();
                 hasFrame = true;
             }
@@ -86,15 +81,6 @@ bool VideoFrameProcessor::isFormatSupported(const QVideoSurfaceFormat &format) c
     return imageFormat != QImage::Format_Invalid && !size.isEmpty() && format.handleType() == QAbstractVideoBuffer::NoHandle;
 }
 
-void VideoFrameProcessor::OnFrameTimeout()
-{
-    if (!hasFrame)
-    {
-        mediaResolution.setWidth(640);
-        mediaResolution.setHeight(480);
-        hasFrame = true;
-    }
-}
 #include <QAbstractVideoBuffer>
 #include <QAbstractVideoSurface>
 #include <QtGlobal>

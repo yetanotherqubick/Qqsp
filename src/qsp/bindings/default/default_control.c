@@ -403,7 +403,6 @@ QSP_BOOL QSPSaveGame(const QSP_CHAR *fileName, QSP_BOOL isRefresh)
 	return QSP_TRUE;
 }
 /* Сохранение состояния в память */
-//QSP_BOOL QSPSaveGameAsData(void *buf, int bufSize, int *realSize, QSP_BOOL isRefresh) //NOTE: old version
 QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh)
 {
 	int len, size;
@@ -418,7 +417,6 @@ QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh)
 	}
 	size = len * sizeof(QSP_CHAR);
 	*realSize = size;
-	//
 	*buf = malloc(size);
 	if (*buf == NULL)
 	{
@@ -426,14 +424,6 @@ QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh)
 		return QSP_FALSE;
 	}
 	memcpy(*buf, data, size);
-	//
-
-	//if (size > bufSize)
-	//{
-	//	free(data);
-	//	return QSP_FALSE;
-	//}
-
 	memcpy(buf, data, size);
 	free(data);
 	if (isRefresh) qspCallRefreshInt(QSP_FALSE);
@@ -479,20 +469,6 @@ QSP_BOOL QSPRestartGame(QSP_BOOL isRefresh)
 	if (isRefresh) qspCallRefreshInt(QSP_FALSE);
 	return QSP_TRUE;
 }
-/* ------------------------------------------------------------ */
-/* Меню */
-/* Ф-я предназначена только для вызова из CallBack'а QSP_CALL_SHOWMENU */
-//void QSPSelectMenuItem(int index)
-//{
-//	QSPVariant arg;
-//	if (index >= 0 && index < qspCurMenuItems)
-//	{
-//		if (qspIsDisableCodeExec) return;
-//		arg.IsStr = QSP_FALSE;
-//		QSP_NUM(arg) = index + 1;
-//		qspExecLocByNameWithArgs(qspCurMenuLocs[index], &arg, 1);
-//	}
-//}
 /* ------------------------------------------------------------ */
 /* Установка CALLBACK'ов */
 void QSPSetCallBack(int type, QSP_CALLBACK func)

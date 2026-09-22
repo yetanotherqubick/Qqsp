@@ -54,16 +54,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     mainToolBar = new QToolBar(this);
     mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
     addToolBar(mainToolBar);
-    // mainStatusBar = new QStatusBar(this);
-    // mainStatusBar->setObjectName(QStringLiteral("mainStatusBar"));
-    // setStatusBar(mainStatusBar);
-
-    // Set QMainWindow in the center of desktop
-    // QRect rect = geometry();
-    // rect.moveCenter(QApplication::desktop()->availableGeometry().center());
-    // setGeometry(rect);
-
-    // mainStatusBar->setVisible(false);
     mainToolBar->setVisible(false);
     mainToolBar->setWindowTitle(tr("ToolBar"));
 
@@ -331,12 +321,10 @@ void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
         if (pixmap_ok)
         {
             action = m_menu->addAction(QIcon(itemPixmap), name);
-            // m_menu->addAction(QIcon(itemPixmap), name, this, SLOT(OnMenu(bool)));
         }
         else
         {
             action = m_menu->addAction(name);
-            // m_menu->addAction(name, this, SLOT(OnMenu(bool)));
         }
         action->setData(m_menuItemId);
     }
@@ -842,7 +830,6 @@ void MainWindow::CreateDockWindows()
     _objectsListBox = new QspListBox(this);
     _objectsListBox->setObjectName(QStringLiteral("_objectsListBox"));
     connect(_objectsListBox, &QListWidget::itemClicked, this, &MainWindow::OnObjectListBoxItemClicked);
-    // connect(_objectsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnObjectListBoxItemClicked(QListWidgetItem *)));
     connect(_objectsListBox, &QListWidget::itemDoubleClicked, this, &MainWindow::OnObjectListBoxItemClicked);
     // connect(_objectsListBox, SIGNAL(currentRowChanged(int)), this, SLOT(OnObjectChange(int)));
     _objectsWidget->setWidget(_objectsListBox);
@@ -854,7 +841,6 @@ void MainWindow::CreateDockWindows()
     _actionsListBox = new QspListBox(this);
     _actionsListBox->setObjectName(QStringLiteral("_actionsListBox"));
     connect(_actionsListBox, &QListWidget::itemClicked, this, &MainWindow::OnActionsListBoxItemClicked);
-    // connect(_actionsListBox, SIGNAL(itemPressed(QListWidgetItem *)), this, SLOT(OnActionsListBoxItemClicked(QListWidgetItem *)));
     connect(_actionsListBox, &QListWidget::itemDoubleClicked, this, &MainWindow::OnActionsListBoxItemClicked);
     connect(_actionsListBox, &QspListBox::SelectionChange, this, &MainWindow::OnActionChange);
     _actionsListBox->SetMouseTracking(true);
