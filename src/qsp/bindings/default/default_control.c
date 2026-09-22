@@ -424,7 +424,6 @@ QSP_BOOL QSPSaveGameAsData(void **buf, int *realSize, QSP_BOOL isRefresh)
 		return QSP_FALSE;
 	}
 	memcpy(*buf, data, size);
-	memcpy(buf, data, size);
 	free(data);
 	if (isRefresh) qspCallRefreshInt(QSP_FALSE);
 	return QSP_TRUE;
