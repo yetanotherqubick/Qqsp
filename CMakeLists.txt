@@ -65,6 +65,8 @@ endif()
 set(QQSP_SOURCES
     src/app/main.cpp
     src/app/mainwindow.cpp
+    src/app/rollbackmanager.cpp
+    src/app/debuglogwindow.cpp
     src/widgets/qsptextbox.cpp
     src/widgets/qsplistbox.cpp
     src/widgets/qspinputbox.cpp
@@ -79,6 +81,8 @@ set(QQSP_SOURCES
 
 set(QQSP_HEADERS
     src/app/mainwindow.h
+    src/app/rollbackmanager.h
+    src/app/debuglogwindow.h
     src/widgets/qsptextbox.h
     src/widgets/qsplistbox.h
     src/widgets/qspinputbox.h
@@ -288,3 +292,44 @@ target_link_libraries(tst_engine
 )
 
 add_test(NAME tst_engine COMMAND tst_engine)
+
+# Headless smoke driver: runs the full client against a game file without
+# interaction (manual tool, not part of CTest).
+set(QQSP_DRIVER_SOURCES ${QQSP_SOURCES})
+list(REMOVE_ITEM QQSP_DRIVER_SOURCES src/app/main.cpp)
+
+add_executable(gldriver
+    tests/gldriver.cpp
+    ${QQSP_DRIVER_SOURCES}
+    ${QQSP_HEADERS}
+    ${QQSP_FORMS}
+)
+
+target_include_directories(gldriver
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/web
+)
+
+target_compile_definitions(gldriver
+    PRIVATE
+        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
+        _UNICODE
+        _WEBBOX
+        _WEBBOX_COMMON
+        _NONATIVEDIALOG
+)
+
+target_link_libraries(gldriver
+    PRIVATE
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        Qt6::Multimedia
+        Qt6::WebEngineWidgets
+        Qt6::WebChannel
+        QspLegacy::qsp-legacy
+)
