@@ -460,7 +460,7 @@ void MainWindow::SetOverallVolume(float new_volume)
 void MainWindow::SetDisableVideo(bool isDisableVideo)
 {
     disableVideo = isDisableVideo;
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     _mainDescTextBox->SetDisableVideo(disableVideo);
     _descTextBox->SetDisableVideo(disableVideo);
 #endif
@@ -469,7 +469,7 @@ void MainWindow::SetDisableVideo(bool isDisableVideo)
 void MainWindow::SetVideoFix(bool isFix)
 {
     m_videoFix = isFix;
-#ifdef _WEBBOX_COMMON
+#ifdef _WEBBOX
     _mainDescTextBox->SetVideoFix(m_videoFix);
     _descTextBox->SetVideoFix(m_videoFix);
 #endif
@@ -793,23 +793,13 @@ void MainWindow::CreateMenuBar()
 void MainWindow::CreateDockWindows()
 {
     // "Main desc" widget
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     _mainDescTextBox = new QspTextBox(this);
     connect(_mainDescTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
 #endif
 #ifdef _WEBBOX
     _mainDescTextBox = new QspWebBox(this);
     connect(_mainDescTextBox, &QspWebBox::qspLinkClicked, this, &MainWindow::OnLinkClicked);
-#endif
-#ifdef _WEBBOX_WEBKIT
-    _mainDescTextBox = new QspWebBox(this);
-    connect(_mainDescTextBox, SIGNAL(linkClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
-    _mainDescTextBox->load(QUrl("qsp:/"));
-    {
-        QEventLoop loop;
-        connect(_mainDescTextBox, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
-        loop.exec();
-    }
 #endif
     _mainDescTextBox->setObjectName(QStringLiteral("_mainDescTextBox"));
     _mainDescWidget = new QDockWidget(tr("Main desc"), this);
@@ -844,23 +834,13 @@ void MainWindow::CreateDockWindows()
     _descWidget = new QDockWidget(tr("Additional desc"), this);
     _descWidget->setObjectName(QStringLiteral("_descWidget"));
     addDockWidget(Qt::BottomDockWidgetArea, _descWidget, Qt::Horizontal);
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     _descTextBox = new QspTextBox(this);
     connect(_descTextBox, SIGNAL(anchorClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
 #endif
 #ifdef _WEBBOX
     _descTextBox = new QspWebBox(this);
     connect(_descTextBox, &QspWebBox::qspLinkClicked, this, &MainWindow::OnLinkClicked);
-#endif
-#ifdef _WEBBOX_WEBKIT
-    _descTextBox = new QspWebBox(this);
-    connect(_descTextBox, SIGNAL(linkClicked(QUrl)), this, SLOT(OnLinkClicked(QUrl)));
-    _descTextBox->load(QUrl("qsp:/"));
-    {
-        QEventLoop loop;
-        connect(_descTextBox, SIGNAL(loadFinished(bool)), &loop, SLOT(quit()));
-        loop.exec();
-    }
 #endif
     _descTextBox->setObjectName(QStringLiteral("_descTextBox"));
     _descWidget->setWidget(_descTextBox);
@@ -1052,7 +1032,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
             showNormal();
         }
     }
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     _descTextBox->keyPressEvent(event);
     _mainDescTextBox->keyPressEvent(event);
 #endif
@@ -1480,7 +1460,7 @@ void MainWindow::OnLinkClicked(const QUrl &url)
         QObject *obj = sender();
         if (obj == _mainDescTextBox)
         {
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
             _mainDescTextBox->setSource(url);
 #else
             _mainDescTextBox->setUrl(url);
@@ -1488,7 +1468,7 @@ void MainWindow::OnLinkClicked(const QUrl &url)
         }
         else
         {
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
             _descTextBox->setSource(url);
 #else
             _descTextBox->setUrl(url);

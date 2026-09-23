@@ -30,9 +30,6 @@
 
 #include <QWebEngineProfile>
 #endif
-#ifdef _WEBBOX_WEBKIT
-#include "qspwebbox_webkit.h"
-#endif
 
 #include <qsp_default.h>
 
@@ -74,7 +71,7 @@ public:
     {
         return m_timer;
     }
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     QspTextBox *GetDesc() const
     {
         return _mainDescTextBox;
@@ -318,7 +315,7 @@ private:
     QMenu *_gameMenu;     // was wxMenu *m_gameMenu;
     QMenu *_settingsMenu; // was wxMenu *m_settingsMenu;
     QMenu *_showHideMenu; // Show / Hide submenu
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     QspTextBox *_mainDescTextBox; // m_desc
     QspTextBox *_descTextBox;     // m_vars ID_VARSDESC
 #else

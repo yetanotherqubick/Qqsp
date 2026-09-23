@@ -72,7 +72,7 @@ public:
         disableVideo = isDisableVideo;
     }
     void keyPressEvent(QKeyEvent *event);
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     void SetBackgroundImage(const QImage &bmpBg);
     void LoadBackImage(const QString &fileName);
     // TODO:
@@ -85,7 +85,7 @@ public:
 private:
     // Internal methods
     void wheelEvent(QWheelEvent *e);
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     void CalcImageSize();
     void paintEvent(QPaintEvent *e);
     QVariant loadResource(int type, const QUrl &name);
@@ -107,7 +107,7 @@ private:
     QColor m_fontColor;
     bool showPlainText;
     bool disableVideo;
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
     QImage m_bmpBg;
     QImage m_bmpRealBg;
     QMap<QString, animation_gif> animations_gif;
@@ -115,7 +115,7 @@ private:
     QMutex mutex;
 #endif
 
-#ifndef _WEBBOX_COMMON
+#ifndef _WEBBOX
 private slots:
     void repaintAnimation();
     void resizeAnimations();

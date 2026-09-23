@@ -23,11 +23,6 @@ option(QQSP_ENABLE_WEBBOX
     ON
 )
 
-option(QQSP_ENABLE_WEBBOX_WEBKIT
-    "Build the legacy Qt WebKit-based web box"
-    OFF
-)
-
 option(QQSP_ENABLE_ANDROID
     "Enable Android-specific support"
     OFF
@@ -76,13 +71,6 @@ if(QQSP_ENABLE_WEBBOX)
         WebEngineCore
         WebEngineWidgets
         WebChannel
-    )
-endif()
-
-if(QQSP_ENABLE_WEBBOX_WEBKIT)
-    find_package(Qt5 5.15 REQUIRED COMPONENTS
-        Network
-        WebKitWidgets
     )
 endif()
 
@@ -157,20 +145,6 @@ if(QQSP_ENABLE_WEBBOX)
     )
 endif()
 
-if(QQSP_ENABLE_WEBBOX_WEBKIT)
-    list(APPEND QQSP_SOURCES
-        src/web/qspwebbox_webkit.cpp
-        src/web/qspnetworkaccessmanager.cpp
-        src/web/qspreply.cpp
-    )
-
-    list(APPEND QQSP_HEADERS
-        src/web/qspwebbox_webkit.h
-        src/web/qspnetworkaccessmanager.h
-        src/web/qspreply.h
-    )
-endif()
-
 if(QQSP_ENABLE_ANDROID)
     list(APPEND QQSP_SOURCES
         src/platform/android/androidfiledialog.cpp
@@ -238,15 +212,6 @@ if(QQSP_ENABLE_WEBBOX)
     target_compile_definitions(Qqsp
         PRIVATE
             _WEBBOX
-            _WEBBOX_COMMON
-    )
-endif()
-
-if(QQSP_ENABLE_WEBBOX_WEBKIT)
-    target_compile_definitions(Qqsp
-        PRIVATE
-            _WEBBOX_WEBKIT
-            _WEBBOX_COMMON
     )
 endif()
 
@@ -281,14 +246,6 @@ if(QQSP_ENABLE_WEBBOX)
             Qt::WebEngineCore
             Qt::WebEngineWidgets
             Qt::WebChannel
-    )
-endif()
-
-if(QQSP_ENABLE_WEBBOX_WEBKIT)
-    target_link_libraries(Qqsp
-        PRIVATE
-            Qt::Network
-            Qt::WebKitWidgets
     )
 endif()
 
