@@ -3,12 +3,44 @@
 
 #include "mainwindow.h"
 
+#include <QAudioOutput>
 #include <QMap>
+#include <QAudioDevice>
+#include <QMediaDevices>
+#include <QUrl>
 #include <QMediaPlayer>
+#include <map>
 #include <QString>
 #include <qsp_default.h>
 
-typedef QMap<QString, QMediaPlayer *> QSPSounds;
+// A sound in playback: the player and its audio output travel together, the
+// engine's volume is kept as the per-sound base volume (0..1, linear) and
+// combined with the overall coefficient on every output volume change.
+struct QSPSound
+{
+    QMediaPlayer *player;
+    QAudioOutput *output;
+    float baseVolume;
+
+    QSPSound()
+        : player(new QMediaPlayer())
+        , output(new QAudioOutput())
+        , baseVolume(1.0f)
+    {
+        player->setAudioOutput(output);
+        output->setDevice(QMediaDevices::defaultAudioOutput());
+    }
+    ~QSPSound()
+    {
+        player->stop();
+        delete output;
+        delete player;
+    }
+    QSPSound(const QSPSound &) = delete;
+    QSPSound &operator=(const QSPSound &) = delete;
+};
+
+typedef std::map<QString, QSPSound> QSPSounds;
 
 // static QSPString qspStringFromPair(const QSP_CHAR *start, const QSP_CHAR *end)
 //{

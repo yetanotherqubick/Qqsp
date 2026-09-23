@@ -14,7 +14,9 @@
 #include <QThread>
 #include <QTimer>
 
+#include <QAudio>
 #include <QAudioOutput>
+#include <QDebug>
 
 #include <algorithm>
 #include <cstring>
@@ -29,6 +31,14 @@ QSPSounds QSPCallBacks::m_sounds;
 float QSPCallBacks::m_volumeCoeff;
 bool QSPCallBacks::m_isAllowHTML5Extras;
 QString QSPCallBacks::m_gameFilePath;
+
+namespace
+{
+float toLinearAmplitude(float coeff)
+{
+    return QAudio::convertVolume(coeff, QAudio::LogarithmicVolumeScale, QAudio::LinearVolumeScale);
+}
+} // namespace
 
 void QSPCallBacks::Init(MainWindow *frame)
 {
@@ -219,7 +229,11 @@ QSP_BOOL QSPCallBacks::IsPlay(const QSP_CHAR *file)
         QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     if (elem != m_sounds.end())
     {
-        if (elem.value()->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
+        // Qt 6 reaches PlayingState asynchronously; loading and buffering
+        // count as playing so the engine does not restart a starting track.
+        if (elem->second.player->playbackState() == QMediaPlayer::PlaybackState::PlayingState
+            || elem->second.player->mediaStatus() == QMediaPlayer::LoadingMedia
+            || elem->second.player->mediaStatus() == QMediaPlayer::BufferingMedia)
         {
             playing = QSP_TRUE;
         }
@@ -235,16 +249,11 @@ void QSPCallBacks::CloseFile(const QSP_CHAR *file)
             QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
         if (elem != m_sounds.end())
         {
-            delete elem.value();
             m_sounds.erase(elem);
         }
     }
     else
     {
-        for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
-        {
-            delete i.value();
-        }
         m_sounds.clear();
     }
 }
@@ -256,15 +265,26 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
         return;
     }
     CloseFile(file);
-    QString strFile(
+    const QString strFile(
         QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
-    QMediaPlayer *snd = new QMediaPlayer();
-    QAudioOutput *audio = new QAudioOutput(snd);
-    snd->setAudioOutput(audio);
-    snd->setSource(QUrl::fromLocalFile(strFile));
-    audio->setVolume((volume * m_volumeCoeff) / 100.0f);
-    snd->play();
-    m_sounds.insert(strFile, snd);
+    const QFileInfo fileInfo(strFile);
+    if (!fileInfo.exists() || !fileInfo.isFile())
+    {
+        qWarning() << "Audio file not found:" << strFile;
+        return;
+    }
+    if (!fileInfo.isReadable())
+    {
+        qWarning() << "Audio file not readable:" << strFile;
+        return;
+    }
+    QSPSound &snd = m_sounds.find(strFile)->second;
+    QObject::connect(snd.player, &QMediaPlayer::errorOccurred, [strFile](QMediaPlayer::Error, const QString &errorString) {
+        qWarning() << "Audio playback error for" << strFile << ":" << errorString;
+    });
+    snd.player->setSource(QUrl::fromLocalFile(strFile));
+    snd.output->setVolume(snd.baseVolume * toLinearAmplitude(m_volumeCoeff));
+    snd.player->play();
     UpdateSounds();
 }
 
@@ -530,14 +550,18 @@ bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
     }
     QSPSounds::iterator elem = m_sounds.find(
         QString(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
-    QMediaPlayer *snd = elem.value();
-    snd->audioOutput()->setVolume((volume * m_volumeCoeff) / 100.0f);
-    return true;
+    QSPSound &snd = elem->second;
+    if (snd.player->playbackState() != QMediaPlayer::PlaybackState::StoppedState)
+    {
+        snd.baseVolume = static_cast<float>(volume) / 100.0f;
+        snd.output->setVolume(snd.baseVolume * toLinearAmplitude(m_volumeCoeff));
+        return true;
+    }
+    return false;
 }
 
 void QSPCallBacks::SetOverallVolume(float coeff)
 {
-    QMediaPlayer *snd;
     if (coeff < 0.0)
     {
         coeff = 0.0;
@@ -547,13 +571,10 @@ void QSPCallBacks::SetOverallVolume(float coeff)
         coeff = 1.0;
     }
     m_volumeCoeff = coeff;
-    for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
+    const float amp = toLinearAmplitude(m_volumeCoeff);
+    for (auto &entry : m_sounds)
     {
-        snd = i.value();
-        if (snd->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
-        {
-            snd->audioOutput()->setVolume(snd->audioOutput()->volume() * m_volumeCoeff);
-        }
+        entry.second.output->setVolume(entry.second.baseVolume * amp);
     }
 }
 
@@ -564,18 +585,16 @@ void QSPCallBacks::SetAllowHTML5Extras(bool HTML5Extras)
 
 void QSPCallBacks::UpdateSounds()
 {
-    QMediaPlayer *snd;
-    QSPSounds::iterator i = m_sounds.begin();
-    while (i != m_sounds.end())
+    for (auto i = m_sounds.begin(); i != m_sounds.end();)
     {
-        snd = i.value();
-        if (snd->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
+        if (i->second.player->playbackState() != QMediaPlayer::PlaybackState::StoppedState
+            || i->second.player->mediaStatus() == QMediaPlayer::LoadingMedia
+            || i->second.player->mediaStatus() == QMediaPlayer::BufferingMedia)
         {
             ++i;
         }
         else
         {
-            delete snd;
             i = m_sounds.erase(i);
         }
     }
