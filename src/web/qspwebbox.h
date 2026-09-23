@@ -6,11 +6,13 @@
 #include "qspwebengineurlschemehandler.h"
 
 #include <QColor>
+#include <QDesktopServices>
 #include <QFont>
 #include <QString>
 #include <QUrl>
 #include <QVariant>
 #include <QWebChannel>
+#include <QWebEnginePage>
 #include <QWebEngineProfile>
 #include <QWebEngineView>
 #include <QWidget>
@@ -19,6 +21,39 @@ namespace Ui
 {
 class QspWebBox;
 }
+
+// Only QSP links (qsp:/exec:) are handled by the client through the installed
+// scheme handlers; any other navigation is handed to the system default
+// program and rejected.
+class QspWebEnginePage : public QWebEnginePage
+{
+    Q_OBJECT
+
+public:
+    explicit QspWebEnginePage(QWebEngineProfile *profile, QObject *parent = nullptr)
+        : QWebEnginePage(profile, parent)
+    {
+    }
+
+protected:
+    bool acceptNavigationRequest(const QUrl &url, NavigationType type, bool isMainFrame) override
+    {
+        const QString scheme = url.scheme();
+        if (scheme == QLatin1String("qsp") || scheme == QLatin1String("exec"))
+        {
+            return true;
+        }
+        if (type == QWebEnginePage::NavigationTypeReload || type == QWebEnginePage::NavigationTypeBackForward)
+        {
+            return true;
+        }
+        if (isMainFrame)
+        {
+            QDesktopServices::openUrl(url);
+        }
+        return false;
+    }
+};
 
 class QspWebBox : public QWebEngineView
 {

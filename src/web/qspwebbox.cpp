@@ -6,7 +6,7 @@
 #include <QPalette>
 #include <QScrollBar>
 #include <QWebEngineSettings>
-// #include <QTimer>
+#include <QTimer>
 #include "comtools.h"
 
 #include <QEventLoop>
@@ -19,7 +19,7 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     settings()->setDefaultTextEncoding("utf-8");
     setFocusPolicy(Qt::NoFocus);
     settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
-    settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
+    settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::DisallowUnknownUrlSchemes);
     // setFrameStyle(QFrame::NoFrame);
     // setFrameShadow(QFrame::Plain);
     setContextMenuPolicy(Qt::NoContextMenu);
@@ -28,25 +28,23 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     showPlainText = false;
     m_videoFix = true;
     m_font = font();
-    // setOpenLinks(false);
-    // QspWebEngineUrlRequestInterceptor *qwuri = new QspWebEngineUrlRequestInterceptor(this);
-    // profile->setRequestInterceptor(qwuri);
     profile.installUrlSchemeHandler(QByteArray("qsp"), &qweush);
     profile.installUrlSchemeHandler(QByteArray("exec"), &qeweush);
-    page()->triggerAction(QWebEnginePage::Stop);
-    page()->deleteLater();
-    QWebEnginePage *newpage = new QWebEnginePage(&profile, this);
+    QWebEnginePage *newpage = new QspWebEnginePage(&profile, this);
     QWebChannel *channel = new QWebChannel(newpage);
     channel->registerObject(QStringLiteral("qsp"), &qspJS);
     newpage->setWebChannel(channel);
     newpage->settings()->setDefaultTextEncoding("utf-8");
     newpage->settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
-    newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
-    page()->deleteLater();
+    newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::DisallowUnknownUrlSchemes);
     setPage(newpage);
     connect(&qeweush, SIGNAL(qspLinkClicked(QUrl)), this, SLOT(OnQspLinkClicked(QUrl)));
     QEventLoop loop;
     connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
+    QTimer timer;
+    timer.setSingleShot(true);
+    connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+    timer.start(3000);
     page()->load(QUrl("qsp:/"));
     loop.exec();
 }
@@ -153,33 +151,24 @@ void QspWebBox::RefreshUI(bool isScroll)
     {
         page()->triggerAction(QWebEnginePage::Stop);
         page()->deleteLater();
-        QWebEnginePage *newpage = new QWebEnginePage(&profile, this);
+        QWebEnginePage *newpage = new QspWebEnginePage(&profile, this);
         QWebChannel *channel = new QWebChannel(newpage);
         channel->registerObject(QStringLiteral("qsp"), &qspJS);
         newpage->setWebChannel(channel);
         newpage->settings()->setDefaultTextEncoding("utf-8");
         newpage->settings()->setAttribute(QWebEngineSettings::PlaybackRequiresUserGesture, false);
-        newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::AllowAllUnknownUrlSchemes);
+        newpage->settings()->setUnknownUrlSchemePolicy(QWebEngineSettings::DisallowUnknownUrlSchemes);
         setPage(newpage);
         QEventLoop loop;
         connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
+        QTimer timer;
+        timer.setSingleShot(true);
+        connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+        timer.start(3000);
         page()->load(QUrl("qsp:/"));
         loop.exec();
     }
-    page()->triggerAction(QWebEnginePage::ReloadAndBypassCache);
-
-    // QTimer wtimer;
-    // wtimer.setSingleShot(true);
-    // QEventLoop loop;
-    // connect(this,  SIGNAL(loadFinished(bool)), &loop, SLOT(quit()) );
-    // connect(&wtimer, SIGNAL(timeout()), &loop, SLOT(quit()));
-    // wtimer.start(400);
-    // loop.exec();
-    // if(!wtimer.isActive())
-    //{
-    //     qDebug() << "timeout";
-    // }
-    // if (isScroll) verticalScrollBar()->setValue(verticalScrollBar()->maximum());
+    page()->triggerAction(QWebEnginePage::Reload);
 }
 
 void QspWebBox::LoadBackImage(const QString &fileName)
