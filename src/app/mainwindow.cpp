@@ -2,6 +2,7 @@
 
 #include "callbacks_gui.h"
 #include "comtools.h"
+#include "debuglogwindow.h"
 #include "optionsdialog.h"
 
 #include <QApplication>
@@ -54,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_savedGamePath.clear();
     m_isQuit = false;
     m_keyPressedWhileDisabled = false;
+    m_debugLogWindow = nullptr;
     m_isGameOpened = false;
     showPlainText = false;
 
@@ -341,6 +343,89 @@ void MainWindow::UpdateGamePath(const QString &path)
     m_imgView->SetGamePath(new_path);
 }
 
+void MainWindow::captureRollbackSnapshot(const QString &label)
+{
+    if (!m_isGameOpened)
+    {
+        return;
+    }
+    m_rollback.captureSnapshot(label.isEmpty()
+        ? QDateTime::currentDateTime().toString("hh:mm:ss")
+        : label);
+    UpdateRollbackControls();
+}
+
+void MainWindow::UpdateRollbackControls()
+{
+    m_actionStepBack->setEnabled(m_rollback.canGoBack());
+    m_actionStepForward->setEnabled(m_rollback.canGoForward());
+}
+
+void MainWindow::OnRollbackStepBack()
+{
+    if (!m_isGameOpened || !m_rollback.canGoBack())
+    {
+        return;
+    }
+    EnableControls(false);
+    const bool ok = m_rollback.back();
+    EnableControls(true);
+    if (ok)
+    {
+        QSPCallBacks::RefreshInt(QSP_TRUE);
+        UpdateRollbackControls();
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Rollback failed"), tr("Could not restore the previous game state."));
+    }
+}
+
+void MainWindow::OnRollbackStepForward()
+{
+    if (!m_isGameOpened || !m_rollback.canGoForward())
+    {
+        return;
+    }
+    EnableControls(false);
+    const bool ok = m_rollback.forward();
+    EnableControls(true);
+    if (ok)
+    {
+        QSPCallBacks::RefreshInt(QSP_TRUE);
+        UpdateRollbackControls();
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Rollback failed"), tr("Could not restore the next game state."));
+    }
+}
+
+void MainWindow::OnDebugLog()
+{
+    if (!m_debugLogWindow)
+    {
+        m_debugLogWindow = new DebugLogWindow(this);
+        m_debugLogWindow->setAttribute(Qt::WA_DeleteOnClose);
+        connect(m_debugLogWindow, &QObject::destroyed, this, [this] { m_debugLogWindow = nullptr; });
+    }
+    m_debugLogWindow->show();
+    m_debugLogWindow->raise();
+    m_debugLogWindow->activateWindow();
+}
+
+
+void MainWindow::appendDebugLine(const QString &line)
+{
+    if (!m_debugLogWindow)
+    {
+        m_debugLogWindow = new DebugLogWindow(this);
+        m_debugLogWindow->setAttribute(Qt::WA_DeleteOnClose);
+        connect(m_debugLogWindow, &QObject::destroyed, this, [this] { m_debugLogWindow = nullptr; });
+    }
+    m_debugLogWindow->appendLine(line);
+}
+
 void MainWindow::ShowError()
 {
     bool oldIsProcessEvents;
@@ -517,6 +602,7 @@ void MainWindow::LoadSettings(QString filePath)
 
     SetLastPath(settings->value("application/lastPath", GetLastPath()).toString());
     perGameConfig = settings->value("application/perGameConfig", perGameConfig).toBool();
+    m_rollback.setMaxSnapshots(settings->value("application/rollbackDepth", 10).toInt());
 
     m_isUseFontSize = settings->value("application/isUseFontSize", m_isUseFontSize).toBool();
     m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
@@ -596,6 +682,7 @@ void MainWindow::SaveSettings(QString filePath)
 
     settings->setValue("application/lastPath", lastPath);
     settings->setValue("application/perGameConfig", perGameConfig);
+    settings->setValue("application/rollbackDepth", m_rollback.maxSnapshots());
 
     settings->setValue("application/isUseFontSize", m_isUseFontSize);
     settings->setValue("application/fontSize", m_fontSize);
@@ -682,6 +769,16 @@ void MainWindow::CreateMenuBar()
     action->setShortcut(QKeySequence(Qt::Key_F5));
     connect(action, &QAction::triggered, this, &MainWindow::OnQuickSaveGame);
     mainToolBar->addAction(action);
+    // Rollback items
+    _gameMenu->addSeparator();
+    m_actionStepBack = _gameMenu->addAction(tr("Step back"));
+    m_actionStepBack->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_Z)));
+    m_actionStepBack->setEnabled(false);
+    connect(m_actionStepBack, &QAction::triggered, this, &MainWindow::OnRollbackStepBack);
+    m_actionStepForward = _gameMenu->addAction(tr("Step forward"));
+    m_actionStepForward->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_Y)));
+    m_actionStepForward->setEnabled(false);
+    connect(m_actionStepForward, &QAction::triggered, this, &MainWindow::OnRollbackStepForward);
     //------------------------------------------------------------------
     mainToolBar->addSeparator();
     // Settings menu
@@ -778,6 +875,11 @@ void MainWindow::CreateMenuBar()
     //        this, SLOT(OnToggleShowPlainText()), QKeySequence(QKeyCombination(Qt::ALT, Qt::Key_D))->setCheckable(true);
 
     _settingsMenu->addSeparator();
+
+    // Debug log item
+    action = _settingsMenu->addAction(tr("Debug log"));
+    action->setShortcut(QKeySequence(Qt::Key_F12));
+    connect(action, &QAction::triggered, this, &MainWindow::OnDebugLog);
 
     // Options item
     action = _settingsMenu->addAction(tr("Options..."));
@@ -979,6 +1081,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     if (action != -1)
     {
+        captureRollbackSnapshot(tr("Action %1").arg(action + 1));
         if (!QSPSetSelActionIndex(action, QSP_TRUE))
         {
             ShowError();
@@ -1116,6 +1219,8 @@ void MainWindow::OpenGameFile(const QString &path)
             }
             UpdateGamePath(filePath);
             OnNewGame();
+            m_rollback.clear();
+            captureRollbackSnapshot(tr("Game start"));
             if (m_isQuit)
             {
                 return;
@@ -1138,6 +1243,7 @@ void MainWindow::ActionsListBoxDoAction(int action)
     {
         if (action != -1)
         {
+            captureRollbackSnapshot(tr("Action %1").arg(action + 1));
             if (!QSPSetSelActionIndex(action, QSP_TRUE))
             {
                 ShowError();
@@ -1467,6 +1573,7 @@ void MainWindow::OnLinkClicked(const QUrl &url)
     else if (href.startsWith("EXEC:", Qt::CaseInsensitive))
     {
         QString string = href.mid(5);
+        captureRollbackSnapshot(tr("Link"));
         if (m_isProcessEvents && !QSPExecString(qspStringFromQString(string), QSP_TRUE))
         {
             ShowError();
@@ -1542,6 +1649,7 @@ void MainWindow::OnInputTextEnter()
     {
         return;
     }
+    captureRollbackSnapshot(tr("Input"));
     QSPSetInputStrText(qspStringFromQString(_inputTextBox->GetText()));
     if (!QSPExecUserInput(QSP_TRUE))
     {

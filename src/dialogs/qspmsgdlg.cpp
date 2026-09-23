@@ -82,6 +82,11 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
     }
     else if (href.startsWith("EXEC:", Qt::CaseInsensitive)) // NOTE: was not part of original player
     {
+        auto *mainWindow = qobject_cast<MainWindow *>(this->parent());
+        if (mainWindow != nullptr)
+        {
+            mainWindow->captureRollbackSnapshot(tr("Link"));
+        }
         QString string = href.mid(5);
         if (!QSPExecString(qspStringFromQString(string), QSP_TRUE))
         {

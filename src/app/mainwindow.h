@@ -5,6 +5,7 @@
 #include "qspinputbox.h"
 #include "qsplistbox.h"
 #include "qsptextbox.h"
+#include "rollbackmanager.h"
 
 #include <QAction>
 #include <QCloseEvent>
@@ -56,6 +57,10 @@ public:
     // truth for game-path derivation (QSPCallBacks derives the game directory
     // from it).
     QString gameFilePath() const { return m_gameFilePath; }
+
+    void captureRollbackSnapshot(const QString &label = QString());
+    void appendDebugLine(const QString &line);
+    void UpdateRollbackControls();
 
     // Methods
     void EnableControls(bool status, bool isExtended = false);
@@ -368,6 +373,10 @@ private:
     float m_volume;
     int m_menuIndex;
     QString m_gameFilePath;
+    QAction *m_actionStepBack;
+    QAction *m_actionStepForward;
+    RollbackManager m_rollback;
+    class DebugLogWindow *m_debugLogWindow;
     bool showPlainText;
     bool showCaptions;
     bool autostartLastGame;
@@ -382,6 +391,9 @@ public slots:
 private slots:
     void OnOpenGame();
     void OnRestartGame();
+    void OnRollbackStepBack();
+    void OnRollbackStepForward();
+    void OnDebugLog();
     void OnOpenSavedGame();
     void OnSaveGame();
     void OnOpenQuickSavedGame();
