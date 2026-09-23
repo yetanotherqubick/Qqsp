@@ -42,7 +42,7 @@ def load_entries(db_path):
         with open(db_path, encoding="utf-8") as f:
             entries = json.load(f)
     except FileNotFoundError:
-        sys.exit(f"ERROR: {db_path} not found. Run: cmake --preset qt5-cpp17")
+        sys.exit(f"ERROR: {db_path} not found. Run: cmake --preset qt6-cpp17")
     except json.JSONDecodeError as exc:
         sys.exit(f"ERROR: {db_path} is not valid JSON ({exc}). Re-run configure.")
 

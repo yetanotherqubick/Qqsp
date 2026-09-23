@@ -23,18 +23,11 @@ option(QQSP_ENABLE_WEBBOX
     ON
 )
 
-option(QQSP_ENABLE_ANDROID
-    "Enable Android-specific support"
-    OFF
-)
-
-# Compile-time deprecation enforcement for the application target. On Qt 5
-# the effective macro is QT_DISABLE_DEPRECATED_BEFORE (0x060000 disables
-# everything deprecated through Qt 5.15); on Qt 6 it is
-# QT_DISABLE_DEPRECATED_UP_TO. The deprecation ratchet
+# Compile-time deprecation enforcement for the application target. On Qt 6
+# the effective macro is QT_DISABLE_DEPRECATED_UP_TO; the deprecation ratchet
 # (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises the value in scratch
 # builds.
-set(QQSP_QT_DISABLE_DEPRECATED 0x060000
+set(QQSP_QT_DISABLE_DEPRECATED 0x060500
     CACHE STRING "Qt API version up to which deprecated APIs are disabled"
 )
 
@@ -53,7 +46,7 @@ find_package(QspLegacy 5.7.0 REQUIRED)
 
 # Directly used Qt modules. Qt's imported targets carry their own transitive
 # link dependencies, so lower-level Qt/system libraries are not listed here.
-find_package(Qt5 5.15 REQUIRED COMPONENTS
+find_package(Qt6 6.2 REQUIRED COMPONENTS
     Core
     Gui
     Widgets
@@ -62,23 +55,10 @@ find_package(Qt5 5.15 REQUIRED COMPONENTS
 )
 
 if(QQSP_ENABLE_WEBBOX)
-    find_package(Qt5 5.15 REQUIRED COMPONENTS
-        WebEngine
+    find_package(Qt6 6.2 REQUIRED COMPONENTS
         WebEngineCore
         WebEngineWidgets
         WebChannel
-    )
-endif()
-
-if(QQSP_ENABLE_ANDROID)
-    if(NOT ANDROID)
-        message(FATAL_ERROR
-            "QQSP_ENABLE_ANDROID requires an Android Qt build."
-        )
-    endif()
-
-    find_package(Qt5 5.15 REQUIRED COMPONENTS
-        AndroidExtras
     )
 endif()
 
@@ -94,7 +74,6 @@ set(QQSP_SOURCES
     src/app/callbacks_gui.cpp
     src/app/comtools.cpp
     src/dialogs/optionsdialog.cpp
-    src/multimedia/videoframeprocessor.cpp
     src/multimedia/videolabel.cpp
 )
 
@@ -109,7 +88,6 @@ set(QQSP_HEADERS
     src/app/callbacks_gui.h
     src/app/comtools.h
     src/dialogs/optionsdialog.h
-    src/multimedia/videoframeprocessor.h
     src/multimedia/videolabel.h
 )
 
@@ -136,16 +114,6 @@ if(QQSP_ENABLE_WEBBOX)
         src/web/qspexecwebengineurlschemehandler.h
         src/web/url_schemes.h
         src/web/qspwebchannel.h
-    )
-endif()
-
-if(QQSP_ENABLE_ANDROID)
-    list(APPEND QQSP_SOURCES
-        src/platform/android/androidfiledialog.cpp
-    )
-
-    list(APPEND QQSP_HEADERS
-        src/platform/android/androidfiledialog.h
     )
 endif()
 
@@ -193,7 +161,6 @@ target_include_directories(Qqsp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets
         ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
         ${CMAKE_CURRENT_SOURCE_DIR}/src/web
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android
 )
 
 if(QT_VERSION VERSION_LESS 6.0.0)
@@ -217,13 +184,6 @@ if(QQSP_ENABLE_WEBBOX)
     )
 endif()
 
-if(QQSP_ENABLE_ANDROID)
-    target_compile_definitions(Qqsp
-        PRIVATE
-            _ANDROIDQT
-    )
-endif()
-
 # Disable native file dialogs on non-macOS Unix builds.
 if(UNIX AND NOT APPLE)
     target_compile_definitions(Qqsp
@@ -244,17 +204,8 @@ target_link_libraries(Qqsp
 if(QQSP_ENABLE_WEBBOX)
     target_link_libraries(Qqsp
         PRIVATE
-            Qt::WebEngine
-            Qt::WebEngineCore
             Qt::WebEngineWidgets
             Qt::WebChannel
-    )
-endif()
-
-if(QQSP_ENABLE_ANDROID)
-    target_link_libraries(Qqsp
-        PRIVATE
-            Qt::AndroidExtras
     )
 endif()
 
@@ -291,7 +242,7 @@ endif()
 # Regression tests (seed of ROADMAP M5). check.sh runs them through CTest.
 enable_testing()
 
-find_package(Qt5 5.15 REQUIRED COMPONENTS Gui Test)
+find_package(Qt6 6.2 REQUIRED COMPONENTS Gui Test)
 
 add_executable(tst_paths
     tests/tst_paths.cpp
@@ -306,14 +257,14 @@ target_include_directories(tst_paths
 
 target_link_libraries(tst_paths
     PRIVATE
-        Qt5::Gui
-        Qt5::Test
+        Qt6::Gui
+        Qt6::Test
         QspLegacy::qsp-legacy
 )
 
 add_test(NAME tst_paths COMMAND tst_paths)
 
-find_package(Qt5 5.15 REQUIRED COMPONENTS Core)
+find_package(Qt6 6.2 REQUIRED COMPONENTS Core)
 
 add_executable(tst_engine
     tests/tst_engine.cpp
@@ -331,8 +282,8 @@ target_compile_definitions(tst_engine
 
 target_link_libraries(tst_engine
     PRIVATE
-        Qt5::Core
-        Qt5::Test
+        Qt6::Core
+        Qt6::Test
         QspLegacy::qsp-legacy
 )
 

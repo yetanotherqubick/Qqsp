@@ -7,7 +7,6 @@
 #include <QApplication>
 #include <QCursor>
 #include <QDesktopServices>
-#include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFontDialog>
@@ -19,12 +18,6 @@
 #include <QPalette>
 #include <QSettings>
 #include <QThread>
-
-#ifdef _ANDROIDQT
-#include "androidfiledialog.h"
-
-#include <QStandardPaths>
-#endif
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
 {
@@ -505,7 +498,7 @@ void MainWindow::LoadSettings(QString filePath)
     restoreGeometry(settings->value("mainWindow/geometry").toByteArray());
     if (isMaximized())
     {
-        setGeometry(QApplication::desktop()->availableGeometry(this));
+        setGeometry(screen()->availableGeometry());
     }
     restoreState(settings->value("mainWindow/windowState").toByteArray());
 
@@ -645,20 +638,24 @@ void MainWindow::CreateMenuBar()
     _fileMenu = menuBar()->addMenu(tr("&Quest"));
 
     // Open item
-    action = _fileMenu->addAction(QIcon(":/gfx/menu/open"), tr("Open game..."), this, &MainWindow::OnOpenGame,
-                                  QKeySequence(Qt::ALT + Qt::Key_O));
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/open"), tr("Open game..."));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::ALT, Qt::Key_O)));
+    connect(action, &QAction::triggered, this, &MainWindow::OnOpenGame);
     mainToolBar->addAction(action);
 
     // New game item
-    action = _fileMenu->addAction(QIcon(":/gfx/menu/new"), tr("Restart game"), this, &MainWindow::OnRestartGame,
-                                  QKeySequence(Qt::ALT + Qt::Key_N));
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/new"), tr("Restart game"));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::ALT, Qt::Key_N)));
+    connect(action, &QAction::triggered, this, &MainWindow::OnRestartGame);
     mainToolBar->addAction(action);
 
     _fileMenu->addSeparator();
     mainToolBar->addSeparator();
 
     // Exit item
-    action = _fileMenu->addAction(QIcon(":/gfx/menu/exit"), tr("Exit"), this, &QWidget::close, QKeySequence(Qt::ALT + Qt::Key_X));
+    action = _fileMenu->addAction(QIcon(":/gfx/menu/exit"), tr("Exit"));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::ALT, Qt::Key_X)));
+    connect(action, &QAction::triggered, this, &QWidget::close);
     mainToolBar->addAction(action);
     //------------------------------------------------------------------
     mainToolBar->addSeparator();
@@ -666,18 +663,24 @@ void MainWindow::CreateMenuBar()
     _gameMenu = menuBar()->addMenu(tr("&Game"));
 
     // Open saved game item
-    action = _gameMenu->addAction(QIcon(":/gfx/menu/statusopen"), tr("Open saved game..."), this, &MainWindow::OnOpenSavedGame,
-                                  QKeySequence(Qt::CTRL + Qt::Key_O));
+    action = _gameMenu->addAction(QIcon(":/gfx/menu/statusopen"), tr("Open saved game..."));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_O)));
+    connect(action, &QAction::triggered, this, &MainWindow::OnOpenSavedGame);
     mainToolBar->addAction(action);
     // Save game item
-    action = _gameMenu->addAction(QIcon(":/gfx/menu/statussave"), tr("Save game..."), this, &MainWindow::OnSaveGame,
-                                  QKeySequence(Qt::CTRL + Qt::Key_S));
+    action = _gameMenu->addAction(QIcon(":/gfx/menu/statussave"), tr("Save game..."));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_S)));
+    connect(action, &QAction::triggered, this, &MainWindow::OnSaveGame);
     mainToolBar->addAction(action);
     // Open quicksave item
-    action = _gameMenu->addAction(tr("Quick Load"), this, &MainWindow::OnOpenQuickSavedGame, QKeySequence(Qt::Key_F9));
+    action = _gameMenu->addAction(tr("Quick Load"));
+    action->setShortcut(QKeySequence(Qt::Key_F9));
+    connect(action, &QAction::triggered, this, &MainWindow::OnOpenQuickSavedGame);
     mainToolBar->addAction(action);
     // Quicksave item
-    action = _gameMenu->addAction(tr("Quick Save"), this, &MainWindow::OnQuickSaveGame, QKeySequence(Qt::Key_F5));
+    action = _gameMenu->addAction(tr("Quick Save"));
+    action->setShortcut(QKeySequence(Qt::Key_F5));
+    connect(action, &QAction::triggered, this, &MainWindow::OnQuickSaveGame);
     mainToolBar->addAction(action);
     //------------------------------------------------------------------
     mainToolBar->addSeparator();
@@ -689,39 +692,39 @@ void MainWindow::CreateMenuBar()
 
     // Objects item
     action = _objectsWidget->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_1)));
     _showHideMenu->addAction(action);
 
     // Actions item
     action = _actionsWidget->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_2));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_2)));
     _showHideMenu->addAction(action);
 
     // Additional desc item
     action = _descWidget->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_3));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_3)));
     _showHideMenu->addAction(action);
 
     // Input area item
     action = _inputWidget->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_4)));
     _showHideMenu->addAction(action);
 
     // Main desc item
     action = _mainDescWidget->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_5)));
     _showHideMenu->addAction(action);
 
     // Image item
     action = _imgViewWidget->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_6)));
     _showHideMenu->addAction(action);
 
     _showHideMenu->addSeparator();
 
     // Captions item
     action = _showHideMenu->addAction(tr("Captions"));
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_6)));
     action->setCheckable(true);
     if (_objectsWidget->titleBarWidget() == nullptr)
     {
@@ -735,13 +738,13 @@ void MainWindow::CreateMenuBar()
 
     // ToolBar
     action = mainToolBar->toggleViewAction();
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_7)));
     _showHideMenu->addAction(action);
 
     // TODO: MenuBar
     //  MenuBar
     // action = _showHideMenu->addAction(tr("MenuBar"));
-    // action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
+    // action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_7)));
     // action->setCheckable(true);
     // if(mainMenuBar->isVisible())
     //     action->setChecked(true);
@@ -751,14 +754,15 @@ void MainWindow::CreateMenuBar()
 
     // Hotkeys for actions item
     action = _showHideMenu->addAction(tr("Hotkeys for actions"));
-    action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_8)));
     action->setCheckable(true);
     action->setChecked(m_isShowHotkeys);
     connect(action, &QAction::toggled, this, &MainWindow::OnToggleHotkeys);
 
     // Window / Fullscreen mode item
-    action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"), this, &MainWindow::OnToggleWinMode,
-                                      QKeySequence(Qt::Key_F11));
+    action = _settingsMenu->addAction(QIcon(":/gfx/menu/windowmode"), tr("Window / Fullscreen mode"));
+    action->setShortcut(QKeySequence(Qt::Key_F11));
+    connect(action, &QAction::triggered, this, &MainWindow::OnToggleWinMode);
     mainToolBar->addAction(action);
 
     _settingsMenu->addSeparator();
@@ -766,17 +770,19 @@ void MainWindow::CreateMenuBar()
 
     // Display HTML code as plain text
     action = _settingsMenu->addAction(tr("Display HTML code as plain text"));
-    action->setShortcut(QKeySequence(Qt::ALT + Qt::Key_D));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::ALT, Qt::Key_D)));
     action->setCheckable(true);
     action->setChecked(showPlainText);
     connect(action, &QAction::toggled, this, &MainWindow::OnToggleShowPlainText);
     //    _settingsMenu->addAction(tr("Display HTML code as plain text"),
-    //        this, SLOT(OnToggleShowPlainText()), QKeySequence(Qt::ALT + Qt::Key_D))->setCheckable(true);
+    //        this, SLOT(OnToggleShowPlainText()), QKeySequence(QKeyCombination(Qt::ALT, Qt::Key_D))->setCheckable(true);
 
     _settingsMenu->addSeparator();
 
     // Options item
-    action = _settingsMenu->addAction(tr("Options..."), this, &MainWindow::OnOptions, QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_O));
+    action = _settingsMenu->addAction(tr("Options..."));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL | Qt::ALT, Qt::Key_O)));
+    connect(action, &QAction::triggered, this, &MainWindow::OnOptions);
     // mainToolBar->addAction(action);
     //------------------------------------------------------------------
     // mainToolBar->addSeparator();
@@ -784,7 +790,9 @@ void MainWindow::CreateMenuBar()
     QMenu *helpMenu(menuBar()->addMenu(tr("&Help")));
 
     // About item
-    action = helpMenu->addAction(QIcon(":/gfx/menu/about"), tr("About..."), this, &MainWindow::OnAbout, QKeySequence(Qt::CTRL + Qt::Key_H));
+    action = helpMenu->addAction(QIcon(":/gfx/menu/about"), tr("About..."));
+    action->setShortcut(QKeySequence(QKeyCombination(Qt::CTRL, Qt::Key_H)));
+    connect(action, &QAction::triggered, this, &MainWindow::OnAbout);
     mainToolBar->addAction(action);
 }
 
@@ -1179,7 +1187,6 @@ void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 
 void MainWindow::OnOpenGame()
 {
-#ifndef _ANDROIDQT
 #ifndef _NONATIVEDIALOG
     QString path = QFileDialog::getOpenFileName(this, tr("Select game file"), GetLastPath(), tr("QSP games (*.qsp *.gam)"));
 #else
@@ -1191,26 +1198,6 @@ void MainWindow::OnOpenGame()
         SetLastPath(QFileInfo(path).canonicalPath());
         OpenGameFile(path);
     }
-#else
-    QString path = QFileDialog::getOpenFileName(this, tr("Select game file"),
-                                                QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation).at(0),
-                                                tr("QSP games (*.qsp *.gam)"));
-    if (!path.isEmpty())
-    {
-        SetLastPath(QFileInfo(path).canonicalPath());
-        OpenGameFile(path);
-    }
-    return;
-    AndroidFileDialog fileDialog;
-    connect(&fileDialog, SIGNAL(existingFileNameReady(QString)), this, SLOT(OpenGameFile(QString)));
-    bool success = fileDialog.provideExistingFileName();
-    if (!success)
-    {
-        qDebug() << "Problem with JNI or sth like that...";
-        disconnect(fileDialog, SIGNAL(existingFileNameReady(QString)), this, SLOT(OpenGameFile(QString)));
-        // or just delete fileDialog instead of disconnect
-    }
-#endif
 }
 
 void MainWindow::OnRestartGame()

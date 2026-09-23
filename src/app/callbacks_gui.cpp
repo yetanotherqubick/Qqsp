@@ -14,6 +14,8 @@
 #include <QThread>
 #include <QTimer>
 
+#include <QAudioOutput>
+
 #include <algorithm>
 #include <cstring>
 #ifdef _WEBBOX
@@ -217,7 +219,7 @@ QSP_BOOL QSPCallBacks::IsPlay(const QSP_CHAR *file)
         QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     if (elem != m_sounds.end())
     {
-        if (elem.value()->state() == QMediaPlayer::PlayingState)
+        if (elem.value()->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
         {
             playing = QSP_TRUE;
         }
@@ -257,8 +259,10 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
     QString strFile(
         QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath());
     QMediaPlayer *snd = new QMediaPlayer();
-    snd->setMedia(QUrl::fromLocalFile(strFile));
-    snd->setVolume(volume * m_volumeCoeff);
+    QAudioOutput *audio = new QAudioOutput(snd);
+    snd->setAudioOutput(audio);
+    snd->setSource(QUrl::fromLocalFile(strFile));
+    audio->setVolume((volume * m_volumeCoeff) / 100.0f);
     snd->play();
     m_sounds.insert(strFile, snd);
     UpdateSounds();
@@ -407,7 +411,7 @@ void QSPCallBacks::Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen)
     QString inputText = QInputDialog::getText(m_frame, MainWindow::tr("Input data"), QSPTools::qspStrToQt(text), QLineEdit::Normal);
     // QSP_CHAR is uint16_t and QString::utf16() provides the same-width
     // buffer; copy like strncpy: at most maxLen - 1 units, zero-padded.
-    const int copyLen = std::min(maxLen - 1, inputText.length());
+    const int copyLen = std::min(maxLen - 1, static_cast<int>(inputText.length()));
     if (copyLen > 0)
     {
         memcpy(buffer, inputText.utf16(), copyLen * sizeof(QSP_CHAR));
@@ -527,7 +531,7 @@ bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)
     QSPSounds::iterator elem = m_sounds.find(
         QString(QFileInfo(m_gamePath + QSPTools::GetCaseInsensitiveFilePath(m_gamePath, QSPTools::qspStrToQt(file))).absoluteFilePath()));
     QMediaPlayer *snd = elem.value();
-    snd->setVolume(volume * m_volumeCoeff);
+    snd->audioOutput()->setVolume((volume * m_volumeCoeff) / 100.0f);
     return true;
 }
 
@@ -546,9 +550,9 @@ void QSPCallBacks::SetOverallVolume(float coeff)
     for (QSPSounds::iterator i = m_sounds.begin(); i != m_sounds.end(); ++i)
     {
         snd = i.value();
-        if (snd->state() == QMediaPlayer::PlayingState)
+        if (snd->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
         {
-            snd->setVolume(snd->volume() * m_volumeCoeff);
+            snd->audioOutput()->setVolume(snd->audioOutput()->volume() * m_volumeCoeff);
         }
     }
 }
@@ -565,7 +569,7 @@ void QSPCallBacks::UpdateSounds()
     while (i != m_sounds.end())
     {
         snd = i.value();
-        if (snd->state() == QMediaPlayer::PlayingState)
+        if (snd->playbackState() == QMediaPlayer::PlaybackState::PlayingState)
         {
             ++i;
         }

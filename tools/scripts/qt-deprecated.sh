@@ -5,7 +5,7 @@
 # migration (ROADMAP M7/M8).
 #
 # Usage: qt-deprecated.sh [--up-to HEX] [--keep] [--help]
-#   --up-to HEX   value for QT_DISABLE_DEPRECATED_UP_TO (default 0x060000)
+#   --up-to HEX   value for QT_DISABLE_DEPRECATED_UP_TO (default 0x060500)
 #   --keep        keep the scratch build directory for inspection
 #
 # Scratch build: build/qt-deprecated (recreated each run unless --keep).
@@ -20,7 +20,7 @@ usage() {
   sed -n '2,13p' "$0" | sed 's/^# \{0,1\}//'
 }
 
-UP_TO="0x060000"
+UP_TO="0x060500"
 KEEP=0
 while [ $# -gt 0 ]; do
   case "$1" in

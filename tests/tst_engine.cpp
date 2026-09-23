@@ -14,7 +14,7 @@ namespace
 {
 QString strToQt(const QSP_CHAR *str)
 {
-    return str ? QString::fromUtf16(reinterpret_cast<const ushort *>(str)) : QString();
+    return str ? QString::fromUtf16(reinterpret_cast<const char16_t *>(str)) : QString();
 }
 
 const QSP_CHAR *qspStringFromQString(const QString &s)

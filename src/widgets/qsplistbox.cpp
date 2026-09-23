@@ -398,7 +398,7 @@ void QspListBox::mouseMoveEvent(QMouseEvent *event)
 {
     if (m_mouseTracking)
     {
-        QListWidgetItem *curItem = itemAt(event->pos());
+        QListWidgetItem *curItem = itemAt(event->position().toPoint());
         if (curItem != nullptr)
         {
             SetSelection(row(curItem));

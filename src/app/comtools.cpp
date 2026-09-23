@@ -31,7 +31,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
         ch = *i;
         if (ch == QChar('<'))
         {
-            quote = 0;
+            quote = QChar();
             while (i != str.end())
             {
                 ch = *i;
@@ -79,7 +79,7 @@ QString QSPTools::HtmlizeWhitespaces(const QString &str)
                     {
                         if (ch == quote)
                         {
-                            quote = 0;
+                            quote = QChar();
                         }
                         out.append(ch);
                     }
@@ -301,7 +301,7 @@ QString QSPTools::qspStrToQt(const QSP_CHAR *str)
     }
     else
     {
-        return QString::fromUtf16(str);
+        return QString::fromUtf16(reinterpret_cast<const char16_t *>(str));
     }
 }
 

@@ -1,8 +1,8 @@
 #include "videolabel.h"
 
+#include <QAudioOutput>
+#include <QVideoFrame>
 #include <QUrl>
-// #include <QCoreApplication>
-// #include <QThread>
 
 VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel(parent)
 {
@@ -13,57 +13,43 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
     setAttribute(Qt::WA_TransparentForMouseEvents);
     resolution_set = false;
     m_medialLoaded = false;
-
-    playlist.setPlaybackMode(QMediaPlaylist::PlaybackMode::Loop);
-    playlist.addMedia(QUrl::fromLocalFile(m_path + m_filename));
-    mediaPlayer.setPlaylist(&playlist);
-    mediaPlayer.setVideoOutput(&vfp);
-    mediaPlayer.play();
-    //    while(!vfp.hasFrame && mediaPlayer.error() != QMediaPlayer::InvalidMedia && vfp.error() == QAbstractVideoSurface::NoError)
-    //    {
-    //        QCoreApplication::processEvents();
-    //        //QThread::msleep(4);
-    //    }
-
-    //    if(mediaPlayer.error() != QMediaPlayer::InvalidMedia && vfp.error() == QAbstractVideoSurface::NoError)
-    //    {
-    connect(&vfp, &VideoFrameProcessor::newFrame, this, &VideoLabel::OnNewFrame);
     m_videoError = false;
+
+    QAudioOutput *audio = new QAudioOutput(this);
+    mediaPlayer.setAudioOutput(audio);
+    mediaPlayer.setSource(QUrl::fromLocalFile(m_path + m_filename));
+    mediaPlayer.setLoops(QMediaPlayer::Infinite);
+    mediaPlayer.setVideoSink(&videoSink);
+    connect(&videoSink, &QVideoSink::videoFrameChanged, this, &VideoLabel::OnNewFrame);
+    mediaPlayer.play();
 }
 
 VideoLabel::~VideoLabel() = default;
 
 bool VideoLabel::videoError()
 {
-    if (mediaPlayer.error() != QMediaPlayer::FormatError && vfp.error() == QAbstractVideoSurface::NoError)
-    {
-        return false;
-    }
-    else
-    {
-        return true;
-    }
+    return mediaPlayer.error() != QMediaPlayer::Error::NoError;
 }
 
-void VideoLabel::OnNewFrame(QImage newVideoFrame)
+void VideoLabel::OnNewFrame(const QVideoFrame &frame)
 {
-    if (mutex.tryLock())
+    if (!frame.isValid())
     {
-        setPixmap(QPixmap::fromImage(newVideoFrame));
+        return;
+    }
+    if (!resolution_set)
+    {
+        m_resolution = frame.size();
+        resolution_set = true;
+    }
+    QImage image = frame.toImage();
+    if (!image.isNull())
+    {
+        setPixmap(QPixmap::fromImage(image));
         if (!m_medialLoaded)
         {
             m_medialLoaded = true;
             Q_EMIT medialLoaded();
         }
-        mutex.unlock();
     }
 }
-#include <QAbstractVideoSurface>
-#include <QHashFunctions>
-#include <QImage>
-#include <QLabel>
-#include <QMediaPlayer>
-#include <QMediaPlaylist>
-#include <QPixmap>
-#include <QSizePolicy>
-#include <QWidget>
