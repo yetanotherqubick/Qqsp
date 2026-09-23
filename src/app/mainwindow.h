@@ -60,8 +60,7 @@ public:
     void EnableControls(bool status, bool isExtended = false);
     void ApplyParams();
     void DeleteMenu();
-    void AddMenuItem(const QString &name, const QString &imgPath);
-    int ShowMenu();
+    int ShowMenu(QSPListItem *items, int count);
     void UpdateGamePath(const QString &path);
     void ShowError();
 
@@ -342,7 +341,6 @@ private:
     QTimer *m_timer;
     QspImgCanvas *m_imgView;
     QDockWidget *_imgViewWidget;
-    int m_menuItemId;
     QMenu *m_menu; // qsp callback menu
     QColor m_backColor;
     QColor m_linkColor;

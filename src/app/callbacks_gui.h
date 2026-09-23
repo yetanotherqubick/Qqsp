@@ -34,6 +34,10 @@ static const QSP_CHAR *qspStringFromQString(const QString &s)
     return (QSP_CHAR *)s.utf16();
 }
 
+// Legacy QSP_CHAR is uint16_t while QSP_FMT() yields char16_t literals; the
+// two are representation-identical but distinct C++ types, so bridge them.
+#define QSP_VAR(name) reinterpret_cast<const QSP_CHAR *>(QSP_FMT(name))
+
 class QSPCallBacks
 {
 public:
@@ -55,8 +59,7 @@ public:
     static int GetMSCount();
     static void Msg(const QSP_CHAR *str);
     static void DeleteMenu();
-    static void AddMenuItem(const QSP_CHAR *name, const QSP_CHAR *imgPath);
-    static int ShowMenu();
+    static int ShowMenu(QSPListItem *items, int count);
     static void Input(const QSP_CHAR *text, QSP_CHAR *buffer, int maxLen);
     static void ShowImage(const QSP_CHAR *file);
     // static void OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame);

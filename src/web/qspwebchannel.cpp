@@ -19,18 +19,15 @@ void QspWebChannel::ExecString(const QString &string)
 void QspWebChannel::ShowError()
 {
     QString errorMessage;
-    QSP_CHAR *loc;
-    int code;
-    int actIndex;
-    int line;
-    QSPGetLastErrorData(&code, &loc, &actIndex, &line);
+    QSPErrorInfo errorInfo = QSPGetLastErrorData();
+    int code = errorInfo.ErrorNum;
     QString desc = QSPTools::qspStrToQt(QSPGetErrorDesc(code));
-    if (loc)
+    if (errorInfo.LocName)
     {
         errorMessage = QString("Location: %1\nArea: %2\nLine: %3\nCode: %4\nDesc: %5")
-                           .arg(QSPTools::qspStrToQt(loc))
-                           .arg(actIndex < 0 ? QString("on visit") : QString("on action"))
-                           .arg(line)
+                           .arg(QSPTools::qspStrToQt(errorInfo.LocName))
+                           .arg(errorInfo.ActIndex < 0 ? QString("on visit") : QString("on action"))
+                           .arg(errorInfo.TopLineNum)
                            .arg(code)
                            .arg(desc);
     }

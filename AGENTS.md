@@ -9,9 +9,10 @@ unless the current task requires it.
 `ROADMAP.md` defines modernization scope and milestone order.
  
 ## Repository boundaries
- 
-- `src/qsp/` is the bundled C11 QSP engine. Leave it unchanged unless the task
-  explicitly targets the engine.
+
+- The QSP engine comes from the system `qsp-legacy` library (CMake package
+  `QspLegacy`, target `QspLegacy::qsp-legacy`). The repository no longer
+  bundles engine sources; do not modify the installed library.
 - Do not edit generated artifacts (for example `build/` and `graft/`); change their
   source configuration and regenerate them.
 ## Verification

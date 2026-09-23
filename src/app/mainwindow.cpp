@@ -176,7 +176,7 @@ void MainWindow::ApplyParams()
     // --------------
     if (!m_isUseBackColor)
     {
-        if (QSPGetVarValues(QSP_FMT("BCOLOR"), 0, &numVal, &strVal))
+        if (QSPGetVarValues(QSP_VAR("BCOLOR"), 0, &numVal, &strVal))
         {
             if (numVal == 0)
             {
@@ -200,7 +200,7 @@ void MainWindow::ApplyParams()
     // --------------
     if (!m_isUseFontColor)
     {
-        if (QSPGetVarValues(QSP_FMT("FCOLOR"), 0, &numVal, &strVal))
+        if (QSPGetVarValues(QSP_VAR("FCOLOR"), 0, &numVal, &strVal))
         {
             if (numVal == 0)
             {
@@ -224,7 +224,7 @@ void MainWindow::ApplyParams()
     // --------------
     if (!m_isUseLinkColor)
     {
-        if (QSPGetVarValues(QSP_FMT("LCOLOR"), 0, &numVal, &strVal))
+        if (QSPGetVarValues(QSP_VAR("LCOLOR"), 0, &numVal, &strVal))
         {
             if (numVal == 0)
             {
@@ -251,7 +251,7 @@ void MainWindow::ApplyParams()
     int sizeType = 0;
     if (!m_isUseFont)
     {
-        if (QSPGetVarValues(QSP_FMT("FNAME"), 0, &numVal, &strVal))
+        if (QSPGetVarValues(QSP_VAR("FNAME"), 0, &numVal, &strVal))
         {
             if (strVal != nullptr)
             {
@@ -264,7 +264,7 @@ void MainWindow::ApplyParams()
         }
         if (!m_isUseFontSize)
         {
-            if (QSPGetVarValues(QSP_FMT("FSIZE"), 0, &numVal, &strVal))
+            if (QSPGetVarValues(QSP_VAR("FSIZE"), 0, &numVal, &strVal))
             {
                 if (numVal != 0)
                 {
@@ -295,20 +295,22 @@ void MainWindow::ApplyParams()
 void MainWindow::DeleteMenu()
 {
     m_menu->clear();
-    m_menuItemId = 0;
 }
 
-void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
+int MainWindow::ShowMenu(QSPListItem *items, int count)
 {
-    if (name == QString("-"))
+    m_menu->clear();
+    for (int i = 0; i < count; ++i)
     {
-        m_menu->addSeparator();
-    }
-    else
-    {
+        QString name = QSPTools::qspStrToQt(items[i].Name);
+        if (name == QString("-"))
+        {
+            m_menu->addSeparator();
+            continue;
+        }
         bool pixmap_ok = false;
         QPixmap itemPixmap;
-        QFileInfo file(m_path + imgPath);
+        QFileInfo file(m_path + QSPTools::qspStrToQt(items[i].Image));
         QString itemPath(file.absoluteFilePath());
         if (file.exists() && file.isFile())
         {
@@ -326,13 +328,8 @@ void MainWindow::AddMenuItem(const QString &name, const QString &imgPath)
         {
             action = m_menu->addAction(name);
         }
-        action->setData(m_menuItemId);
+        action->setData(i);
     }
-    m_menuItemId++;
-}
-
-int MainWindow::ShowMenu()
-{
     m_menuIndex = -1;
     m_menu->exec(QCursor::pos());
     return m_menuIndex;
@@ -357,22 +354,19 @@ void MainWindow::ShowError()
 {
     bool oldIsProcessEvents;
     QString errorMessage;
-    QSP_CHAR *loc;
-    int code;
-    int actIndex;
-    int line;
     if (m_isQuit)
     {
         return;
     }
-    QSPGetLastErrorData(&code, &loc, &actIndex, &line);
+    QSPErrorInfo errorInfo = QSPGetLastErrorData();
+    int code = errorInfo.ErrorNum;
     QString desc = QSPTools::qspStrToQt(QSPGetErrorDesc(code));
-    if (loc)
+    if (errorInfo.LocName)
     {
         errorMessage = QString("Location: %1\nArea: %2\nLine: %3\nCode: %4\nDesc: %5")
-                           .arg(QSPTools::qspStrToQt(loc))
-                           .arg(actIndex < 0 ? QString("on visit") : QString("on action"))
-                           .arg(line)
+                           .arg(QSPTools::qspStrToQt(errorInfo.LocName))
+                           .arg(errorInfo.ActIndex < 0 ? QString("on visit") : QString("on action"))
+                           .arg(errorInfo.TopLineNum)
                            .arg(code)
                            .arg(desc);
     }
@@ -917,7 +911,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     setVisible(false);
     m_isQuit = true;
 
-    QSPDeInit();
+    QSPTerminate();
     QSPCallBacks::DeInit();
 
     QCoreApplication::processEvents();
@@ -1079,7 +1073,7 @@ void MainWindow::OpenGameFile(const QString &path)
         _objectsListBox->SetGamePath(QSPCallBacks::m_gamePath);
         _actionsListBox->SetGamePath(QSPCallBacks::m_gamePath);
         _descTextBox->SetGamePath(QSPCallBacks::m_gamePath);
-        if (QSPLoadGameWorld(qspStringFromQString(path)))
+        if (QSPLoadGameWorldFromFile(qspStringFromQString(path), QSP_FALSE))
         {
             m_isGameOpened = true;
             lastGame = path;
@@ -1193,7 +1187,7 @@ void MainWindow::dropEvent(QDropEvent *event)
             {
                 if (m_isGameOpened)
                 {
-                    if (!QSPOpenSavedGame(qspStringFromQString(event->mimeData()->urls().at(0).toLocalFile()), QSP_TRUE))
+                    if (!QSPOpenSavedGameFromFile(qspStringFromQString(event->mimeData()->urls().at(0).toLocalFile()), QSP_TRUE))
                     {
                         ShowError();
                     }
@@ -1279,7 +1273,7 @@ void MainWindow::OnOpenSavedGame()
     if (!path.isEmpty())
     {
         SetLastPath(QFileInfo(path).canonicalPath());
-        if (!QSPOpenSavedGame(qspStringFromQString(path), QSP_TRUE))
+        if (!QSPOpenSavedGameFromFile(qspStringFromQString(path), QSP_TRUE))
         {
             ShowError();
         }
@@ -1309,7 +1303,7 @@ void MainWindow::OnSaveGame()
             path.append(".sav");
         }
         QString p = GetLastPath();
-        if (QSPSaveGame(qspStringFromQString(path), QSP_TRUE))
+        if (QSPSaveGameAsFile(qspStringFromQString(path), QSP_TRUE))
         {
             SetLastPath(QFileInfo(path).canonicalPath());
             m_savedGamePath = path;
@@ -1331,7 +1325,7 @@ void MainWindow::OnOpenQuickSavedGame()
     QFileInfo fileInfo(path);
     if (fileInfo.exists() && fileInfo.isFile())
     {
-        if (!QSPOpenSavedGame(qspStringFromQString(path), QSP_TRUE))
+        if (!QSPOpenSavedGameFromFile(qspStringFromQString(path), QSP_TRUE))
         {
             ShowError();
         }
@@ -1349,7 +1343,7 @@ void MainWindow::OnQuickSaveGame()
         return;
     }
     QString path = m_path + QSP_QUICKSAVE;
-    if (QSPSaveGame(qspStringFromQString(path), QSP_TRUE))
+    if (QSPSaveGameAsFile(qspStringFromQString(path), QSP_TRUE))
     {
         m_savedGamePath = path;
     }

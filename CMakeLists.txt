@@ -2,19 +2,16 @@ cmake_minimum_required(VERSION 3.25)
 
 project(Qqsp
     VERSION 1.9.0.0
-    LANGUAGES C CXX
+    LANGUAGES CXX
 )
 
 # Export the compilation database for clangd and other analysis tools.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Set the language standards used by the application and bundled C code.
+# Set the language standard used by the application.
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_C_STANDARD 11)
-set(CMAKE_C_STANDARD_REQUIRED ON)
-set(CMAKE_C_EXTENSIONS ON)
 
 # Qt code generation.
 set(CMAKE_AUTOMOC ON)
@@ -31,19 +28,9 @@ option(QQSP_ENABLE_WEBBOX_WEBKIT
     OFF
 )
 
-option(QQSP_ENABLE_DEBUG
-    "Enable the Qqsp memory-debugging support"
-    OFF
-)
-
 option(QQSP_ENABLE_ANDROID
     "Enable Android-specific support"
     OFF
-)
-
-option(QQSP_IGNORE_QSP_INCOMPATIBLE_POINTER_WARNING
-    "Ignore -Wincompatible-pointer-types warnings"
-    ON
 )
 
 # Value of QT_DISABLE_DEPRECATED_UP_TO for the application target. The
@@ -53,13 +40,25 @@ set(QQSP_QT_DISABLE_DEPRECATED_UP_TO 0x050F00
     CACHE STRING "Qt API version up to which deprecated APIs are disabled"
 )
 
-# Oniguruma is an external dependency located by cmake/Findoniguruma.cmake.
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+# Value of QT_DISABLE_DEPRECATED_UP_TO for the application target. The
+# default is the currently enforced level (Qt 5.15); the deprecation ratchet
+# (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises it in scratch builds.
+set(QQSP_QT_DISABLE_DEPRECATED_UP_TO 0x050F00
+    CACHE STRING "Qt API version up to which deprecated APIs are disabled"
+)
 
-# Regular-expression support for the QSP engine. 6.9.10 is the final release of
-# the archived upstream project; requiring it gives every build the same regex
-# behavior and all upstream security fixes.
-find_package(oniguruma 6.9.10 REQUIRED)
+# The QSP engine comes from the system qsp-legacy library, consumed the same
+# way the build previously consumed the system Oniguruma. The package exports
+# the target QspLegacy::qsp-legacy (a shared library linking Oniguruma
+# privately) together with the public headers qsp.h, qsp_default.h, and
+# bindings_config.h.
+#
+# cmake/Findoniguruma.cmake stays and the module path is extended first: the
+# installed QspLegacyConfig.cmake calls find_dependency(oniguruma), and the
+# system Oniguruma ships only pkg-config metadata, so the Find module is what
+# satisfies that check.
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+find_package(QspLegacy 5.7.0 REQUIRED)
 
 # Directly used Qt modules. Qt's imported targets carry their own transitive
 # link dependencies, so lower-level Qt/system libraries are not listed here.
@@ -113,30 +112,6 @@ set(QQSP_SOURCES
     src/dialogs/optionsdialog.cpp
     src/multimedia/videoframeprocessor.cpp
     src/multimedia/videolabel.cpp
-
-    src/qsp/actions.c
-    src/qsp/callbacks.c
-    src/qsp/codetools.c
-    src/qsp/coding.c
-    src/qsp/common.c
-    src/qsp/errors.c
-    src/qsp/game.c
-    src/qsp/locations.c
-    src/qsp/mathops.c
-    src/qsp/menu.c
-    src/qsp/objects.c
-    src/qsp/playlist.c
-    src/qsp/statements.c
-    src/qsp/text.c
-    src/qsp/time_qsp.c
-    src/qsp/towlower.c
-    src/qsp/towupper.c
-    src/qsp/variables.c
-    src/qsp/variant.c
-
-    src/qsp/bindings/default/default_callbacks.c
-    src/qsp/bindings/default/default_coding.c
-    src/qsp/bindings/default/default_control.c
 )
 
 set(QQSP_HEADERS
@@ -152,29 +127,6 @@ set(QQSP_HEADERS
     src/dialogs/optionsdialog.h
     src/multimedia/videoframeprocessor.h
     src/multimedia/videolabel.h
-
-    src/qsp/actions.h
-    src/qsp/callbacks.h
-    src/qsp/codetools.h
-    src/qsp/coding.h
-    src/qsp/common.h
-    src/qsp/declarations.h
-    src/qsp/errors.h
-    src/qsp/game.h
-    src/qsp/locations.h
-    src/qsp/mathops.h
-    src/qsp/menu.h
-    src/qsp/objects.h
-    src/qsp/playlist.h
-    src/qsp/qsp.h
-    src/qsp/statements.h
-    src/qsp/text.h
-    src/qsp/time_qsp.h
-    src/qsp/variables.h
-    src/qsp/variant.h
-
-    src/qsp/bindings/bindings_config.h
-    src/qsp/bindings/default/qsp_default.h
 )
 
 set(QQSP_FORMS
@@ -184,16 +136,6 @@ set(QQSP_FORMS
 set(QQSP_RESOURCES
     qqsp.qrc
 )
-
-if(QQSP_ENABLE_DEBUG)
-    list(APPEND QQSP_SOURCES
-        src/qsp/memwatch.c
-    )
-
-    list(APPEND QQSP_HEADERS
-        src/qsp/memwatch.h
-    )
-endif()
 
 if(QQSP_ENABLE_WEBBOX)
     list(APPEND QQSP_SOURCES
@@ -276,13 +218,6 @@ add_custom_target(QqspTranslations
 
 add_dependencies(Qqsp QqspTranslations)
 
-if(QQSP_IGNORE_QSP_INCOMPATIBLE_POINTER_WARNING)
-    target_compile_options(Qqsp
-        PRIVATE
-            $<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-pointer-types>
-    )
-endif()
-
 target_include_directories(Qqsp
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/app
@@ -291,7 +226,6 @@ target_include_directories(Qqsp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
         ${CMAKE_CURRENT_SOURCE_DIR}/src/web
         ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/qsp/bindings/default
 )
 
 target_compile_definitions(Qqsp
@@ -299,13 +233,6 @@ target_compile_definitions(Qqsp
         QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED_UP_TO}
         _UNICODE
 )
-
-if(QQSP_ENABLE_DEBUG)
-    target_compile_definitions(Qqsp
-        PRIVATE
-            _DEBUGMW
-    )
-endif()
 
 if(QQSP_ENABLE_WEBBOX)
     target_compile_definitions(Qqsp
@@ -344,7 +271,7 @@ target_link_libraries(Qqsp
         Qt::Gui
         Qt::Widgets
         Qt::Multimedia
-        oniguruma::onig
+        QspLegacy::qsp-legacy
 )
 
 if(QQSP_ENABLE_WEBBOX)
@@ -401,3 +328,4 @@ if(WIN32)
         WIN32_EXECUTABLE TRUE
     )
 endif()
+
