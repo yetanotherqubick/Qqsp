@@ -35,6 +35,14 @@ public:
     {
     }
 
+    QWebEnginePage *createWindow(WebWindowType type) override
+    {
+        Q_UNUSED(type)
+        // New-window navigations reuse this page so the navigation policy
+        // decides their fate.
+        return this;
+    }
+
 protected:
     bool acceptNavigationRequest(const QUrl &url, NavigationType type, bool isMainFrame) override
     {
@@ -49,7 +57,12 @@ protected:
         }
         if (isMainFrame)
         {
-            QDesktopServices::openUrl(url);
+            const bool internal = scheme == QLatin1String("about") || scheme == QLatin1String("qrc")
+                || scheme == QLatin1String("data");
+            if (!internal)
+            {
+                QDesktopServices::openUrl(url);
+            }
         }
         return false;
     }
