@@ -277,7 +277,8 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
         qWarning() << "Audio file not readable:" << strFile;
         return;
     }
-    QSPSound &snd = m_sounds.find(strFile)->second;
+    auto emplaced = m_sounds.emplace(strFile, QSPSound());
+    QSPSound &snd = emplaced.first->second;
     QObject::connect(snd.player, &QMediaPlayer::errorOccurred, [strFile](QMediaPlayer::Error, const QString &errorString) {
         qWarning() << "Audio playback error for" << strFile << ":" << errorString;
     });
