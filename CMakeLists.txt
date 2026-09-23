@@ -310,3 +310,28 @@ target_link_libraries(tst_paths
 )
 
 add_test(NAME tst_paths COMMAND tst_paths)
+
+find_package(Qt5 5.15 REQUIRED COMPONENTS Core)
+
+add_executable(tst_engine
+    tests/tst_engine.cpp
+)
+
+target_include_directories(tst_engine
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app
+)
+
+target_compile_definitions(tst_engine
+    PRIVATE
+        QSP_TEST_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/minimal.qsp"
+)
+
+target_link_libraries(tst_engine
+    PRIVATE
+        Qt5::Core
+        Qt5::Test
+        QspLegacy::qsp-legacy
+)
+
+add_test(NAME tst_engine COMMAND tst_engine)

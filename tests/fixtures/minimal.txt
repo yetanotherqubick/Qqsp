@@ -1,0 +1,5 @@
+#start
+result = STRCOMP('abc','a.c')
+find = STRFIND('xyzabc','b')
+* 'Desc:' + $find
+---
