@@ -1456,23 +1456,27 @@ void MainWindow::OnLinkClicked(const QUrl &url)
     if (href.startsWith("#"))
     {
         QObject *obj = sender();
+#ifndef _WEBBOX
         if (obj == _mainDescTextBox)
         {
-#ifndef _WEBBOX
             _mainDescTextBox->setSource(url);
-#else
-            _mainDescTextBox->setUrl(url);
-#endif
         }
         else
         {
-#ifndef _WEBBOX
             _descTextBox->setSource(url);
+        }
 #else
+        Q_UNUSED(obj)
+        if (obj == _mainDescTextBox)
+        {
+            _mainDescTextBox->setUrl(url);
+        }
+        else
+        {
             _descTextBox->setUrl(url);
         }
 #endif
-        }
+    }
     else if (href.startsWith("EXEC:", Qt::CaseInsensitive))
     {
         QString string = href.mid(5);
