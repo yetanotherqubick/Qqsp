@@ -1,0 +1,31 @@
+# clang-tidy configuration for the Qqsp application sources.
+#
+# Scope: the lint scripts (tools/scripts/tidy.sh) pass only application source
+# files; the bundled engine tree (src/qsp) is excluded by default. Engine C
+# code, when explicitly targeted, uses its own minimal inline check set.
+#
+# Findings are a worklist, not a gate: tools/scripts/check.sh remains the
+# deterministic check (see AGENTS.md). Add exclusions only with a reason.
+---
+Checks: >
+  bugprone-*,
+  misc-*,
+  modernize-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  -bugprone-easily-swappable-parameters,
+  -misc-include-cleaner,
+  -misc-non-private-member-variables-in-classes,
+  -modernize-use-trailing-return-type,
+  -readability-else-after-return,
+  -readability-function-cognitive-complexity,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -readability-implicit-bool-conversion
+
+HeaderFilterRegex: '/src/'
+
+FormatStyle: file
+
+WarningsAsErrors: ''

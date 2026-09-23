@@ -46,6 +46,13 @@ option(QQSP_IGNORE_QSP_INCOMPATIBLE_POINTER_WARNING
     ON
 )
 
+# Value of QT_DISABLE_DEPRECATED_UP_TO for the application target. The
+# default is the currently enforced level (Qt 5.15); the deprecation ratchet
+# (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises it in scratch builds.
+set(QQSP_QT_DISABLE_DEPRECATED_UP_TO 0x050F00
+    CACHE STRING "Qt API version up to which deprecated APIs are disabled"
+)
+
 # Oniguruma is an external dependency located by cmake/Findoniguruma.cmake.
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -289,7 +296,7 @@ target_include_directories(Qqsp
 
 target_compile_definitions(Qqsp
     PRIVATE
-        QT_DISABLE_DEPRECATED_UP_TO=0x050F00
+        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED_UP_TO}
         _UNICODE
 )
 

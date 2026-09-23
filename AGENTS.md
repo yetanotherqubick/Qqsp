@@ -25,6 +25,11 @@ cmake --build --preset qt5-cpp14
  
 Until automated tests exist, the "deterministic checks" named in `ROADMAP.md` are a
 successful configure and full build. Do not claim verification that was not performed.
+
+Developer and agent tooling lives in `tools/scripts/` (see its `README.md`):
+`check.sh` wraps the verification above and adds warning-baseline comparison;
+the other scripts cover formatting, clang-tidy/clazy analysis, the Qt
+deprecation ratchet, and removal-evidence helpers.
  
 ## Evidence
  
