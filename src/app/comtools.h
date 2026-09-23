@@ -15,6 +15,7 @@ public:
     static QString GetAppPath();
     static QString GetCaseInsensitiveFilePath(QString searchDir, QString originalPath);
     static QString GetCaseInsensitiveAbsoluteFilePath(QString searchDir, QString originalPath);
+    static QString GameDirFromFilePath(const QString &filePath);
     static QString qspStrToQt(const QSP_CHAR *str);
     static QColor wxtoQColor(int wxColor);
 

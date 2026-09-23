@@ -66,6 +66,12 @@ public:
     static void OpenGameStatus(const QSP_CHAR *file);
     static void SaveGameStatus(const QSP_CHAR *file);
 
+    // Game path ownership: the loaded .qsp file path lives in MainWindow
+    // (gameFilePath()); QSPCallBacks derives the game directory from it once
+    // per change and propagates it to the widgets.
+    static void SetGameFilePath(const QString &filePath);
+    static void UpdateGamePath(const QString &filePath);
+
     static QString m_gamePath;
 
 private:
@@ -80,6 +86,7 @@ private:
     static QSPSounds m_sounds;
     static float m_volumeCoeff;
     static bool m_isAllowHTML5Extras;
+    static QString m_gameFilePath;
 };
 
 #endif

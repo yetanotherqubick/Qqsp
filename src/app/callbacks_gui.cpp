@@ -29,6 +29,7 @@ bool QSPCallBacks::m_isHtml;
 QSPSounds QSPCallBacks::m_sounds;
 float QSPCallBacks::m_volumeCoeff;
 bool QSPCallBacks::m_isAllowHTML5Extras;
+QString QSPCallBacks::m_gameFilePath;
 
 void QSPCallBacks::Init(MainWindow *frame)
 {
@@ -92,7 +93,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         return;
     }
     // -------------------------------
-    UpdateGamePath();
+    UpdateGamePath(m_frame->gameFilePath());
     // -------------------------------
     const QSP_CHAR *mainDesc = QSPGetMainDesc();
     const QSP_CHAR *varsDesc = QSPGetVarsDesc();
@@ -501,19 +502,23 @@ void QSPCallBacks::SaveGameStatus(const QSP_CHAR *file)
     }
 }
 
-void QSPCallBacks::UpdateGamePath()
+void QSPCallBacks::SetGameFilePath(const QString &filePath)
 {
-    m_gamePath = QFileInfo(m_gamePath).canonicalPath();
-    if (!m_gamePath.endsWith("/"))
-    {
-        m_gamePath += "/";
-    }
-    // m_frame->UpdateGamePath(m_gamePath);
+    m_gamePath = QSPTools::GameDirFromFilePath(filePath);
     m_frame->GetDesc()->SetGamePath(m_gamePath);
     m_frame->GetObjects()->SetGamePath(m_gamePath);
     m_frame->GetActions()->SetGamePath(m_gamePath);
     m_frame->GetVars()->SetGamePath(m_gamePath);
     m_frame->GetImgView()->SetGamePath(m_gamePath);
+}
+
+void QSPCallBacks::UpdateGamePath(const QString &filePath)
+{
+    if (QFileInfo(filePath).absoluteFilePath() == m_gameFilePath)
+    {
+        return;
+    }
+    SetGameFilePath(filePath);
 }
 
 bool QSPCallBacks::SetVolume(const QSP_CHAR *file, int volume)

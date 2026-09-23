@@ -3,6 +3,7 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QDirIterator>
+#include <QFileInfo>
 
 QHash<QString, QString> QSPTools::file_list;
 QString QSPTools::file_path;
@@ -244,6 +245,33 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString searchDir, QString 
     }
 #endif
     return new_name;
+}
+
+QString QSPTools::GameDirFromFilePath(const QString &filePath)
+{
+    if (filePath.isEmpty())
+    {
+        return QString();
+    }
+    QFileInfo info(filePath);
+    if (info.isDir())
+    {
+        // Defensive: a directory path resolves to itself, not to its parent.
+        QString dir = info.canonicalFilePath();
+        return dir.isEmpty() ? QString() : dir + '/';
+    }
+    QString dir = info.canonicalPath();
+    if (dir.isEmpty() || dir == ".")
+    {
+        // The file (or a path component) does not exist yet; fall back to the
+        // non-canonical absolute parent.
+        dir = info.absolutePath();
+    }
+    if (!dir.isEmpty() && !dir.endsWith('/'))
+    {
+        dir += '/';
+    }
+    return dir;
 }
 
 QString QSPTools::qspStrToQt(const QSP_CHAR *str)

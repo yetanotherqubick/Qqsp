@@ -56,6 +56,11 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    // Absolute path of the currently loaded .qsp file — the single source of
+    // truth for game-path derivation (QSPCallBacks derives the game directory
+    // from it).
+    QString gameFilePath() const { return m_gameFilePath; }
+
     // Methods
     void EnableControls(bool status, bool isExtended = false);
     void ApplyParams();
@@ -366,6 +371,7 @@ private:
     bool m_isShowHotkeys;
     float m_volume;
     int m_menuIndex;
+    QString m_gameFilePath;
     bool showPlainText;
     bool showCaptions;
     bool autostartLastGame;
