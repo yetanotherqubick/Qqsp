@@ -97,6 +97,7 @@ public:
     // static void OpenGame(const QSP_CHAR *file, QSP_BOOL isNewGame);
     static void OpenGameStatus(const QSP_CHAR *file);
     static void SaveGameStatus(const QSP_CHAR *file);
+    static void Debug(const QSP_CHAR *str);
 
     // Game path ownership: the loaded .qsp file path lives in MainWindow
     // (gameFilePath()); QSPCallBacks derives the game directory from it once

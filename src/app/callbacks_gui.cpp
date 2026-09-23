@@ -64,8 +64,7 @@ void QSPCallBacks::Init(MainWindow *frame)
     // QSPSetCallBack(QSP_CALL_OPENGAME, (QSP_CALLBACK)&OpenGame); //replace
     QSPSetCallBack(QSP_CALL_OPENGAMESTATUS, (QSP_CALLBACK)&OpenGameStatus);
     QSPSetCallBack(QSP_CALL_SAVEGAMESTATUS, (QSP_CALLBACK)&SaveGameStatus);
-    // TODO: implement this?
-    // QSP_CALL_DEBUG, /* void func(const QSP_CHAR *str) */
+    QSPSetCallBack(QSP_CALL_DEBUG, (QSP_CALLBACK)&Debug);
 }
 
 void QSPCallBacks::DeInit()
@@ -286,6 +285,15 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
     snd.output->setVolume(snd.baseVolume * toLinearAmplitude(m_volumeCoeff));
     snd.player->play();
     UpdateSounds();
+}
+
+void QSPCallBacks::Debug(const QSP_CHAR *str)
+{
+    if (m_frame->IsQuit())
+    {
+        return;
+    }
+    m_frame->appendDebugLine(QSPTools::qspStrToQt(str));
 }
 
 void QSPCallBacks::ShowPane(int type, QSP_BOOL isShow)
