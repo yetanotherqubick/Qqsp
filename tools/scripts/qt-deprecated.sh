@@ -44,7 +44,7 @@ mkdir -p "$SCRATCH"
 
 qqsp_section "configure (QT_DISABLE_DEPRECATED_UP_TO=$UP_TO)"
 if ! cmake -S "$QQSP_REPO_ROOT" -B "$SCRATCH" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-  "-DQQSP_QT_DISABLE_DEPRECATED_UP_TO=$UP_TO" >"$LOG" 2>&1; then
+  "-DQQSP_QT_DISABLE_DEPRECATED=$UP_TO" >"$LOG" 2>&1; then
   qqsp_fail "configure failed"
   tail -n 15 "$LOG"
   exit 1

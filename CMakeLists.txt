@@ -28,17 +28,13 @@ option(QQSP_ENABLE_ANDROID
     OFF
 )
 
-# Value of QT_DISABLE_DEPRECATED_UP_TO for the application target. The
-# default is the currently enforced level (Qt 5.15); the deprecation ratchet
-# (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises it in scratch builds.
-set(QQSP_QT_DISABLE_DEPRECATED_UP_TO 0x050F00
-    CACHE STRING "Qt API version up to which deprecated APIs are disabled"
-)
-
-# Value of QT_DISABLE_DEPRECATED_UP_TO for the application target. The
-# default is the currently enforced level (Qt 5.15); the deprecation ratchet
-# (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises it in scratch builds.
-set(QQSP_QT_DISABLE_DEPRECATED_UP_TO 0x050F00
+# Compile-time deprecation enforcement for the application target. On Qt 5
+# the effective macro is QT_DISABLE_DEPRECATED_BEFORE (0x060000 disables
+# everything deprecated through Qt 5.15); on Qt 6 it is
+# QT_DISABLE_DEPRECATED_UP_TO. The deprecation ratchet
+# (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises the value in scratch
+# builds.
+set(QQSP_QT_DISABLE_DEPRECATED 0x060000
     CACHE STRING "Qt API version up to which deprecated APIs are disabled"
 )
 
@@ -202,11 +198,19 @@ target_include_directories(Qqsp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/platform/android
 )
 
-target_compile_definitions(Qqsp
-    PRIVATE
-        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED_UP_TO}
-        _UNICODE
-)
+if(QT_VERSION VERSION_LESS 6.0.0)
+    target_compile_definitions(Qqsp
+        PRIVATE
+            QT_DISABLE_DEPRECATED_BEFORE=${QQSP_QT_DISABLE_DEPRECATED}
+            _UNICODE
+    )
+else()
+    target_compile_definitions(Qqsp
+        PRIVATE
+            QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
+            _UNICODE
+    )
+endif()
 
 if(QQSP_ENABLE_WEBBOX)
     target_compile_definitions(Qqsp
