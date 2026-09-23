@@ -39,8 +39,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     setAcceptDrops(true);
 
 #ifdef _WEBBOX
-//    qwuri = new QspWebEngineUrlRequestInterceptor();
-//    QWebEngineProfile::defaultProfile()->setRequestInterceptor(qwuri);
 //    QspWebEngineUrlSchemeHandler *qweush = new QspWebEngineUrlSchemeHandler();
 //    QWebEngineProfile::defaultProfile()->installUrlSchemeHandler(QByteArray("qsp"),qweush);
 #endif

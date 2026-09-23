@@ -9,5 +9,8 @@ generated file):
         <upstream>/txt2gam/src/*.c $(pkg-config --cflags --libs oniguruma)
     ./txt2gam minimal.txt minimal.qsp
 
-The game defines one location `start` that runs STRCOMP/STRFIND checks and
-prints a description containing `Desc:`.
+The game defines one location `start` whose body runs STRCOMP/STRFIND
+checks and prints a description containing `Desc:`. Note: the location body
+of this 2013-era output does not survive the legacy parse (the loaded world
+has the location but no executable code), so `tst_engine` exercises the
+engine through `QSPExecString` instead of relying on location execution.

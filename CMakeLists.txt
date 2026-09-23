@@ -124,7 +124,6 @@ set(QQSP_RESOURCES
 if(QQSP_ENABLE_WEBBOX)
     list(APPEND QQSP_SOURCES
         src/web/qspwebbox.cpp
-        src/web/qspwebengineurlrequestinterceptor.cpp
         src/web/qspwebengineurlschemehandler.cpp
         src/web/qspexecwebengineurlschemehandler.cpp
         src/web/url_schemes.cpp
@@ -133,7 +132,6 @@ if(QQSP_ENABLE_WEBBOX)
 
     list(APPEND QQSP_HEADERS
         src/web/qspwebbox.h
-        src/web/qspwebengineurlrequestinterceptor.h
         src/web/qspwebengineurlschemehandler.h
         src/web/qspexecwebengineurlschemehandler.h
         src/web/url_schemes.h

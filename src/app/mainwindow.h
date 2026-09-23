@@ -25,7 +25,6 @@
 #include <QWidget>
 #ifdef _WEBBOX
 #include "qspwebbox.h"
-#include "qspwebengineurlrequestinterceptor.h"
 #include "qspwebengineurlschemehandler.h"
 
 #include <QWebEngineProfile>
