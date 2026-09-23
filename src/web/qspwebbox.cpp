@@ -49,7 +49,12 @@ QspWebBox::QspWebBox(QWidget *parent) : QWebEngineView(parent)
     loop.exec();
 }
 
-QspWebBox::~QspWebBox() = default;
+QspWebBox::~QspWebBox()
+{
+    // The profile member is destroyed before the QObject child pages; delete
+    // the page first so its teardown never touches a dead profile.
+    delete page();
+}
 
 void QspWebBox::SetIsHtml(bool isHtml)
 {
@@ -315,6 +320,10 @@ void QspWebBox::Quit()
     setPage(newpage);
     QEventLoop loop;
     connect(page(), &QWebEnginePage::loadFinished, &loop, &QEventLoop::quit);
+    QTimer timer;
+    timer.setSingleShot(true);
+    connect(&timer, &QTimer::timeout, &loop, &QEventLoop::quit);
+    timer.start(3000);
     page()->load(QUrl("about:blank"));
     loop.exec();
 }
