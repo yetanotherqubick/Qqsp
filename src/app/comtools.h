@@ -21,9 +21,15 @@ public:
 
     static bool useCaseInsensitiveFilePath;
 
+    // Test instrumentation: number of times a directory file list was built.
+    static int file_cache_builds;
+
 private:
-    static QHash<QString, QString> file_list;
-    static QString file_path;
+    // Case-insensitive lookup tables, keyed by the scanned directory. Entries
+    // are evicted (all at once) when more than a few directories are seen, so
+    // memory stays bounded without thrashing between the game directory and
+    // its parent.
+    static QHash<QString, QHash<QString, QString>> file_lists;
 };
 
 #endif

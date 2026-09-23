@@ -5,8 +5,8 @@
 #include <QDirIterator>
 #include <QFileInfo>
 
-QHash<QString, QString> QSPTools::file_list;
-QString QSPTools::file_path;
+QHash<QString, QHash<QString, QString>> QSPTools::file_lists;
+int QSPTools::file_cache_builds = 0;
 bool QSPTools::useCaseInsensitiveFilePath = true;
 
 QString QSPTools::GetHexColor(const QColor color)
@@ -196,20 +196,29 @@ QString QSPTools::GetCaseInsensitiveFilePath(QString searchDir, QString original
     if (useCaseInsensitiveFilePath)
     {
         QDir itDir(searchDir);
-        if (file_path != searchDir && !searchDir.isEmpty())
+        if (!searchDir.isEmpty() && !file_lists.contains(searchDir))
         {
-            file_list.clear();
+            if (file_lists.size() >= 3)
+            {
+                file_lists.clear();
+            }
+            QHash<QString, QString> list;
             QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext())
             {
                 it.next();
-                file_list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
+                list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
             }
-            file_path = searchDir;
+            file_lists.insert(searchDir, list);
+            ++file_cache_builds;
         }
-        if (file_list.contains(new_name.toLower()))
+        if (file_lists.contains(searchDir))
         {
-            return itDir.relativeFilePath(file_list.value(new_name.toLower()));
+            const QHash<QString, QString> &list = file_lists.value(searchDir);
+            if (list.contains(new_name.toLower()))
+            {
+                return itDir.relativeFilePath(list.value(new_name.toLower()));
+            }
         }
     }
 #endif
@@ -227,20 +236,29 @@ QString QSPTools::GetCaseInsensitiveAbsoluteFilePath(QString searchDir, QString 
         {
             new_name = new_name.remove(0, searchDir.length());
         }
-        if (file_path != searchDir && !searchDir.isEmpty())
+        if (!searchDir.isEmpty() && !file_lists.contains(searchDir))
         {
-            file_list.clear();
+            if (file_lists.size() >= 3)
+            {
+                file_lists.clear();
+            }
+            QHash<QString, QString> list;
             QDirIterator it(searchDir, QDir::Files, QDirIterator::Subdirectories);
             while (it.hasNext())
             {
                 it.next();
-                file_list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
+                list.insert(itDir.relativeFilePath(it.filePath()).toLower(), itDir.relativeFilePath(it.filePath()));
             }
-            file_path = searchDir;
+            file_lists.insert(searchDir, list);
+            ++file_cache_builds;
         }
-        if (file_list.contains(new_name.toLower()))
+        if (file_lists.contains(searchDir))
         {
-            return itDir.absoluteFilePath(file_list.value(new_name.toLower()));
+            const QHash<QString, QString> &list = file_lists.value(searchDir);
+            if (list.contains(new_name.toLower()))
+            {
+                return itDir.absoluteFilePath(list.value(new_name.toLower()));
+            }
         }
     }
 #endif
