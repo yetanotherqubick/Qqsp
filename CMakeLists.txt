@@ -329,3 +329,27 @@ if(WIN32)
     )
 endif()
 
+# Regression tests (seed of ROADMAP M5). check.sh runs them through CTest.
+enable_testing()
+
+find_package(Qt5 5.15 REQUIRED COMPONENTS Gui Test)
+
+add_executable(tst_paths
+    tests/tst_paths.cpp
+    src/app/comtools.cpp
+    src/app/comtools.h
+)
+
+target_include_directories(tst_paths
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app
+)
+
+target_link_libraries(tst_paths
+    PRIVATE
+        Qt5::Gui
+        Qt5::Test
+        QspLegacy::qsp-legacy
+)
+
+add_test(NAME tst_paths COMMAND tst_paths)
