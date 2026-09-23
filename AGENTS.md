@@ -20,8 +20,8 @@ unless the current task requires it.
 Configure and build with the CMake preset:
  
 ```sh
-cmake --preset qt5-cpp14
-cmake --build --preset qt5-cpp14
+cmake --preset qt5-cpp17
+cmake --build --preset qt5-cpp17
 ```
  
 Until automated tests exist, the "deterministic checks" named in `ROADMAP.md` are a

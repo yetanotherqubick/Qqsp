@@ -2,8 +2,8 @@
   "version": 6,
   "configurePresets": [
     {
-      "name": "qt5-cpp14",
-      "displayName": "Qt 5 / C++14",
+      "name": "qt5-cpp17",
+      "displayName": "Qt 5 / C++17",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
@@ -14,8 +14,8 @@
   ],
   "buildPresets": [
     {
-      "name": "qt5-cpp14",
-      "configurePreset": "qt5-cpp14"
+      "name": "qt5-cpp17",
+      "configurePreset": "qt5-cpp17"
     }
   ],
   "cmakeMinimumRequired": {

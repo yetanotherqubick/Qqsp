@@ -39,7 +39,7 @@ SortIncludes: CaseSensitive
 IncludeBlocks: Regroup
 
 # C++ language
-Standard: c++14
+Standard: c++17
 
 # Namespaces
 NamespaceIndentation: None

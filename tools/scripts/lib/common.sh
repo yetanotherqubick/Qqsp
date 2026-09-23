@@ -10,7 +10,7 @@ QQSP_SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 QQSP_REPO_ROOT="$(cd "$QQSP_SCRIPTS_DIR/../.." && pwd)"
 QQSP_BUILD_DIR="$QQSP_REPO_ROOT/build"
 QQSP_LOG_DIR="$QQSP_BUILD_DIR/logs"
-QQSP_PRESET_DEFAULT="qt5-cpp14"
+QQSP_PRESET_DEFAULT="qt5-cpp17"
 
 # Application source areas. The bundled engine tree (src/qsp) is excluded by
 # default everywhere: per AGENTS.md it stays unchanged unless a task targets it.
