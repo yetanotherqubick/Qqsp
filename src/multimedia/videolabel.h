@@ -33,8 +33,8 @@ public:
 private:
     QString m_path;
     QString m_filename;
-    QMediaPlayer mediaPlayer;
     QVideoSink videoSink;
+    QMediaPlayer mediaPlayer;
     QSize m_resolution;
     bool m_videoError;
     bool m_medialLoaded;
