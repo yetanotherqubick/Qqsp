@@ -9,6 +9,7 @@
 #include <QMediaDevices>
 #include <QUrl>
 #include <QMediaPlayer>
+#include <utility>
 #include <map>
 #include <QString>
 #include <qsp_default.h>
@@ -32,9 +33,34 @@ struct QSPSound
     }
     ~QSPSound()
     {
-        player->stop();
-        delete output;
-        delete player;
+        if (player)
+        {
+            player->stop();
+            delete output;
+            delete player;
+        }
+    }
+    QSPSound(QSPSound &&other) noexcept
+        : player(std::exchange(other.player, nullptr))
+        , output(std::exchange(other.output, nullptr))
+        , baseVolume(other.baseVolume)
+    {
+    }
+    QSPSound &operator=(QSPSound &&other) noexcept
+    {
+        if (this != &other)
+        {
+            if (player)
+            {
+                player->stop();
+            }
+            delete output;
+            delete player;
+            player = std::exchange(other.player, nullptr);
+            output = std::exchange(other.output, nullptr);
+            baseVolume = other.baseVolume;
+        }
+        return *this;
     }
     QSPSound(const QSPSound &) = delete;
     QSPSound &operator=(const QSPSound &) = delete;
