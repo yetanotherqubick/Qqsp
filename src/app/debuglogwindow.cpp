@@ -2,11 +2,11 @@
 
 #include <QApplication>
 #include <QClipboard>
-#include <QCloseEvent>
 #include <QToolBar>
 
 DebugLogWindow::DebugLogWindow(QWidget *parent) : QMainWindow(parent)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("QSP debug log"));
     setAttribute(Qt::WA_DeleteOnClose);
     resize(500, 400);
@@ -29,10 +29,4 @@ DebugLogWindow::DebugLogWindow(QWidget *parent) : QMainWindow(parent)
 void DebugLogWindow::appendLine(const QString &line)
 {
     logText->appendPlainText(line);
-}
-
-void DebugLogWindow::closeEvent(QCloseEvent *event)
-{
-    emit closed();
-    QMainWindow::closeEvent(event);
 }

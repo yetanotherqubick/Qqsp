@@ -279,6 +279,7 @@ void QSPCallBacks::PlayFile(const QSP_CHAR *file, int volume)
     }
     auto emplaced = m_sounds.emplace(strFile, QSPSound());
     QSPSound &snd = emplaced.first->second;
+    snd.baseVolume = std::clamp(static_cast<float>(volume) / 100.0f, 0.0f, 1.0f);
     QObject::connect(snd.player, &QMediaPlayer::errorOccurred, [strFile](QMediaPlayer::Error, const QString &errorString) {
         qWarning() << "Audio playback error for" << strFile << ":" << errorString;
     });

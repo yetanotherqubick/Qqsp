@@ -58,9 +58,12 @@ public:
     // from it).
     QString gameFilePath() const { return m_gameFilePath; }
 
+    bool isGameOpened() const { return m_isGameOpened; }
+
     void captureRollbackSnapshot(const QString &label = QString());
     void appendDebugLine(const QString &line);
     void UpdateRollbackControls();
+    class DebugLogWindow *ensureDebugLogWindow();
 
     // Methods
     void EnableControls(bool status, bool isExtended = false);

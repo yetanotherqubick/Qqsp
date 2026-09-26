@@ -349,9 +349,12 @@ void MainWindow::captureRollbackSnapshot(const QString &label)
     {
         return;
     }
-    m_rollback.captureSnapshot(label.isEmpty()
+    if (!m_rollback.captureSnapshot(label.isEmpty()
         ? QDateTime::currentDateTime().toString("hh:mm:ss")
-        : label);
+        : label))
+    {
+        qWarning() << "Rollback capture failed for" << label;
+    }
     UpdateRollbackControls();
 }
 
@@ -401,29 +404,26 @@ void MainWindow::OnRollbackStepForward()
     }
 }
 
-void MainWindow::OnDebugLog()
+DebugLogWindow *MainWindow::ensureDebugLogWindow()
 {
     if (!m_debugLogWindow)
     {
         m_debugLogWindow = new DebugLogWindow(this);
-        m_debugLogWindow->setAttribute(Qt::WA_DeleteOnClose);
         connect(m_debugLogWindow, &QObject::destroyed, this, [this] { m_debugLogWindow = nullptr; });
     }
-    m_debugLogWindow->show();
-    m_debugLogWindow->raise();
-    m_debugLogWindow->activateWindow();
+    return m_debugLogWindow;
 }
 
+void MainWindow::OnDebugLog()
+{
+    ensureDebugLogWindow()->show();
+    ensureDebugLogWindow()->raise();
+    ensureDebugLogWindow()->activateWindow();
+}
 
 void MainWindow::appendDebugLine(const QString &line)
 {
-    if (!m_debugLogWindow)
-    {
-        m_debugLogWindow = new DebugLogWindow(this);
-        m_debugLogWindow->setAttribute(Qt::WA_DeleteOnClose);
-        connect(m_debugLogWindow, &QObject::destroyed, this, [this] { m_debugLogWindow = nullptr; });
-    }
-    m_debugLogWindow->appendLine(line);
+    ensureDebugLogWindow()->appendLine(line);
 }
 
 void MainWindow::ShowError()
@@ -1592,6 +1592,7 @@ void MainWindow::OnObjectListBoxItemClicked(QListWidgetItem *itemClicked)
         return;
     }
     int object = _objectsListBox->row(itemClicked);
+    captureRollbackSnapshot(tr("Object %1").arg(object + 1));
     if (!QSPSetSelObjectIndex(object, QSP_TRUE))
     {
         ShowError();

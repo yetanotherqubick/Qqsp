@@ -9,6 +9,7 @@
 #include <QSettings>
 #include <QString>
 #include <QTranslator>
+#include "appbootstrap.h"
 #ifdef _WEBBOX
 #include "url_schemes.h"
 #endif
@@ -16,10 +17,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    a.setApplicationName("Qqsp");
-    a.setOrganizationName("Qqsp");
-    a.setApplicationVersion("1.9");
-    a.setDoubleClickInterval(1);
+    QspApp::configureApplication(&a);
 
     QObject::tr("__LANGNAME__");
     QObject::tr("__LANGID__");

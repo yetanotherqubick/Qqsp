@@ -10,16 +10,10 @@ class DebugLogWindow : public QMainWindow
 {
     Q_OBJECT
 
-signals:
-    void closed();
-
 public:
     explicit DebugLogWindow(QWidget *parent = nullptr);
 
     void appendLine(const QString &line);
-
-protected:
-    void closeEvent(QCloseEvent *event) override;
 
 private:
     QPlainTextEdit *logText;
