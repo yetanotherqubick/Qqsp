@@ -2,8 +2,7 @@
 # Inventory TODO/FIXME/XXX/HACK markers in tracked sources.
 #
 # Usage: todo.sh [--all] [--since REF] [--help]
-#   --all        include the engine tree (src/qsp) and tools/, not just
-#                application areas
+#   --all        include tools/, not just application areas
 #   --since REF  limit to files added/changed since REF
 #
 # Output: "file:line: text" lines, then per-file counts and a total.
@@ -32,7 +31,7 @@ done
 cd "$QQSP_REPO_ROOT"
 
 SCOPE=("${QQSP_APP_AREAS[@]}")
-[ "$ALL" -eq 0 ] || SCOPE+=("$QQSP_ENGINE_DIR" tools)
+[ "$ALL" -eq 0 ] || SCOPE+=("tools")
 
 PATTERN='(TODO|FIXME|XXX|HACK)'
 
@@ -46,7 +45,7 @@ else
   RESULTS="$(git grep -nE "$PATTERN" -- "${SCOPE[@]}" || true)"
   LABEL="in scope (application areas)"
   if [ "$ALL" -eq 1 ]; then
-    LABEL="in scope (application areas + engine + tools)"
+    LABEL="in scope (application areas + tools)"
   fi
 fi
 

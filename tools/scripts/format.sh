@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 # Check or apply clang-format over project sources.
 #
-# Usage: format.sh [--fix] [--with-engine] [-- paths...] [--help]
-#
-# Default scope is the application areas; the engine tree (src/qsp) is opt-in.
+# Usage: format.sh [--fix] [-- paths...] [--help]
 # Honors the repository .clang-format (Standard follows C++14 -> C++17 changes).
 #
 # Exit codes: 0 formatted, 1 violations found, 2 usage error.
@@ -24,7 +22,6 @@ PATHS=()
 while [ $# -gt 0 ]; do
   case "$1" in
     --fix) FIX=1; shift ;;
-    --with-engine) QQSP_WITH_ENGINE=1; shift ;;
     -h|--help) usage; exit 0 ;;
     --) shift; PATHS=("$@"); break ;;
     *) PATHS+=("$1"); shift ;;

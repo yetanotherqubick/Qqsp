@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 # Run clang-tidy over application sources using the build's compile database.
 #
-# Usage: tidy.sh [--since REF] [--fix] [--no-fail] [--jobs N] [--with-engine]
-#                [--checks SPEC] [-- paths...] [--help]
+# Usage: tidy.sh [--since REF] [--fix] [--no-fail] [--checks SPEC] [-- paths...] [--help]
 #
 #   --since REF    limit to files added/changed since REF (git diff, A/C/M/R)
 #   --fix          apply suggested fixes (review with git diff + check.sh!)
 #   --no-fail      report findings without failing (exit 0)
-#   --with-engine  include engine C files with a minimal C-oriented check set
 #   --checks SPEC  append check configuration (clang-tidy --checks syntax)
 #
 # Scope follows build/compile_commands.json: enabled sources only, generated
-# files excluded, engine tree opt-in. Findings are a worklist, not a gate.
+# Findings are a worklist, not a gate.
 #
 # Exit codes: 0 clean (or --no-fail), 1 findings, 2 usage/missing tool.
 set -euo pipefail
@@ -33,7 +31,6 @@ FIX=0
 NO_FAIL=0
 JOBS="${QQSP_JOBS:-4}"
 CHECKS=""
-ENGINE=0
 PATHS=()
 
 while [ $# -gt 0 ]; do
@@ -42,7 +39,6 @@ while [ $# -gt 0 ]; do
     --fix) FIX=1; shift ;;
     --no-fail) NO_FAIL=1; shift ;;
     --jobs) JOBS="${2:?--jobs needs a number}"; shift 2 ;;
-    --with-engine) ENGINE=1; shift ;;
     --checks) CHECKS="${2:?--checks needs a spec}"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
     --) shift; PATHS=("$@"); break ;;
@@ -59,10 +55,6 @@ if [ ${#PATHS[@]} -gt 0 ]; then
   FILES=("${PATHS[@]}")
 else
   mapfile -d '' FILES < <("$FILES_PY" --app-cxx --db "$QQSP_BUILD_DIR/compile_commands.json")
-  if [ "$ENGINE" -eq 1 ]; then
-    mapfile -d '' ENGINE_FILES < <("$FILES_PY" --engine-c --db "$QQSP_BUILD_DIR/compile_commands.json")
-    FILES+=("${ENGINE_FILES[@]}")
-  fi
 fi
 
 if [ -n "$SINCE" ]; then
@@ -85,29 +77,15 @@ mkdir -p "$QQSP_LOG_DIR"
 : >"$LOG"
 
 run_tidy() {
-  # Engine C files get a minimal C-oriented set; C++ files use .clang-tidy.
-  if [ "$1" = "engine" ]; then
-    clang-tidy -p "$QQSP_BUILD_DIR" --quiet \
-      --config="{Checks: 'bugprone-*,cert-*,misc-*,readability-redundant-*,readability-simplify-*, HeaderFilterRegex: \"/src/qsp/\", WarningsAsErrors: \"\", FormatStyle: \"none\"}" \
-      "$2"
-  else
-    local extra=()
-    [ -n "$CHECKS" ] && extra=(--checks "$CHECKS")
-    [ "$FIX" -eq 1 ] && extra+=(--fix)
-    clang-tidy -p "$QQSP_BUILD_DIR" --config-file "$REPO_TIDY_CONFIG" --quiet "${extra[@]}" "$2"
-  fi
+  local extra=()
+  [ -n "$CHECKS" ] && extra=(--checks "$CHECKS")
+  [ "$FIX" -eq 1 ] && extra+=(--fix)
+  clang-tidy -p "$QQSP_BUILD_DIR" --config-file "$QQSP_REPO_ROOT/.clang-tidy" --quiet "${extra[@]}" "$1"
 }
-REPO_TIDY_CONFIG="$QQSP_REPO_ROOT/.clang-tidy"
 
 set +e
 for f in "${FILES[@]}"; do
-  case "$ENGINE" in
-    1) case "$f" in
-         "$QQSP_ENGINE_DIR"/*) run_tidy engine "$f" >>"$LOG" 2>&1 ;;
-         *) run_tidy cxx "$f" >>"$LOG" 2>&1 ;;
-       esac ;;
-    *) run_tidy cxx "$f" >>"$LOG" 2>&1 ;;
-  esac
+  run_tidy "$f" >>"$LOG" 2>&1
 done
 set -e
 # NOTE: files are analyzed sequentially for deterministic merged output; use

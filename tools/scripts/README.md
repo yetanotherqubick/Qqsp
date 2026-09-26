@@ -9,10 +9,8 @@ stable `### section` headers, and exit codes agents can branch on.
 * **Exit codes**: `0` clean · `1` findings/failure · `2` missing tool or usage
   error.
 * **Scope**: application areas only (`src/app`, `src/web`, `src/widgets`,
-  `src/dialogs`, `src/multimedia`, `src/platform`). The bundled engine tree
-  (`src/qsp`) is untouched unless a task targets it — opt in per script with
-  `--with-engine` / `--all`. Generated code (`moc_*`, `qrc_*`, `ui_*`) is
-  always excluded.
+  `src/dialogs`, `src/multimedia`, `src/platform`). Generated code
+  (`moc_*`, `qrc_*`, `ui_*`) is always excluded.
 * **Files**: scripts never modify sources, except `format.sh --fix` and
   `tidy.sh --fix` when explicitly requested.
 * **Scratch files** live under `build/` (gitignored): logs in `build/logs/`,

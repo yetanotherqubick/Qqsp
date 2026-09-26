@@ -12,10 +12,9 @@ QQSP_BUILD_DIR="$QQSP_REPO_ROOT/build"
 QQSP_LOG_DIR="$QQSP_BUILD_DIR/logs"
 QQSP_PRESET_DEFAULT="qt6-cpp17"
 
-# Application source areas. The bundled engine tree (src/qsp) is excluded by
-# default everywhere: per AGENTS.md it stays unchanged unless a task targets it.
+# Application source areas. The bundled engine tree was removed in M8 — the
+# engine is the system qsp-legacy library — so there is no engine area.
 QQSP_APP_AREAS=(src/app src/web src/widgets src/dialogs src/multimedia src/platform)
-QQSP_ENGINE_DIR="src/qsp"
 
 # --- basic reporting ---------------------------------------------------------
 
@@ -71,13 +70,9 @@ qqsp_git_sources() {
     done
 }
 
-# Tracked application sources (engine excluded). Set QQSP_WITH_ENGINE=1 in the
-# environment to append the engine tree.
+# Tracked application sources.
 qqsp_app_sources() {
   qqsp_git_sources "${QQSP_APP_AREAS[@]}"
-  if [ "${QQSP_WITH_ENGINE:-0}" = "1" ]; then
-    qqsp_git_sources "$QQSP_ENGINE_DIR"
-  fi
 }
 
 # --- warnings and errors -----------------------------------------------------

@@ -10,7 +10,6 @@ Exit codes: 0 ok, 2 missing/stale compile database.
 
 Usage:
   files.py --app-cxx           C++ sources under application areas
-  files.py --engine-c          C sources under src/qsp
   files.py --other             everything else in the database (debug aid)
 """
 
@@ -27,7 +26,6 @@ APP_AREAS = (
     "src/multimedia",
     "src/platform",
 )
-ENGINE_DIR = "src/qsp"
 GENERATED_PREFIXES = ("moc_", "qrc_", "ui_")
 
 CXX_EXTS = (".cpp", ".cc", ".cxx")
@@ -68,8 +66,6 @@ def main():
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--app-cxx", action="store_true",
                        help="C++ sources under application areas")
-    group.add_argument("--engine-c", action="store_true",
-                       help="C sources under the engine tree")
     group.add_argument("--other", action="store_true",
                        help="database entries outside both categories")
     args = parser.parse_args()
@@ -83,13 +79,9 @@ def main():
         if args.app_cxx:
             if path.startswith(APP_AREAS) and path.endswith(CXX_EXTS):
                 selected.append(path)
-        elif args.engine_c:
-            if path.startswith(ENGINE_DIR + "/") and path.endswith(C_EXTS):
-                selected.append(path)
         else:  # --other
             in_app = path.startswith(APP_AREAS) and path.endswith(CXX_EXTS)
-            in_engine = path.startswith(ENGINE_DIR + "/") and path.endswith(C_EXTS)
-            if not (in_app or in_engine):
+            if not in_app:
                 selected.append(path)
 
     for path in sorted(set(selected)):
