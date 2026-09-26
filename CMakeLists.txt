@@ -169,26 +169,11 @@ target_include_directories(Qqsp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/web
 )
 
-if(QT_VERSION VERSION_LESS 6.0.0)
-    target_compile_definitions(Qqsp
-        PRIVATE
-            QT_DISABLE_DEPRECATED_BEFORE=${QQSP_QT_DISABLE_DEPRECATED}
-            _UNICODE
-    )
-else()
-    target_compile_definitions(Qqsp
-        PRIVATE
-            QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
-            _UNICODE
-    )
-endif()
-
-if(QQSP_ENABLE_WEBBOX)
-    target_compile_definitions(Qqsp
-        PRIVATE
-            _WEBBOX
-    )
-endif()
+target_compile_definitions(Qqsp
+    PRIVATE
+        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
+        _UNICODE
+)
 
 # Disable native file dialogs on non-macOS Unix builds.
 if(UNIX AND NOT APPLE)

@@ -17,11 +17,6 @@
 #include <QWebEngineView>
 #include <QWidget>
 
-namespace Ui
-{
-class QspWebBox;
-}
-
 // Only QSP links (qsp:/exec:) are handled by the client through the installed
 // scheme handlers; any other navigation is handed to the system default
 // program and rejected.

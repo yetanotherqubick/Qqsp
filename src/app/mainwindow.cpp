@@ -144,11 +144,8 @@ MainWindow::~MainWindow() = default;
 
 void MainWindow::EnableControls(bool status, bool isExtended)
 {
-    if (isExtended)
-    {
-        _fileMenu->setEnabled(status); // TODO: ???
-    }
-    _fileMenu->setEnabled(status);                 // TODO: ???
+    Q_UNUSED(isExtended)
+    _fileMenu->setEnabled(status);
     _gameMenu->setEnabled(status);
     _settingsMenu->setEnabled(status);
     _objectsListBox->setEnabled(status);
@@ -1559,7 +1556,6 @@ void MainWindow::OnLinkClicked(const QUrl &url)
             _descTextBox->setSource(url);
         }
 #else
-        Q_UNUSED(obj)
         if (obj == _mainDescTextBox)
         {
             _mainDescTextBox->setUrl(url);

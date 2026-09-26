@@ -19,7 +19,6 @@ signals:
 public:
     explicit VideoLabel(QString path, QString filename, QWidget *parent = 0);
     ~VideoLabel();
-    bool videoError();
     QSize getResolution()
     {
         return m_resolution;
@@ -36,7 +35,6 @@ private:
     QVideoSink videoSink;
     QMediaPlayer mediaPlayer;
     QSize m_resolution;
-    bool m_videoError;
     bool m_medialLoaded;
 
 private slots:

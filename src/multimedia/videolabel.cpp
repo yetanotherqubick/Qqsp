@@ -13,7 +13,6 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
     setAttribute(Qt::WA_TransparentForMouseEvents);
     resolution_set = false;
     m_medialLoaded = false;
-    m_videoError = false;
 
     QAudioOutput *audio = new QAudioOutput(this);
     mediaPlayer.setAudioOutput(audio);
@@ -25,11 +24,6 @@ VideoLabel::VideoLabel(QString path, QString filename, QWidget *parent) : QLabel
 }
 
 VideoLabel::~VideoLabel() = default;
-
-bool VideoLabel::videoError()
-{
-    return mediaPlayer.error() != QMediaPlayer::Error::NoError;
-}
 
 void VideoLabel::OnNewFrame(const QVideoFrame &frame)
 {
