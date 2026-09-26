@@ -349,6 +349,10 @@ void MainWindow::setPendingRollbackLabel(const QString &label)
 // Called when a refresh has settled: the current scene is the state the user
 // sees, so it becomes a rollback snapshot whenever it differs from the last
 // captured one (new location, or a pending choice label to record).
+// Called when a refresh has settled: a rollback snapshot is taken only when
+// the location changed — a real scene boundary (player choice or
+// timer-driven transition). Refreshes within the same location carry the
+// pending label forward to the next boundary instead of capturing.
 void MainWindow::settleScene()
 {
     if (!m_isGameOpened || m_isRestoring)
@@ -356,19 +360,19 @@ void MainWindow::settleScene()
         return;
     }
     QString cur = QSPTools::qspStrToQt(QSPGetCurLoc());
-    bool changed = cur != m_lastCapturedLoc;
-    if (!changed && m_pendingRollbackLabel.isEmpty())
+    if (cur == m_lastCapturedLoc)
     {
         return;
     }
     QString label = !m_pendingRollbackLabel.isEmpty()
         ? m_pendingRollbackLabel
         : tr("Time passes");
+    m_pendingRollbackLabel.clear();
     if (!m_rollback.captureSnapshot(label))
     {
         qWarning() << "Rollback capture failed for" << label;
+        return;
     }
-    m_pendingRollbackLabel.clear();
     m_lastCapturedLoc = cur;
     UpdateRollbackControls();
 }
