@@ -359,6 +359,16 @@ void MainWindow::UpdateRollbackControls()
 {
     m_actionStepBack->setEnabled(m_rollback.canGoBack());
     m_actionStepForward->setEnabled(m_rollback.canGoForward());
+    // Name the state each step would land on so the user always sees how far
+    // the step reaches.
+    if (m_rollback.canGoBack())
+        m_actionStepBack->setText(tr("Step back (before %1)").arg(m_rollback.labelAt(m_rollback.currentIndex() - 1)));
+    else
+        m_actionStepBack->setText(tr("Step back"));
+    if (m_rollback.canGoForward())
+        m_actionStepForward->setText(tr("Step forward (before %1)").arg(m_rollback.labelAt(m_rollback.currentIndex() + 1)));
+    else
+        m_actionStepForward->setText(tr("Step forward"));
 }
 
 void MainWindow::OnRollbackStepBack()
@@ -1588,7 +1598,6 @@ void MainWindow::OnObjectListBoxItemClicked(QListWidgetItem *itemClicked)
         return;
     }
     int object = _objectsListBox->row(itemClicked);
-    captureRollbackSnapshot(tr("Object %1").arg(object + 1));
     if (!QSPSetSelObjectIndex(object, QSP_TRUE))
     {
         ShowError();

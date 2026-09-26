@@ -35,6 +35,7 @@ public:
     bool canGoBack() const;
     bool canGoForward() const;
     QString currentLabel() const;
+    QString labelAt(int index) const;
 
     void setMaxSnapshots(int n);
     void clear();

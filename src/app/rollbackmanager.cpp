@@ -129,6 +129,13 @@ QString RollbackManager::currentLabel() const
     return m_snapshots[m_cursor].label;
 }
 
+QString RollbackManager::labelAt(int index) const
+{
+    if (index < 0 || index >= static_cast<int>(m_snapshots.size()))
+        return QString();
+    return m_snapshots[index].label;
+}
+
 void RollbackManager::setMaxSnapshots(int n)
 {
     m_maxSnapshots = qMax(1, n);

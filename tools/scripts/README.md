@@ -66,7 +66,7 @@ enforced Qt 5.15 level); the script raises it in a scratch build only.
 
 * `.clang-format` (repository root) — formatting; `format.sh` follows it.
 * `.clang-tidy` (repository root) — curated check list; exclusions need a
-  reason. Engine C code gets its own minimal inline set in `tidy.sh`.
+  reason.
 * `lib/common.sh` — shared scope lists and helpers; `lib/files.py` — source
   lists derived from `build/compile_commands.json` (the lint scripts only see
   what the current build configuration actually compiles).

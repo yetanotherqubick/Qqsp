@@ -6,9 +6,7 @@
 
 DebugLogWindow::DebugLogWindow(QWidget *parent) : QMainWindow(parent)
 {
-    setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(tr("QSP debug log"));
-    setAttribute(Qt::WA_DeleteOnClose);
     resize(500, 400);
 
     logText = new QPlainTextEdit(this);

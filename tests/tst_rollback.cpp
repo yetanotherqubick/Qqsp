@@ -54,6 +54,7 @@ private slots:
     void divergenceTruncatesForwardHistory();
     void depthEviction();
     void clearResetsHistory();
+    void labelAtBounds();
     void saveLoadRoundtrip();
 
 private:
@@ -136,6 +137,16 @@ void TestRollback::clearResetsHistory()
     QCOMPARE(m_rollback.snapshotCount(), 0);
     QVERIFY(!m_rollback.hasSnapshots());
     QCOMPARE(m_rollback.currentIndex(), -1);
+}
+
+void TestRollback::labelAtBounds()
+{
+    QVERIFY(m_rollback.captureSnapshot("first"));
+    QVERIFY(m_rollback.captureSnapshot("second"));
+    QCOMPARE(m_rollback.labelAt(0), QString("first"));
+    QCOMPARE(m_rollback.labelAt(1), QString("second"));
+    QCOMPARE(m_rollback.labelAt(2), QString());
+    QCOMPARE(m_rollback.labelAt(-1), QString());
 }
 
 void TestRollback::saveLoadRoundtrip()
