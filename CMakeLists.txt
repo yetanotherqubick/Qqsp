@@ -146,9 +146,7 @@ qt_add_resources(
 )
 
 add_executable(Qqsp
-    ${QQSP_SOURCES}
-    ${QQSP_HEADERS}
-    ${QQSP_FORMS}
+    src/app/main.cpp
     ${QQSP_RESOURCES}
     ${QQSP_TRANSLATION_RESOURCES}
 )
@@ -159,6 +157,56 @@ add_custom_target(QqspTranslations
 )
 
 add_dependencies(Qqsp QqspTranslations)
+
+# Shared application sources as a static library: the executable and the
+# gldriver smoke tool link the same objects instead of duplicating the
+# source list (which had already drifted once).
+set(QQSP_APP_SOURCES ${QQSP_SOURCES})
+list(REMOVE_ITEM QQSP_APP_SOURCES src/app/main.cpp)
+
+add_library(qqsp_app STATIC
+    ${QQSP_APP_SOURCES}
+    ${QQSP_HEADERS}
+    ${QQSP_FORMS}
+)
+
+target_include_directories(qqsp_app
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/web
+)
+
+target_compile_definitions(qqsp_app
+    PUBLIC
+        _UNICODE
+        $<$<BOOL:${QQSP_ENABLE_WEBBOX}>:_WEBBOX>
+    PRIVATE
+        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
+)
+
+target_link_libraries(qqsp_app
+    PUBLIC
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        Qt6::Multimedia
+        QspLegacy::qsp-legacy
+)
+
+if(QQSP_ENABLE_WEBBOX)
+    target_link_libraries(qqsp_app
+        PUBLIC
+            Qt6::WebEngineWidgets
+            Qt6::WebChannel
+    )
+endif()
+
+if(UNIX AND NOT APPLE)
+    target_compile_definitions(qqsp_app PRIVATE _NONATIVEDIALOG)
+endif()
 
 target_include_directories(Qqsp
     PRIVATE
@@ -185,20 +233,10 @@ endif()
 
 target_link_libraries(Qqsp
     PRIVATE
-        Qt::Core
-        Qt::Gui
-        Qt::Widgets
-        Qt::Multimedia
-        QspLegacy::qsp-legacy
+        qqsp_app
 )
 
-if(QQSP_ENABLE_WEBBOX)
-    target_link_libraries(Qqsp
-        PRIVATE
-            Qt::WebEngineWidgets
-            Qt::WebChannel
-    )
-endif()
+
 
 set_target_properties(Qqsp PROPERTIES
     OUTPUT_NAME Qqsp
@@ -308,44 +346,18 @@ target_link_libraries(tst_rollback
 add_test(NAME tst_rollback COMMAND tst_rollback)
 
 # Headless smoke driver: runs the full client against a game file without
-# interaction (manual tool, not part of CTest). Requires the web box, which
-# provides the application bootstrap parity with the real client.
-if(QQSP_ENABLE_WEBBOX)
-    set(QQSP_DRIVER_SOURCES ${QQSP_SOURCES})
-    list(REMOVE_ITEM QQSP_DRIVER_SOURCES src/app/main.cpp)
+# interaction. A manual real-game reproducer (not part of CTest); the driver
+# shares the application bootstrap (register_url_schemes +
+# QspApp::configureApplication) with main.cpp.
+add_executable(gldriver tests/gldriver.cpp)
 
-    add_executable(gldriver
-        tests/gldriver.cpp
-        ${QQSP_DRIVER_SOURCES}
-        ${QQSP_HEADERS}
-        ${QQSP_FORMS}
-    )
+target_compile_definitions(gldriver
+    PRIVATE
+        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
+        _NONATIVEDIALOG
+)
 
-    target_include_directories(gldriver
-        PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/app
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/dialogs
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/widgets
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/multimedia
-            ${CMAKE_CURRENT_SOURCE_DIR}/src/web
-    )
-
-    target_compile_definitions(gldriver
-        PRIVATE
-            QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
-            _UNICODE
-            _WEBBOX
-            _NONATIVEDIALOG
-    )
-
-    target_link_libraries(gldriver
-        PRIVATE
-            Qt6::Core
-            Qt6::Gui
-            Qt6::Widgets
-            Qt6::Multimedia
-            Qt6::WebEngineWidgets
-            Qt6::WebChannel
-            QspLegacy::qsp-legacy
-    )
-endif()
+target_link_libraries(gldriver
+    PRIVATE
+        qqsp_app
+)
