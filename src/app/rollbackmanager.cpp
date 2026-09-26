@@ -1,9 +1,8 @@
 #include "rollbackmanager.h"
 
-#include <QMediaDevices>
-
 #include <algorithm>
 #include <cstdlib>
+#include <vector>
 
 #include <qsp_default.h>
 

@@ -280,6 +280,33 @@ target_link_libraries(tst_engine
 
 add_test(NAME tst_engine COMMAND tst_engine)
 
+find_package(Qt6 6.2 REQUIRED COMPONENTS Test)
+
+add_executable(tst_rollback
+    tests/tst_rollback.cpp
+    src/app/rollbackmanager.cpp
+    src/app/rollbackmanager.h
+)
+
+target_include_directories(tst_rollback
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/app
+)
+
+target_compile_definitions(tst_rollback
+    PRIVATE
+        QSP_TEST_FIXTURE="${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/minimal.qsp"
+)
+
+target_link_libraries(tst_rollback
+    PRIVATE
+        Qt6::Core
+        Qt6::Test
+        QspLegacy::qsp-legacy
+)
+
+add_test(NAME tst_rollback COMMAND tst_rollback)
+
 # Headless smoke driver: runs the full client against a game file without
 # interaction (manual tool, not part of CTest). Requires the web box, which
 # provides the application bootstrap parity with the real client.
