@@ -210,6 +210,7 @@ void QSPCallBacks::RefreshInt(QSP_BOOL isRedraw)
         m_frame->EnableControls(true, true);
     }
     m_frame->GetGameMenu()->setEnabled(isCanSave);
+    m_frame->settleScene();
 }
 
 void QSPCallBacks::SetInputStrText(const QSP_CHAR *text)

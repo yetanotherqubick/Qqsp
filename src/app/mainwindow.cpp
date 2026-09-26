@@ -56,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_isQuit = false;
     m_keyPressedWhileDisabled = false;
     m_debugLogWindow = nullptr;
+    m_isRestoring = false;
     m_isGameOpened = false;
     showPlainText = false;
 
@@ -340,18 +341,35 @@ void MainWindow::UpdateGamePath(const QString &path)
     m_imgView->SetGamePath(new_path);
 }
 
-void MainWindow::captureRollbackSnapshot(const QString &label)
+void MainWindow::setPendingRollbackLabel(const QString &label)
 {
-    if (!m_isGameOpened)
+    m_pendingRollbackLabel = label;
+}
+
+// Called when a refresh has settled: the current scene is the state the user
+// sees, so it becomes a rollback snapshot whenever it differs from the last
+// captured one (new location, or a pending choice label to record).
+void MainWindow::settleScene()
+{
+    if (!m_isGameOpened || m_isRestoring)
     {
         return;
     }
-    if (!m_rollback.captureSnapshot(label.isEmpty()
-        ? QDateTime::currentDateTime().toString("hh:mm:ss")
-        : label))
+    QString cur = QSPTools::qspStrToQt(QSPGetCurLoc());
+    bool changed = cur != m_lastCapturedLoc;
+    if (!changed && m_pendingRollbackLabel.isEmpty())
+    {
+        return;
+    }
+    QString label = !m_pendingRollbackLabel.isEmpty()
+        ? m_pendingRollbackLabel
+        : tr("Time passes");
+    if (!m_rollback.captureSnapshot(label))
     {
         qWarning() << "Rollback capture failed for" << label;
     }
+    m_pendingRollbackLabel.clear();
+    m_lastCapturedLoc = cur;
     UpdateRollbackControls();
 }
 
@@ -378,10 +396,13 @@ void MainWindow::OnRollbackStepBack()
         return;
     }
     EnableControls(false);
+    m_isRestoring = true;
     const bool ok = m_rollback.back();
+    m_isRestoring = false;
     EnableControls(true);
     if (ok)
     {
+        m_lastCapturedLoc = QSPTools::qspStrToQt(QSPGetCurLoc());
         QSPCallBacks::RefreshInt(QSP_TRUE);
         UpdateRollbackControls();
     }
@@ -398,10 +419,13 @@ void MainWindow::OnRollbackStepForward()
         return;
     }
     EnableControls(false);
+    m_isRestoring = true;
     const bool ok = m_rollback.forward();
+    m_isRestoring = false;
     EnableControls(true);
     if (ok)
     {
+        m_lastCapturedLoc = QSPTools::qspStrToQt(QSPGetCurLoc());
         QSPCallBacks::RefreshInt(QSP_TRUE);
         UpdateRollbackControls();
     }
@@ -1088,7 +1112,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     }
     if (action != -1)
     {
-        captureRollbackSnapshot(tr("Action %1").arg(action + 1));
+        setPendingRollbackLabel(tr("Action %1").arg(action + 1));
         if (!QSPSetSelActionIndex(action, QSP_TRUE))
         {
             ShowError();
@@ -1227,7 +1251,7 @@ void MainWindow::OpenGameFile(const QString &path)
             UpdateGamePath(filePath);
             OnNewGame();
             m_rollback.clear();
-            captureRollbackSnapshot(tr("Game start"));
+            setPendingRollbackLabel(tr("Game start"));
             if (m_isQuit)
             {
                 return;
@@ -1250,7 +1274,7 @@ void MainWindow::ActionsListBoxDoAction(int action)
     {
         if (action != -1)
         {
-            captureRollbackSnapshot(tr("Action %1").arg(action + 1));
+            setPendingRollbackLabel(tr("Action %1").arg(action + 1));
             if (!QSPSetSelActionIndex(action, QSP_TRUE))
             {
                 ShowError();
@@ -1579,7 +1603,7 @@ void MainWindow::OnLinkClicked(const QUrl &url)
     else if (href.startsWith("EXEC:", Qt::CaseInsensitive))
     {
         QString string = href.mid(5);
-        captureRollbackSnapshot(tr("Link"));
+        setPendingRollbackLabel(tr("Link"));
         if (m_isProcessEvents && !QSPExecString(qspStringFromQString(string), QSP_TRUE))
         {
             ShowError();
@@ -1655,7 +1679,7 @@ void MainWindow::OnInputTextEnter()
     {
         return;
     }
-    captureRollbackSnapshot(tr("Input"));
+    setPendingRollbackLabel(tr("Input"));
     QSPSetInputStrText(qspStringFromQString(_inputTextBox->GetText()));
     if (!QSPExecUserInput(QSP_TRUE))
     {

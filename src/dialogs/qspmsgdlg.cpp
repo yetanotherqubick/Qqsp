@@ -85,7 +85,7 @@ void QspMsgDlg::OnLinkClicked(const QUrl &url)
         auto *mainWindow = qobject_cast<MainWindow *>(this->parent());
         if (mainWindow != nullptr)
         {
-            mainWindow->captureRollbackSnapshot(tr("Link"));
+            mainWindow->setPendingRollbackLabel(tr("Link"));
         }
         QString string = href.mid(5);
         if (!QSPExecString(qspStringFromQString(string), QSP_TRUE))

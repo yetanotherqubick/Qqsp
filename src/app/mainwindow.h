@@ -60,7 +60,8 @@ public:
 
     bool isGameOpened() const { return m_isGameOpened; }
 
-    void captureRollbackSnapshot(const QString &label = QString());
+    void setPendingRollbackLabel(const QString &label);
+    void settleScene();
     void appendDebugLine(const QString &line);
     void UpdateRollbackControls();
     class DebugLogWindow *ensureDebugLogWindow();
@@ -376,6 +377,9 @@ private:
     float m_volume;
     int m_menuIndex;
     QString m_gameFilePath;
+    QString m_lastCapturedLoc;
+    QString m_pendingRollbackLabel;
+    bool m_isRestoring;
     QAction *m_actionStepBack;
     QAction *m_actionStepForward;
     RollbackManager m_rollback;
