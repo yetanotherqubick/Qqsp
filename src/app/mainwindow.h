@@ -393,6 +393,7 @@ private:
     QString m_gameFilePath;
     QString m_lastCapturedLoc;
     QString m_pendingRollbackLabel;
+    bool m_pendingRollbackIsChoice;
     bool m_settlePending;
     bool m_isRestoring;
     QAction *m_actionStepBack;

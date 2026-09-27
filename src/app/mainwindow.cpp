@@ -345,6 +345,7 @@ void MainWindow::UpdateGamePath(const QString &path)
 void MainWindow::setPendingRollbackLabel(const QString &label)
 {
     m_pendingRollbackLabel = label;
+    m_pendingRollbackIsChoice = true;
 }
 
 // Called when a refresh has settled: the current scene is the state the user
@@ -394,8 +395,11 @@ void MainWindow::performSettleCapture()
     QString label = !m_pendingRollbackLabel.isEmpty()
         ? m_pendingRollbackLabel
         : tr("Time passes");
+    const bool isChoice = !m_pendingRollbackLabel.isEmpty();
+    fprintf(stderr, "RB-DIAG settle-capture: label=[%s] loc=[%s]\n", label.toUtf8().constData(), cur.toUtf8().constData());
+    fflush(stderr);
     m_pendingRollbackLabel.clear();
-    if (!m_rollback.captureSnapshot(label))
+    if (!m_rollback.captureSnapshot(label, isChoice))
     {
         qWarning() << "Rollback capture failed for" << label;
         return;
@@ -426,11 +430,15 @@ void MainWindow::OnRollbackStepBack()
     {
         return;
     }
+    fprintf(stderr, "RB-DIAG step back: loc before=[%s]\n", QSPTools::qspStrToQt(QSPGetCurLoc()).toUtf8().constData());
+    fflush(stderr);
     EnableControls(false);
     m_isRestoring = true;
     const bool ok = m_rollback.back();
     m_isRestoring = false;
     EnableControls(true);
+    fprintf(stderr, "RB-DIAG step back done: ok=%d loc after=[%s]\n", (int)ok, QSPTools::qspStrToQt(QSPGetCurLoc()).toUtf8().constData());
+    fflush(stderr);
     if (ok)
     {
         m_lastCapturedLoc = QSPTools::qspStrToQt(QSPGetCurLoc());

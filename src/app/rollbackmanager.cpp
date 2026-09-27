@@ -12,7 +12,7 @@ RollbackManager::RollbackManager(int maxSnapshots)
 {
 }
 
-bool RollbackManager::captureSnapshot(const QString &label)
+bool RollbackManager::captureSnapshot(const QString &label, bool isChoice)
 {
     if (m_maxSnapshots <= 0)
         return false;
@@ -39,6 +39,7 @@ bool RollbackManager::captureSnapshot(const QString &label)
     snap.data = QByteArray(reinterpret_cast<const char *>(buf), realSize * sizeof(QSP_CHAR));
     snap.timestamp = QDateTime::currentDateTime();
     snap.label = label;
+    snap.choice = isChoice;
 
     std::free(buf);
 
@@ -84,14 +85,24 @@ bool RollbackManager::back()
 {
     if (!canGoBack())
         return false;
-    return restoreAt(m_cursor - 1);
+    // Land on the nearest earlier choice snapshot; timer-driven transitions
+    // in between are skipped so one step undoes one player decision.
+    int target = m_cursor - 1;
+    while (target > 0 && !m_snapshots[target].choice)
+        --target;
+    return restoreAt(target);
 }
 
 bool RollbackManager::forward()
 {
     if (!canGoForward())
         return false;
-    return restoreAt(m_cursor + 1);
+    // Land on the nearest later choice snapshot; timer-driven transitions
+    // in between are skipped so one step redoes one player decision.
+    int target = m_cursor + 1;
+    while (target < static_cast<int>(m_snapshots.size()) - 1 && !m_snapshots[target].choice)
+        ++target;
+    return restoreAt(target);
 }
 
 bool RollbackManager::hasSnapshots() const

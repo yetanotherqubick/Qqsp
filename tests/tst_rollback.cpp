@@ -55,6 +55,7 @@ private slots:
     void depthEviction();
     void clearResetsHistory();
     void labelAtBounds();
+    void choiceGranularityStepping();
     void disabledMode();
     void saveLoadRoundtrip();
 
@@ -166,6 +167,26 @@ void TestRollback::disabledMode()
     QVERIFY(m_rollback.captureSnapshot("again"));
     QCOMPARE(m_rollback.snapshotCount(), 1);
     QCOMPARE(m_rollback.currentLabel(), QString("again"));
+}
+
+void TestRollback::choiceGranularityStepping()
+{
+    // back()/forward() land on the nearest choice snapshot, skipping
+    // timer-driven (non-choice) captures in between.
+    QVERIFY(m_rollback.captureSnapshot("A", true));
+    QVERIFY(m_rollback.captureSnapshot("T1", false));
+    QVERIFY(m_rollback.captureSnapshot("B", true));
+    QVERIFY(m_rollback.captureSnapshot("T2", false));
+    QCOMPARE(m_rollback.currentIndex(), 3);
+
+    QVERIFY(m_rollback.back());
+    QCOMPARE(m_rollback.currentLabel(), QString("B"));
+    QVERIFY(m_rollback.back());
+    QCOMPARE(m_rollback.currentLabel(), QString("A"));
+    QVERIFY(m_rollback.forward());
+    QCOMPARE(m_rollback.currentLabel(), QString("B"));
+    QVERIFY(m_rollback.forward());
+    QCOMPARE(m_rollback.currentLabel(), QString("T2"));
 }
 
 void TestRollback::saveLoadRoundtrip()

@@ -19,11 +19,14 @@ public:
         QByteArray data;      // raw bytes from QSPSaveGameAsData
         QDateTime timestamp;  // wall-clock time of capture
         QString label;        // human-readable description
+        bool choice;          // true: player decision; false: timer-driven transition
     };
 
     explicit RollbackManager(int maxSnapshots = 10);
 
-    bool captureSnapshot(const QString &label = QString());
+    // isChoice: true for player decisions (action, link, input), false for
+    // timer-driven transitions. back()/forward() skip non-choice snapshots.
+    bool captureSnapshot(const QString &label, bool isChoice = true);
     bool restoreAt(int index);
     bool back();
     bool forward();
