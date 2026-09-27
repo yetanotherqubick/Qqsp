@@ -57,6 +57,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent)
     m_keyPressedWhileDisabled = false;
     m_debugLogWindow = nullptr;
     m_isRestoring = false;
+    m_settlePending = false;
     m_isGameOpened = false;
     showPlainText = false;
 
@@ -349,10 +350,12 @@ void MainWindow::setPendingRollbackLabel(const QString &label)
 // Called when a refresh has settled: the current scene is the state the user
 // sees, so it becomes a rollback snapshot whenever it differs from the last
 // captured one (new location, or a pending choice label to record).
-// Called when a refresh has settled: a rollback snapshot is taken only when
-// the location changed — a real scene boundary (player choice or
-// timer-driven transition). Refreshes within the same location carry the
-// pending label forward to the next boundary instead of capturing.
+// Called when a refresh has settled: a scene boundary is detected here — new
+// location, or a pending choice label (action / link / input). The capture
+// itself must NOT run inside this callback: qsp-legacy disables code
+// execution for the duration of callbacks (qspSaveCallState), so
+// QSPSaveGameAsData would always reject. The capture is therefore deferred
+// to performSettleCapture(), which runs once the engine call has unwound.
 void MainWindow::settleScene()
 {
     if (!m_isGameOpened || m_isRestoring)
@@ -360,14 +363,29 @@ void MainWindow::settleScene()
         return;
     }
     QString cur = QSPTools::qspStrToQt(QSPGetCurLoc());
-    if (cur == m_lastCapturedLoc)
+    if (cur == m_lastCapturedLoc && m_pendingRollbackLabel.isEmpty())
+    {
+        return;
+    }
+    m_settlePending = true;
+    QTimer::singleShot(0, this, [this] { performSettleCapture(); });
+}
+
+void MainWindow::performSettleCapture()
+{
+    if (!m_isGameOpened || m_isRestoring || !m_settlePending)
+    {
+        return;
+    }
+    m_settlePending = false;
+    QString cur = QSPTools::qspStrToQt(QSPGetCurLoc());
+    if (cur == m_lastCapturedLoc && m_pendingRollbackLabel.isEmpty())
     {
         return;
     }
     QString label = !m_pendingRollbackLabel.isEmpty()
         ? m_pendingRollbackLabel
         : tr("Time passes");
-    m_pendingRollbackLabel.clear();
     if (!m_rollback.captureSnapshot(label))
     {
         qWarning() << "Rollback capture failed for" << label;
