@@ -2,8 +2,8 @@
 
 #include <qsp_default.h>
 
-// Engine-integration coverage against the system qsp-legacy library
-// (ROADMAP M5). The fixture is a minimal game built from minimal.txt with the
+// Engine-integration coverage against the system qsp-legacy library.
+// The fixture is a minimal game built from minimal.txt with the
 // upstream 60f0e9d-era txt2gam; see fixtures/minimal.txt.
 
 #ifndef QSP_TEST_FIXTURE

@@ -2,7 +2,7 @@
 # Check or apply clang-format over project sources.
 #
 # Usage: format.sh [--fix] [-- paths...] [--help]
-# Honors the repository .clang-format (Standard follows C++14 -> C++17 changes).
+# Honors the repository .clang-format.
 #
 # Exit codes: 0 formatted, 1 violations found, 2 usage error.
 set -euo pipefail

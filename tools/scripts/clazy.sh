@@ -8,9 +8,6 @@
 #   --level N    clazy check level (default 1); level 2 is verbose, opt-in
 #   --checks     explicit clazy check list (overrides --level)
 #
-# Typical pre-migration use (M7/M8): surface old-style-connect,
-# qstring-allocations, container and lifetime issues before Qt 6.
-#
 # Exit codes: 0 clean (or --no-fail), 1 findings, 2 usage/missing tool.
 set -euo pipefail
 

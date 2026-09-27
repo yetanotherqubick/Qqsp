@@ -84,7 +84,7 @@ fi
 
 WARNINGS="$(grep -cE ': warning: ' "$LOG" || true)"
 
-# --- tests (present only after M5 adds CTest) --------------------------------
+# --- tests -------------------------------------------------------------------
 
 TEST_NOTE=""
 if [ "$NO_TEST" -eq 0 ] && [ -f "$QQSP_BUILD_DIR/CTestTestfile.cmake" ]; then

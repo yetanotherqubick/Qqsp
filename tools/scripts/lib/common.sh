@@ -12,8 +12,8 @@ QQSP_BUILD_DIR="$QQSP_REPO_ROOT/build"
 QQSP_LOG_DIR="$QQSP_BUILD_DIR/logs"
 QQSP_PRESET_DEFAULT="qt6-cpp17"
 
-# Application source areas. The bundled engine tree was removed in M8 — the
-# engine is the system qsp-legacy library — so there is no engine area.
+# Application source areas. The engine is the system qsp-legacy library, so
+# there is no engine area.
 QQSP_APP_AREAS=(src/app src/web src/widgets src/dialogs src/multimedia src/platform)
 
 # --- basic reporting ---------------------------------------------------------

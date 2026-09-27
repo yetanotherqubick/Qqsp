@@ -5,7 +5,7 @@
 
 #include "comtools.h"
 
-// Regression coverage seeded by the engine-switch work (ROADMAP M5):
+// Regression coverage for the engine-switch game-path handling:
 // - GameDirFromFilePath must derive the game DIRECTORY from the loaded .qsp
 //   FILE path with FILE semantics. The previous implementation fed a directory
 //   with trailing slash to QFileInfo::canonicalPath() (parent semantics), which

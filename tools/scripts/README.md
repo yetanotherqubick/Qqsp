@@ -1,6 +1,6 @@
 # tools/scripts — developer and agent tooling
 
-One command per repetitive job in the modernization workflow. Every script:
+One command per repetitive job. Every script:
 `--help`, quiet on success, deduped findings,
 stable `### section` headers, and exit codes agents can branch on.
 
@@ -14,8 +14,7 @@ stable `### section` headers, and exit codes agents can branch on.
 * **Files**: scripts never modify sources, except `format.sh --fix` and
   `tidy.sh --fix` when explicitly requested.
 * **Scratch files** live under `build/` (gitignored): logs in `build/logs/`,
-  warning baselines in `build/baseline/`, ratchet builds in
-  `build/qt-deprecated/`.
+  warning baselines in `build/baseline/`.
 * Lint findings (`tidy.sh`, `clazy.sh`) are a **worklist, not a gate**: the
   deterministic check per `AGENTS.md` is `check.sh` (configure + build, later
   + CTest).
@@ -29,7 +28,6 @@ stable `### section` headers, and exit codes agents can branch on.
 | `format.sh` | clang-format check/fix | `format.sh --fix -- src/app/mainwindow.cpp` |
 | `tidy.sh` | clang-tidy over the compile database | `tidy.sh --since HEAD~5` |
 | `clazy.sh` | clazy-standalone Qt analysis | `clazy.sh --level 1` |
-| `qt-deprecated.sh` | Deprecation ratchet build | `qt-deprecated.sh --up-to 0x060000` → must reach 0 |
 | `todo.sh` | TODO/FIXME/XXX/HACK inventory | `todo.sh --all` |
 | `refs.sh` | Removal evidence for a symbol | `refs.sh QspInputDlg` |
 
@@ -51,17 +49,6 @@ tools/scripts/refs.sh <symbol> --graft
 tools/scripts/tidy.sh --fix --since main   # review fixes, then check.sh
 ```
 
-**Qt 6 readiness**:
-
-```sh
-tools/scripts/clazy.sh --level 1
-tools/scripts/qt-deprecated.sh --up-to 0x060000
-```
-
-The ratchet value is the CMake cache variable
-`QQSP_QT_DISABLE_DEPRECATED_UP_TO` (default `0x050F00` = the currently
-enforced Qt 5.15 level); the script raises it in a scratch build only.
-
 ## Configuration
 
 * `.clang-format` (repository root) — formatting; `format.sh` follows it.
@@ -74,7 +61,7 @@ enforced Qt 5.15 level); the script raises it in a scratch build only.
 ## Requirements
 
 `cmake`, `ninja`, `git`, `pkg-config`, a C compiler, and the toolchain the
-build needs (Qt 5.15, Oniguruma). Optional but used when present:
+build needs (Qt 6, Oniguruma). Optional but used when present:
 `clang-format`, `clang-tidy`, `clazy-standalone`, `python3` (for
 `tidy.sh`/`clazy.sh` file selection), `graft` (`refs.sh --graft`). Missing
 tools produce a one-line install hint (exit 2).

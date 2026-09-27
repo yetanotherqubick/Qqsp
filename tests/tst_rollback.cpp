@@ -4,7 +4,7 @@
 
 #include "rollbackmanager.h"
 
-// RollbackManager coverage (ROADMAP M10): capture buffer growth against the
+// RollbackManager coverage: capture buffer growth against the
 // QSPSaveGameAsData size contract, cursor/divergence semantics, ring-buffer
 // eviction, and real save/restore roundtrips on the minimal fixture.
 

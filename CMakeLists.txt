@@ -23,10 +23,8 @@ option(QQSP_ENABLE_WEBBOX
     ON
 )
 
-# Compile-time deprecation enforcement for the application target. On Qt 6
-# the effective macro is QT_DISABLE_DEPRECATED_UP_TO; the deprecation ratchet
-# (tools/scripts/qt-deprecated.sh, ROADMAP M7/M8) raises the value in scratch
-# builds.
+# Compile-time deprecation enforcement for the application target (the
+# effective macro on Qt 6 is QT_DISABLE_DEPRECATED_UP_TO).
 set(QQSP_QT_DISABLE_DEPRECATED 0x060500
     CACHE STRING "Qt API version up to which deprecated APIs are disabled"
 )
@@ -268,7 +266,7 @@ if(WIN32)
     )
 endif()
 
-# Regression tests (seed of ROADMAP M5). check.sh runs them through CTest.
+# Regression tests. check.sh runs them through CTest.
 enable_testing()
 
 find_package(Qt6 6.2 REQUIRED COMPONENTS Gui Test)

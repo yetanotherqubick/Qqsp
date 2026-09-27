@@ -28,8 +28,8 @@ test failure. Do not claim verification that was not performed.
 
 Developer and agent tooling lives in `tools/scripts/` (see its `README.md`):
 `check.sh` wraps the verification above and adds warning-baseline comparison;
-the other scripts cover formatting, clang-tidy/clazy analysis, the Qt
-deprecation ratchet, and removal-evidence helpers.
+the other scripts cover formatting, clang-tidy/clazy analysis, and
+removal-evidence helpers.
  
 ## Evidence
  
