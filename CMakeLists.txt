@@ -156,8 +156,7 @@ add_custom_target(QqspTranslations
 
 add_dependencies(Qqsp QqspTranslations)
 
-# Shared application sources as a static library: the executable and the
-# gldriver smoke tool link the same objects instead of duplicating the
+# Shared application sources as a static library instead of duplicating the
 # source list (which had already drifted once).
 set(QQSP_APP_SOURCES ${QQSP_SOURCES})
 list(REMOVE_ITEM QQSP_APP_SOURCES src/app/main.cpp)
@@ -342,20 +341,3 @@ target_link_libraries(tst_rollback
 )
 
 add_test(NAME tst_rollback COMMAND tst_rollback)
-
-# Headless smoke driver: runs the full client against a game file without
-# interaction. A manual real-game reproducer (not part of CTest); the driver
-# shares the application bootstrap (register_url_schemes +
-# QspApp::configureApplication) with main.cpp.
-add_executable(gldriver tests/gldriver.cpp)
-
-target_compile_definitions(gldriver
-    PRIVATE
-        QT_DISABLE_DEPRECATED_UP_TO=${QQSP_QT_DISABLE_DEPRECATED}
-        _NONATIVEDIALOG
-)
-
-target_link_libraries(gldriver
-    PRIVATE
-        qqsp_app
-)
