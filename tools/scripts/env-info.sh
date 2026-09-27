@@ -2,8 +2,7 @@
 # Print a one-shot toolchain inventory for this machine.
 #
 # Usage: env-info.sh [--markdown]
-#   --markdown  emit a fenced block suitable for pasting into the ROADMAP.md
-#               Baseline section (M1).
+#   --markdown  emit a fenced block with the inventory
 #
 # Missing tools are reported as "-" (this is an inventory, not a gate).
 set -euo pipefail

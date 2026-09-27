@@ -5,9 +5,7 @@
 Do only the requested task. Do not add unrelated refactoring, cleanup, dependency,
 architectural, or behavior changes; leave newly discovered work for a separate task
 unless the current task requires it.
- 
-`ROADMAP.md` defines modernization scope and milestone order.
- 
+
 ## Repository boundaries
 
 - The QSP engine comes from the system `qsp-legacy` library (CMake package
@@ -24,12 +22,9 @@ cmake --preset qt6-cpp17
 cmake --build --preset qt6-cpp17
 ```
  
-Until automated tests exist, the "deterministic checks" named in `ROADMAP.md` are a
-successful configure and full build. Do not claim verification that was not performed.
-
-Since M5, the deterministic checks are a successful configure, build, and CTest run
+The deterministic checks are a successful configure, build, and CTest run
 (`tst_paths`, `tst_engine`) — in practice `tools/scripts/check.sh`, which fails on any
-test failure.
+test failure. Do not claim verification that was not performed.
 
 Developer and agent tooling lives in `tools/scripts/` (see its `README.md`):
 `check.sh` wraps the verification above and adds warning-baseline comparison;

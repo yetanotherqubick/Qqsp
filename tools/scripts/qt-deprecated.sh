@@ -2,7 +2,7 @@
 # Qt deprecation ratchet: build in a scratch directory with
 # QT_DISABLE_DEPRECATED_UP_TO raised to a target value, and report every API
 # use that blocks it. The ratchet metric must reach 0 before the Qt 6
-# migration (ROADMAP M7/M8).
+# migration.
 #
 # Usage: qt-deprecated.sh [--up-to HEX] [--keep] [--help]
 #   --up-to HEX   value for QT_DISABLE_DEPRECATED_UP_TO (default 0x060500)

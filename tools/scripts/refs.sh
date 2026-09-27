@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # Removal-evidence helper: locate every tracked reference to an identifier and
-# classify them, so a cleanup change can cite concrete evidence (ROADMAP M2/M9
-# gates: "Removed items are supported by evidence").
+# classify them, so a cleanup change can cite concrete evidence.
 #
 # Usage: refs.sh <identifier> [--graft] [--help]
 #   --graft  also ask the graft graph for caller edges (best-effort)
