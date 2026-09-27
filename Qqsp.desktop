@@ -2,9 +2,9 @@
 Type=Application
 Name=Qqsp
 Comment=Qt Quest Soft Player
-Exec=/usr/bin/Qqsp %f
+Exec=/usr/bin/Qqsp %u
 Icon=qsp
 Terminal=false
 StartupNotify=false
-Categories=Application;Game;
+Categories=Game;
 MimeType=application/x-qsp;
