@@ -28,6 +28,7 @@ private slots:
 
 private:
     static QString canonical(const QString &path);
+    static bool makeFile(const QString &path);
 };
 
 QString TestPaths::canonical(const QString &path)
@@ -35,11 +36,22 @@ QString TestPaths::canonical(const QString &path)
     return QFileInfo(path).canonicalFilePath();
 }
 
+// Any existing regular file works as a stand-in; the content is never read.
+// Write the dummy in place instead of copying a host file (such as
+// /etc/hostname), which is absent in some build sandboxes.
+bool TestPaths::makeFile(const QString &path)
+{
+    QFile file(path);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        return false;
+    return file.write("qsp\n") != -1 && file.flush();
+}
+
 void TestPaths::gameDirFromFile()
 {
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
-    QVERIFY(QFile::copy("/etc/hostname", dir.path() + "/game.qsp"));
+    QVERIFY(makeFile(dir.path() + "/game.qsp"));
     QString file = canonical(dir.path()) + "/game.qsp";
 
     QCOMPARE(QSPTools::GameDirFromFilePath(file), canonical(dir.path()) + '/');
@@ -73,7 +85,7 @@ void TestPaths::caseInsensitiveResolution()
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
     QVERIFY(QDir().mkpath(dir.path() + "/Images"));
-    QVERIFY(QFile::copy("/etc/hostname", dir.path() + "/Images/first.PNG"));
+    QVERIFY(makeFile(dir.path() + "/Images/first.PNG"));
 
     QSPTools::useCaseInsensitiveFilePath = true;
     // Lookups are directory-relative; case-insensitive on the relative path.
@@ -88,8 +100,8 @@ void TestPaths::caseInsensitiveCacheNoThrash()
     QTemporaryDir dirA, dirB;
     QVERIFY(dirA.isValid());
     QVERIFY(dirB.isValid());
-    QVERIFY(QFile::copy("/etc/hostname", dirA.path() + "/a.png"));
-    QVERIFY(QFile::copy("/etc/hostname", dirB.path() + "/b.png"));
+    QVERIFY(makeFile(dirA.path() + "/a.png"));
+    QVERIFY(makeFile(dirB.path() + "/b.png"));
 
     QString gameA = canonical(dirA.path()) + '/';
     QString gameB = canonical(dirB.path()) + '/';
