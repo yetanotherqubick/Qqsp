@@ -394,6 +394,7 @@ void MainWindow::performSettleCapture()
     QString label = !m_pendingRollbackLabel.isEmpty()
         ? m_pendingRollbackLabel
         : tr("Time passes");
+    m_pendingRollbackLabel.clear();
     if (!m_rollback.captureSnapshot(label))
     {
         qWarning() << "Rollback capture failed for" << label;
