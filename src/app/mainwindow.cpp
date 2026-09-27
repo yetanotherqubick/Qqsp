@@ -672,7 +672,13 @@ void MainWindow::LoadSettings(QString filePath)
 
     SetLastPath(settings->value("application/lastPath", GetLastPath()).toString());
     perGameConfig = settings->value("application/perGameConfig", perGameConfig).toBool();
-    m_rollback.setMaxSnapshots(settings->value("application/rollbackDepth", 10).toInt());
+    const int rollbackDepth = settings->value("application/rollbackDepth", 10).toInt();
+    // A stored depth of 0 is the legacy "disabled" encoding; keep the chosen
+    // depth separate from the enabled flag so turning rollback off never
+    // clobbers it.
+    m_rollbackDepth = rollbackDepth > 0 ? rollbackDepth : 10;
+    m_rollbackEnabled = settings->value("application/rollbackEnabled", rollbackDepth > 0).toBool();
+    m_rollback.setMaxSnapshots(m_rollbackEnabled ? m_rollbackDepth : 0);
 
     m_isUseFontSize = settings->value("application/isUseFontSize", m_isUseFontSize).toBool();
     m_fontSize = settings->value("application/fontSize", m_fontSize).toInt();
@@ -752,7 +758,8 @@ void MainWindow::SaveSettings(QString filePath)
 
     settings->setValue("application/lastPath", lastPath);
     settings->setValue("application/perGameConfig", perGameConfig);
-    settings->setValue("application/rollbackDepth", m_rollback.maxSnapshots());
+    settings->setValue("application/rollbackDepth", m_rollbackDepth);
+    settings->setValue("application/rollbackEnabled", m_rollbackEnabled);
 
     settings->setValue("application/isUseFontSize", m_isUseFontSize);
     settings->setValue("application/fontSize", m_fontSize);

@@ -22,6 +22,33 @@
      <property name="labelAlignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_language">
+       <property name="text">
+        <string>Language</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="comboBox_language"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_volume">
+       <property name="text">
+        <string>Sound volume</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSlider" name="horizontalSlider_volume">
+       <property name="maximum">
+        <number>100</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="0">
       <widget class="QCheckBox" name="checkBox_fontSize">
        <property name="text">
@@ -130,34 +157,10 @@
        </item>
       </layout>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_language">
-       <property name="text">
-        <string>Language</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QComboBox" name="comboBox_language"/>
-     </item>
      <item row="5" column="0">
       <widget class="QCheckBox" name="checkBox_fontColor">
        <property name="text">
         <string>Custom text color</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="QCheckBox" name="checkBox_linkColor">
-       <property name="text">
-        <string>Custom link color</string>
-       </property>
-      </widget>
-     </item>
-     <item row="9" column="0">
-      <widget class="QCheckBox" name="checkBox_autostart">
-       <property name="text">
-        <string>Autostart last game</string>
        </property>
       </widget>
      </item>
@@ -210,6 +213,13 @@
        </item>
       </layout>
      </item>
+     <item row="6" column="0">
+      <widget class="QCheckBox" name="checkBox_linkColor">
+       <property name="text">
+        <string>Custom link color</string>
+       </property>
+      </widget>
+     </item>
      <item row="6" column="1">
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
@@ -259,6 +269,13 @@
        </item>
       </layout>
      </item>
+     <item row="7" column="0">
+      <widget class="QCheckBox" name="checkBox_disableVideo">
+       <property name="text">
+        <string>Disable video</string>
+       </property>
+      </widget>
+     </item>
      <item row="8" column="0">
       <widget class="QCheckBox" name="checkBox_perGameConfig">
        <property name="text">
@@ -266,54 +283,10 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
-      <layout class="QHBoxLayout" name="horizontalLayout_rollback">
-       <item>
-        <widget class="QCheckBox" name="checkBox_rollback">
-         <property name="text">
-          <string>Enabled</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="spinBox_rollbackDepth">
-         <property name="minimum">
-          <number>1</number>
-         </property>
-         <property name="maximum">
-          <number>99</number>
-         </property>
-         <property name="value">
-          <number>10</number>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_volume">
+     <item row="9" column="0">
+      <widget class="QCheckBox" name="checkBox_autostart">
        <property name="text">
-        <string>Sound volume</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSlider" name="horizontalSlider_volume">
-       <property name="maximum">
-        <number>100</number>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QCheckBox" name="checkBox_disableVideo">
-       <property name="text">
-        <string>Disable video</string>
+        <string>Autostart last game</string>
        </property>
       </widget>
      </item>
@@ -341,6 +314,29 @@
        </property>
        <property name="checked">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="0">
+      <widget class="QCheckBox" name="checkBox_rollback">
+       <property name="text">
+        <string>Rollback history</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QSpinBox" name="spinBox_rollbackDepth">
+       <property name="minimum">
+        <number>1</number>
+       </property>
+       <property name="maximum">
+        <number>99</number>
+       </property>
+       <property name="value">
+        <number>10</number>
        </property>
       </widget>
      </item>

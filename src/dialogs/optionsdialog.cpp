@@ -42,9 +42,9 @@ OptionsDialog::OptionsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Opti
     ui->checkBox_disableVideo->setChecked(mw->GetDisableVideo());
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
+    ui->checkBox_rollback->setChecked(mw->GetRollbackEnabled());
     ui->spinBox_rollbackDepth->setValue(mw->GetRollbackDepth());
-    ui->checkBox_rollback->setChecked(mw->GetRollbackDepth() > 0);
-    ui->spinBox_rollbackDepth->setEnabled(mw->GetRollbackDepth() > 0);
+    ui->spinBox_rollbackDepth->setEnabled(mw->GetRollbackEnabled());
     ui->horizontalSlider_volume->setValue((int)(mw->GetOverallVolume() * 100));
     ui->checkBox_videoFix->setChecked(mw->GetVideoFix());
     ui->checkBox_HTML5Extras->setChecked(mw->GetAllowHTML5Extras());
@@ -195,7 +195,11 @@ void OptionsDialog::on_pushButton_ok_clicked()
     mw->SetDisableVideo(ui->checkBox_disableVideo->isChecked());
     mw->SetPerGameConfig(ui->checkBox_perGameConfig->isChecked());
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
-    mw->SetRollbackDepth(ui->checkBox_rollback->isChecked() ? ui->spinBox_rollbackDepth->value() : 0);
+    mw->SetRollbackEnabled(ui->checkBox_rollback->isChecked());
+    if (ui->checkBox_rollback->isChecked())
+    {
+        mw->SetRollbackDepth(ui->spinBox_rollbackDepth->value());
+    }
     mw->SetVideoFix(ui->checkBox_videoFix->isChecked());
     mw->SetAllowHTML5Extras(ui->checkBox_HTML5Extras->isChecked());
     mw->SetUseCaseInsensitiveFilePath(ui->checkBox_CaseInsensitiveFilePath->isChecked());

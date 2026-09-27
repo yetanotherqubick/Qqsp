@@ -62,15 +62,32 @@ public:
 
     int GetRollbackDepth() const
     {
-        return m_rollback.maxSnapshots();
+        return m_rollbackDepth;
     }
-    void SetRollbackDepth(int depth)
+    bool GetRollbackEnabled() const
     {
-        m_rollback.setMaxSnapshots(depth);
+        return m_rollbackEnabled;
+    }
+    void SetRollbackEnabled(bool on)
+    {
+        m_rollbackEnabled = on;
+        m_rollback.setMaxSnapshots(on ? m_rollbackDepth : 0);
         m_lastCapturedLoc.clear();
         m_pendingRollbackLabel.clear();
         m_settlePending = false;
         UpdateRollbackControls();
+    }
+    void SetRollbackDepth(int depth)
+    {
+        m_rollbackDepth = qBound(1, depth, 99);
+        if (m_rollbackEnabled)
+        {
+            m_rollback.setMaxSnapshots(m_rollbackDepth);
+            m_lastCapturedLoc.clear();
+            m_pendingRollbackLabel.clear();
+            m_settlePending = false;
+            UpdateRollbackControls();
+        }
     }
 
     void setPendingRollbackLabel(const QString &label);
@@ -358,6 +375,8 @@ private:
 
     // Fields
     bool m_isGameOpened;
+    bool m_rollbackEnabled = true;
+    int m_rollbackDepth = 10;
     QString m_savedGamePath;
     QString m_configPath;
     bool perGameConfig;
