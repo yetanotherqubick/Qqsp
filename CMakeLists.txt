@@ -265,6 +265,33 @@ if(WIN32)
     )
 endif()
 
+# Installation rules. The binary and the desktop integration files are all
+# there is to install: translations are embedded into the binary, and the
+# regression tests are not an install artifact. Packagers consume these
+# rules through a DESTDIR-based cmake --install. The license file is left
+# to the packager, which installs it into its distro-specific directory.
+include(GNUInstallDirs)
+
+install(TARGETS Qqsp
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
+
+# Desktop integration files only make sense on Linux.
+if(UNIX AND NOT APPLE)
+    install(FILES Qqsp.desktop
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/applications"
+    )
+
+    install(FILES qsp.mime
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/mime/packages"
+        RENAME qsp.xml
+    )
+
+    install(FILES icons/qsp.svg
+        DESTINATION "${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps"
+    )
+endif()
+
 # Regression tests. check.sh runs them through CTest.
 enable_testing()
 
