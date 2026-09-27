@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QMetaObject>
 #include <QTimer>
 #include <cstdio>
 #include "appbootstrap.h"
@@ -44,5 +45,13 @@ int main(int argc, char *argv[])
         printf("DIAG: quit\n"); fflush(stdout);
         app.quit();
     });
+    int rbMs = qEnvironmentVariableIntValue("GLDRIVER_ROLLBACK_MS");
+    if (rbMs > 0)
+    {
+        QTimer::singleShot(rbMs, [&] {
+            printf("DIAG: rollback step back\n"); fflush(stdout);
+            QMetaObject::invokeMethod(&w, "OnRollbackStepBack");
+        });
+    }
     return app.exec();
 }

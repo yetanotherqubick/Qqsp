@@ -377,6 +377,14 @@ void MainWindow::performSettleCapture()
     {
         return;
     }
+    if (QSPIsInCallBack())
+    {
+        // Still inside an engine callback (e.g. a webbox nested event loop):
+        // qsp-legacy disables code execution there, so QSPSaveGameAsData
+        // would always fail. Retry once the callback has unwound.
+        QTimer::singleShot(50, this, [this] { performSettleCapture(); });
+        return;
+    }
     m_settlePending = false;
     QString cur = QSPTools::qspStrToQt(QSPGetCurLoc());
     if (cur == m_lastCapturedLoc && m_pendingRollbackLabel.isEmpty())
