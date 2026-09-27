@@ -358,7 +358,7 @@ void MainWindow::setPendingRollbackLabel(const QString &label)
 // to performSettleCapture(), which runs once the engine call has unwound.
 void MainWindow::settleScene()
 {
-    if (!m_isGameOpened || m_isRestoring)
+    if (!m_isGameOpened || m_isRestoring || m_rollback.maxSnapshots() <= 0)
     {
         return;
     }

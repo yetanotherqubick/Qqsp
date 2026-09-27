@@ -14,6 +14,8 @@ RollbackManager::RollbackManager(int maxSnapshots)
 
 bool RollbackManager::captureSnapshot(const QString &label)
 {
+    if (m_maxSnapshots <= 0)
+        return false;
     // The engine copies the serialized state into a caller-provided buffer and
     // reports the required size when it does not fit; grow until it does.
     int bufSize = 64 * 1024;
@@ -138,7 +140,12 @@ QString RollbackManager::labelAt(int index) const
 
 void RollbackManager::setMaxSnapshots(int n)
 {
-    m_maxSnapshots = qMax(1, n);
+    m_maxSnapshots = qMax(0, n);
+    if (m_maxSnapshots == 0)
+    {
+        clear();
+        return;
+    }
     while (static_cast<int>(m_snapshots.size()) > m_maxSnapshots)
     {
         m_snapshots.pop_front();

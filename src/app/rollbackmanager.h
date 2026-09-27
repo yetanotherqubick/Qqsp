@@ -37,6 +37,7 @@ public:
     QString currentLabel() const;
     QString labelAt(int index) const;
 
+    // A depth of 0 disables rollback: no captures, no history.
     void setMaxSnapshots(int n);
     void clear();
 

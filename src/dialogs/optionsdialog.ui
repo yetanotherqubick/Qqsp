@@ -266,6 +266,33 @@
        </property>
       </widget>
      </item>
+     <item row="8" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_rollback">
+       <item>
+        <widget class="QCheckBox" name="checkBox_rollback">
+         <property name="text">
+          <string>Enabled</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox_rollbackDepth">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+         <property name="maximum">
+          <number>99</number>
+         </property>
+         <property name="value">
+          <number>10</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_volume">
        <property name="text">

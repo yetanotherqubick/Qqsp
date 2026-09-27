@@ -60,6 +60,19 @@ public:
 
     bool isGameOpened() const { return m_isGameOpened; }
 
+    int GetRollbackDepth() const
+    {
+        return m_rollback.maxSnapshots();
+    }
+    void SetRollbackDepth(int depth)
+    {
+        m_rollback.setMaxSnapshots(depth);
+        m_lastCapturedLoc.clear();
+        m_pendingRollbackLabel.clear();
+        m_settlePending = false;
+        UpdateRollbackControls();
+    }
+
     void setPendingRollbackLabel(const QString &label);
     void settleScene();
     void performSettleCapture();

@@ -42,6 +42,9 @@ OptionsDialog::OptionsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Opti
     ui->checkBox_disableVideo->setChecked(mw->GetDisableVideo());
     ui->checkBox_perGameConfig->setChecked(mw->GetPerGameConfig());
     ui->checkBox_autostart->setChecked(mw->GetAutostart());
+    ui->spinBox_rollbackDepth->setValue(mw->GetRollbackDepth());
+    ui->checkBox_rollback->setChecked(mw->GetRollbackDepth() > 0);
+    ui->spinBox_rollbackDepth->setEnabled(mw->GetRollbackDepth() > 0);
     ui->horizontalSlider_volume->setValue((int)(mw->GetOverallVolume() * 100));
     ui->checkBox_videoFix->setChecked(mw->GetVideoFix());
     ui->checkBox_HTML5Extras->setChecked(mw->GetAllowHTML5Extras());
@@ -80,6 +83,21 @@ OptionsDialog::OptionsDialog(QWidget *parent) : QDialog(parent), ui(new Ui::Opti
     {
         ui->comboBox_language->setCurrentIndex(index);
     }
+
+    // A checkbox with a dependent value field gates that field's
+    // interactivity: unchecked means the field is disabled too.
+    ui->spinBox_fontSize->setEnabled(ui->checkBox_fontSize->isChecked());
+    connect(ui->checkBox_fontSize, &QCheckBox::toggled, ui->spinBox_fontSize, &QWidget::setEnabled);
+    ui->pushButton_font->setEnabled(ui->checkBox_font->isChecked());
+    connect(ui->checkBox_font, &QCheckBox::toggled, ui->pushButton_font, &QWidget::setEnabled);
+    ui->pushButton_backColor->setEnabled(ui->checkBox_backColor->isChecked());
+    connect(ui->checkBox_backColor, &QCheckBox::toggled, ui->pushButton_backColor, &QWidget::setEnabled);
+    ui->pushButton_linkColor->setEnabled(ui->checkBox_linkColor->isChecked());
+    connect(ui->checkBox_linkColor, &QCheckBox::toggled, ui->pushButton_linkColor, &QWidget::setEnabled);
+    ui->pushButton_fontColor->setEnabled(ui->checkBox_fontColor->isChecked());
+    connect(ui->checkBox_fontColor, &QCheckBox::toggled, ui->pushButton_fontColor, &QWidget::setEnabled);
+    ui->spinBox_rollbackDepth->setEnabled(ui->checkBox_rollback->isChecked());
+    connect(ui->checkBox_rollback, &QCheckBox::toggled, ui->spinBox_rollbackDepth, &QWidget::setEnabled);
 }
 
 OptionsDialog::~OptionsDialog()
@@ -177,6 +195,7 @@ void OptionsDialog::on_pushButton_ok_clicked()
     mw->SetDisableVideo(ui->checkBox_disableVideo->isChecked());
     mw->SetPerGameConfig(ui->checkBox_perGameConfig->isChecked());
     mw->SetAutostart(ui->checkBox_autostart->isChecked());
+    mw->SetRollbackDepth(ui->checkBox_rollback->isChecked() ? ui->spinBox_rollbackDepth->value() : 0);
     mw->SetVideoFix(ui->checkBox_videoFix->isChecked());
     mw->SetAllowHTML5Extras(ui->checkBox_HTML5Extras->isChecked());
     mw->SetUseCaseInsensitiveFilePath(ui->checkBox_CaseInsensitiveFilePath->isChecked());

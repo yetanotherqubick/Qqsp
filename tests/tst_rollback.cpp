@@ -55,6 +55,7 @@ private slots:
     void depthEviction();
     void clearResetsHistory();
     void labelAtBounds();
+    void disabledMode();
     void saveLoadRoundtrip();
 
 private:
@@ -147,6 +148,24 @@ void TestRollback::labelAtBounds()
     QCOMPARE(m_rollback.labelAt(1), QString("second"));
     QCOMPARE(m_rollback.labelAt(2), QString());
     QCOMPARE(m_rollback.labelAt(-1), QString());
+}
+
+void TestRollback::disabledMode()
+{
+    // Depth 0 disables rollback entirely: no captures, no history.
+    m_rollback.setMaxSnapshots(0);
+    QVERIFY(!m_rollback.captureSnapshot("ignored"));
+    QCOMPARE(m_rollback.snapshotCount(), 0);
+    QVERIFY(!m_rollback.canGoBack());
+    QVERIFY(!m_rollback.canGoForward());
+    QVERIFY(!m_rollback.back());
+    QVERIFY(!m_rollback.forward());
+
+    // Re-enabling restores normal capture behavior.
+    m_rollback.setMaxSnapshots(3);
+    QVERIFY(m_rollback.captureSnapshot("again"));
+    QCOMPARE(m_rollback.snapshotCount(), 1);
+    QCOMPARE(m_rollback.currentLabel(), QString("again"));
 }
 
 void TestRollback::saveLoadRoundtrip()
